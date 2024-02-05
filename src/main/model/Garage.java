@@ -21,4 +21,9 @@ public class Garage {
         garage.add(c);
     }
 
+    // EFFECTS: displays the cars in the garage
+    public void viewGarage() {
+
+    }
+
 }
