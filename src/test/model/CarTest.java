@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CarTest {
-    Car car1;
-    Car car2;
+    private Car car1;
+    private Car car2;
 
     @BeforeEach
     public void runBefore() {

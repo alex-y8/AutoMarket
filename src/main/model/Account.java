@@ -31,4 +31,10 @@ public class Account {
         return balance;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the account's balance to the given amount
+    public void setBalance(int amount) {
+
+    }
+
 }
