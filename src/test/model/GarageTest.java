@@ -32,6 +32,22 @@ public class GarageTest {
     }
 
     @Test
+    public void testCarsInGarageOneCar() {
+        garage.addCar(car1);
+        assertEquals("Nissan GT-R" + "\n", garage.carsInGarage());
+    }
+
+    @Test
+    public void testCarsInGarageMultipleCars() {
+        garage.addCar(car1);
+        garage.addCar(car2);
+        garage.addCar(car3);
+        assertEquals("Nissan GT-R" + "\n"
+                + "Audi R8" + "\n" +
+                "Toyota Corolla" + "\n", garage.carsInGarage());
+    }
+
+    @Test
     public void testAddCarOne() {
         garage.addCar(car1);
         assertTrue(garage.containsCar(car1));

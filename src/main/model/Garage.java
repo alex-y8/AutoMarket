@@ -17,7 +17,11 @@ public class Garage {
     // EFFECTS: returns the cars in the garage as a String in format "manufacturer, model"
     // foreach car in garagelist, return the car name as a String
     public String carsInGarage() {
-        return "";
+        String carList = "";
+        for (Car c : garage) {
+            carList = carList + c.getManufacturer() + " " + c.getModel() + "\n";
+        }
+        return carList;
     }
 
 
