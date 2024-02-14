@@ -4,6 +4,7 @@ import model.cars.Car;
 
 import java.util.ArrayList;
 
+// Car marketplace, where car listings are shown and up for sale
 public class Marketplace {
 
     private ArrayList<Car> carList;
@@ -41,14 +42,16 @@ public class Marketplace {
     }
 
     // MODIFIES: garage, account
-    // EFFECTS: buys the car from the marketplace, adding it to the garage and subtracting the car's
-    // price from the account's balance. If the account's balance is not sufficient, fail to buy car.
+    // EFFECTS: buys the car from the marketplace, adding it to the garage, subtracting the car's
+    // price from the account's , and return true. If the account's balance is not sufficient, fail to buy car
+    // and return false.
     // helper method: account.boughtCar
-    public void buyCar(Car c) {
-
+    public boolean buyCar(Car c) {
+        return false;
     }
 
     // EFFECTS: displays the garage as a list of cars
+    // helper: garage.carsInGarage
     public void viewGarage() {
 
     }
