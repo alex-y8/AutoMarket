@@ -17,13 +17,16 @@ public class Garage {
     // EFFECTS: returns the cars in the garage as a String in format "manufacturer model"
     // foreach car in garagelist, return the car name as a String
     public String carsInGarage() {
-        String carList = "";
-        for (Car c : garage) {
-            carList = carList + c.getManufacturer() + " " + c.getModel() + "\n";
+        String garageCars = "";
+        if (garage.isEmpty()) {
+            return "Your garage is empty. Visit the marketplace to buy cars!";
         }
-        return carList;
+        for (int i = 0; i < garage.size(); i++) {
+            garageCars += (i + 1) + ". " + garage.get(i).getYear() + " " + garage.get(i).getManufacturer()
+                    + " " + garage.get(i).getModel() + "\n";
+        }
+        return garageCars;
     }
-
 
     // MODIFIES: this
     // EFFECTS: adds a car to the garage, regardless if the car is already in the garage

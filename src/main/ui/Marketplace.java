@@ -7,6 +7,7 @@ import model.cars.Car;
 import model.cars.DriveType;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 // Car marketplace, where car listings are shown and up for sale
@@ -16,6 +17,7 @@ public class Marketplace {
     private ArrayList<Car> carListing;
     private Garage garage;
     private Car car1;
+    private Car car2;
     private Account account;
     private Scanner input;
 
@@ -49,8 +51,11 @@ public class Marketplace {
         account = new Account(0);
         garage = new Garage();
         car1 = new Car("Audi", "R8", 2016, 8.2,
-                7.6, 9.0, 9.2, DriveType.RWD, 242000);
+                7.6, 9.0, 9.2, DriveType.AWD, 242000);
+        car2 = new Car("Nissan", "GT-R", 2017, 7.9,
+                7.2, 9.6, 7.6, DriveType.AWD, 132000);
         carListing.add(car1);
+        carListing.add(car2);
         input = new Scanner(System.in);
     }
 
@@ -59,16 +64,16 @@ public class Marketplace {
     private void processCommand(String command) {
         switch (command) {
             case "m":
-                System.out.println("Now displaying the marketplace");
+                System.out.println("Now displaying the marketplace.");
                 viewCarListing();
                 processMarketCommands(input.next());
                 break;
             case "g":
-                System.out.println("Now displaying your garage");
+                System.out.println("Now displaying your garage.");
                 viewGarage();
                 break;
             case "a":
-                System.out.println("Now displaying your account information");
+                System.out.println("Now displaying your account information.");
                 displayAccountInfo();
                 processAccountCommands(input.next());
                 break;
@@ -83,14 +88,14 @@ public class Marketplace {
     private void processMarketCommands(String command) {
         switch (command) {
             case "b":
-//                Car carToBuy = null;
-//                System.out.println("Please type the manufacturer of the car you would like to purchase");
-//                String manufacturerToBuy = input.next();
-//                checkCarManufacturer(manufacturerToBuy);
-//                System.out.println("Please type the model of the car you would like to purchase");
-//                String modelToBuy = input.next();
-//                checkCarModel(modelToBuy);
-//                makePurchase(carToBuy);
+                System.out.println("Type the number of the car you would like to buy:");
+                try {
+                    processBuyCar(input.nextInt() - 1);
+                } catch (InputMismatchException e) {
+                    System.out.println("Please enter an integer.");
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Please choose from one of the cars listed.");
+                }
                 break;
             case "f":
                 String filter = "";
@@ -100,23 +105,26 @@ public class Marketplace {
                 filterCars(carListing, filter);
             case "s":
                 //helper method foreach loop through all the marketcars, displaying full stats
-            case "back":
-                processCommand(command);
-                break;
             default:
                 System.out.println("Invalid input. Please select one of the options.");
                 viewCarListing();
         }
     }
 
+    // EFFECTS: processes user commands in the buy car menu
+    private void processBuyCar(int carNum) {
+        Car carToBuy = carListing.get(carNum);
+        buyCar(carToBuy);
+    }
+
     // EFFECTS: processes user commands for the account menu
     private void processAccountCommands(String command) {
         switch (command) {
-            case "f":
+            case "i":
                 account.increaseBalance();
                 System.out.println("Your account balance has been increased to " + "$" + account.getBalance());
                 break;
-            case "g":
+            case "o":
                 System.out.println("Set your account balance to any positive number:");
                 try {
                     account.setBalance(input.nextInt());
@@ -146,22 +154,23 @@ public class Marketplace {
     // EFFECTS: displays the cars for sale on the market
     public void viewCarListing() {
         String carListings = "";
-        for (Car c : carListing) {
-            carListings = carListings + c.getManufacturer() + " " + c.getModel() + " $" + c.getPrice() + "\n";
+        for (int i = 0; i < carListing.size(); i++) {
+            carListings += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
+                    + " " + carListing.get(i).getModel() + " $" + carListing.get(i).getPrice() + "\n";
         }
         System.out.println(carListings);
         System.out.println("Type 'b' to choose a car to buy");
         System.out.println("Type 'f' to filter the cars");
         System.out.println("Type 's' to view car specifications");
-        System.out.println("Type 'back' to return to the previous menu");
+        //System.out.println("Type 'back' to return to the previous menu");
 
     }
 
     // EFFECTS: displays the options an Account can operate on
     public void displayAccountInfo() {
         System.out.println("Your current account balance is: " + account.getBalance());
-        System.out.println("Type 'f' to increase your account balance by $10000");
-        System.out.println("Type 'g' to set your account balance to any amount");
+        System.out.println("Type 'i' to increase your account balance by $10000");
+        System.out.println("Type 'o' to set your account balance to any amount");
     }
 
     // MODIFIES: carList
@@ -212,6 +221,8 @@ public class Marketplace {
 //
 //        }
 //    }
+
+
 
     // MODIFIES: garage
     // EFFECTS: buys the car from the marketplace, adding it to the garage, and subtracting the car's
