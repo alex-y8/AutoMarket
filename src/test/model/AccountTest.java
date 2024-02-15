@@ -1,12 +1,12 @@
 package model;
 
+import exceptions.IllegalAccountBalanceException;
 import model.cars.Car;
 import model.cars.DriveType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AccountTest {
     private Account account1;
@@ -45,14 +45,22 @@ public class AccountTest {
 
     @Test
     public void testBoughtCarOnce() {
-        account1.setBalance(250000);
+        try {
+            account1.setBalance(250000);
+        } catch (IllegalAccountBalanceException e) {
+            fail("Unexpected IllegalAccountBalanceException");
+        }
         account1.boughtCar(car1);
         assertEquals(250000-242000, account1.getBalance());
     }
 
     @Test
     public void testBoughtCarMultiple() {
-        account1.setBalance(1000000);
+        try {
+            account1.setBalance(1000000);
+        } catch (IllegalAccountBalanceException e) {
+            fail("Unexpected IllegalAccountBalanceException");
+        }
         account1.boughtCar(car1);
         assertEquals(1000000-242000, account1.getBalance());
         account1.boughtCar(car2);
@@ -66,6 +74,17 @@ public class AccountTest {
         account2.boughtCar(car2);
         assertFalse(account2.boughtCar(car2));
         assertEquals(10000, account2.getBalance());
+    }
+
+    @Test
+    public void testIllegalAccountBalanceException() {
+        try {
+            account1.setBalance(-1);
+            fail("IllegalAccountBalanceException was not thrown.");
+        } catch (IllegalAccountBalanceException e) {
+
+        }
+        assertEquals(0, account1.getBalance());
     }
 
     /* don't need to test getter and setter methods

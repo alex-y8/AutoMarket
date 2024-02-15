@@ -1,5 +1,6 @@
 package ui;
 
+import exceptions.IllegalAccountBalanceException;
 import model.Account;
 import model.Garage;
 import model.cars.Car;
@@ -9,10 +10,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 // Car marketplace, where car listings are shown and up for sale
-// Credits to CPSC210 TellerApp for Scanner implementation
+// Inspired by CPSC210 TellerApp Scanner implementation
 public class Marketplace {
 
-    private ArrayList<Car> carList;
+    private ArrayList<Car> carListing;
     private Garage garage;
     private Car car1;
     private Account account;
@@ -31,24 +32,25 @@ public class Marketplace {
             command = input.next();
             command = command.toLowerCase();
 
+
             if (command.equals("quit")) {
                 keepGoing = false;
             } else {
                 processCommand(command);
             }
         }
-        System.out.println("Thanks for shopping!");
+        System.out.println("Quitting...");
     }
 
     // MODIFIES: this
     // EFFECTS: initializes the marketplace
     private void initialize() {
-        carList = new ArrayList<>();
+        carListing = new ArrayList<>();
         account = new Account(0);
         garage = new Garage();
         car1 = new Car("Audi", "R8", 2016, 8.2,
                 7.6, 9.0, 9.2, DriveType.RWD, 242000);
-        carList.add(car1);
+        carListing.add(car1);
         input = new Scanner(System.in);
     }
 
@@ -59,17 +61,77 @@ public class Marketplace {
             case "m":
                 System.out.println("Now displaying the marketplace");
                 viewCarListing();
-                processMarketCommands(command);
+                processMarketCommands(input.next());
                 break;
             case "g":
                 System.out.println("Now displaying your garage");
                 viewGarage();
                 break;
-
+            case "a":
+                System.out.println("Now displaying your account information");
+                displayAccountInfo();
+                processAccountCommands(input.next());
+                break;
             default:
                 System.out.println("Invalid input. Please select one of the options.");
                 displayMenu();
         }
+    }
+
+
+    // EFFECTS: processes user commands for the marketplace menu
+    private void processMarketCommands(String command) {
+        switch (command) {
+            case "b":
+//                Car carToBuy = null;
+//                System.out.println("Please type the manufacturer of the car you would like to purchase");
+//                String manufacturerToBuy = input.next();
+//                checkCarManufacturer(manufacturerToBuy);
+//                System.out.println("Please type the model of the car you would like to purchase");
+//                String modelToBuy = input.next();
+//                checkCarModel(modelToBuy);
+//                makePurchase(carToBuy);
+                break;
+            case "f":
+                String filter = "";
+                System.out.println("Select a filter: \nManufacturer\nModel\nYear\n"
+                        + "Speed\nHandling\nAcceleration\nBraking\nDrive type\nPrice\n");
+                filter = input.nextLine();
+                filterCars(carListing, filter);
+            case "s":
+                //helper method foreach loop through all the marketcars, displaying full stats
+            case "back":
+                processCommand(command);
+                break;
+            default:
+                System.out.println("Invalid input. Please select one of the options.");
+                viewCarListing();
+        }
+    }
+
+    // EFFECTS: processes user commands for the account menu
+    private void processAccountCommands(String command) {
+        switch (command) {
+            case "f":
+                account.increaseBalance();
+                System.out.println("Your account balance has been increased to " + "$" + account.getBalance());
+                break;
+            case "g":
+                System.out.println("Set your account balance to any positive number:");
+                try {
+                    account.setBalance(input.nextInt());
+                } catch (IllegalAccountBalanceException e) {
+                    System.out.println("Cannot set balance to a negative number.");
+                    System.out.println("Your account balance is " + account.getBalance());
+                    break;
+                }
+                System.out.println("Your account balance has been set to " + "$" + account.getBalance());
+                break;
+            default:
+                System.out.println("Invalid input. Please select one of the options.");
+                displayAccountInfo();
+        }
+
     }
 
     // EFFECTS: displays menu of options to user
@@ -77,13 +139,14 @@ public class Marketplace {
         System.out.println("\nSelect from:");
         System.out.println("\tm -> view the marketplace");
         System.out.println("\tg -> view your garage");
+        System.out.println("\ta -> view your account information");
         System.out.println("\tquit -> exit the application");
     }
 
     // EFFECTS: displays the cars for sale on the market
     public void viewCarListing() {
         String carListings = "";
-        for (Car c : carList) {
+        for (Car c : carListing) {
             carListings = carListings + c.getManufacturer() + " " + c.getModel() + " $" + c.getPrice() + "\n";
         }
         System.out.println(carListings);
@@ -94,28 +157,11 @@ public class Marketplace {
 
     }
 
-    // EFFECTS: processes user commands for the marketplace menu
-    private void processMarketCommands(String command) {
-        switch (command) {
-            case "b":
-                System.out.println("Please type the name of the car you would like to purchase");
-
-                break;
-            case "f":
-                String filter = "";
-                System.out.println("Select a filter: \nManufacturer\n Model\n Year\n"
-                        + "Speed\n Handling\n Acceleration\n Braking\n Drivetype\n Price\n");
-                filter = input.next();
-                filterCars(carList, filter);
-            case "s":
-                //helper method foreach loop through all the marketcars, displaying full stats
-            case "back":
-                processCommand(command);
-                break;
-            default:
-                System.out.println("Invalid input. Please select one of the options.");
-                viewCarListing();
-        }
+    // EFFECTS: displays the options an Account can operate on
+    public void displayAccountInfo() {
+        System.out.println("Your current account balance is: " + account.getBalance());
+        System.out.println("Type 'f' to increase your account balance by $10000");
+        System.out.println("Type 'g' to set your account balance to any amount");
     }
 
     // MODIFIES: carList
@@ -141,6 +187,32 @@ public class Marketplace {
 
     }
 
+    public boolean checkCarManufacturer(String carToBuy) {
+        boolean sameCarManufacturer = false;
+        for (Car c : carListing) {
+            if (carToBuy.equals(c.getManufacturer())) {
+                sameCarManufacturer = true;
+            }
+        }
+        return sameCarManufacturer;
+    }
+
+    public boolean checkCarModel(String carToBuy) {
+        boolean sameCarModel = false;
+        for (Car c : carListing) {
+            if (carToBuy.equals(c.getModel())) {
+                sameCarModel = true;
+            }
+        }
+        return sameCarModel;
+    }
+
+//    public Car makePurchase(Car c) {
+//        if (checkCarManufacturer(c) && checkCarModel(c)) {
+//
+//        }
+//    }
+
     // MODIFIES: garage
     // EFFECTS: buys the car from the marketplace, adding it to the garage, and subtracting the car's
     // price from the account's.
@@ -151,6 +223,12 @@ public class Marketplace {
         } else {
             System.out.println("Insufficient funds. Please get more money before purchasing.");
         }
+
+    }
+
+    // MODIFIES: car
+    // EFFECTS: creates a new car and lists it for sale on the marketplace
+    public void createCarListing() {
 
     }
 

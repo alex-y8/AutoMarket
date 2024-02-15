@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.IllegalAccountBalanceException;
 import model.cars.Car;
 
 // Represents an account with a cash balance in dollars
@@ -40,10 +41,16 @@ public class Account {
         return balance;
     }
 
+    // REQUIRES: amount >= 0
     // MODIFIES: this
     // EFFECTS: sets the account's balance to the given amount
-    public void setBalance(int amount) {
-        this.balance = amount;
+    public void setBalance(int amount) throws IllegalAccountBalanceException {
+        if (amount >= 0) {
+            this.balance = amount;
+        } else {
+            throw new IllegalAccountBalanceException();
+        }
+
     }
 
 }

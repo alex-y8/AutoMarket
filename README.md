@@ -23,4 +23,5 @@ So, I have decided to create a car marketplace application with cars on sale, hi
 - As a user, I want to be able to buy cars from the marketplace
 - As a user, I want to be able to add a car to my garage
 - As a user, I want to be able to view a list of the cars that I own
+- As a user, I want to be able to add/sell my own cars on the market
 - As a user, I want to be able to save and load a file that contains cars in my garage
