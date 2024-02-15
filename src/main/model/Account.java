@@ -6,10 +6,10 @@ import model.cars.Car;
 // Represents an account with a cash balance in dollars
 public class Account {
 
-    private int balance;
+    private double balance;
 
     // Constructs a new account with 0 dollars
-    public Account(int initialBalance) {
+    public Account(double initialBalance) {
         if (initialBalance > 0) {
             balance = initialBalance;
         } else {
@@ -37,14 +37,14 @@ public class Account {
 
 
     // getters
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
     // REQUIRES: amount >= 0
     // MODIFIES: this
     // EFFECTS: sets the account's balance to the given amount
-    public void setBalance(int amount) throws IllegalAccountBalanceException {
+    public void setBalance(double amount) throws IllegalAccountBalanceException {
         if (amount >= 0) {
             this.balance = amount;
         } else {

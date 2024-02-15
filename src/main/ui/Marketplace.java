@@ -7,8 +7,8 @@ import model.cars.Car;
 import model.cars.DriveType;
 
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.text.DecimalFormat;
 
 // Car marketplace, where car listings are shown and up for sale
 // Inspired by CPSC210 TellerApp Scanner implementation
@@ -21,26 +21,62 @@ public class Marketplace {
     private Account account;
     private Scanner input;
 
+    DecimalFormat df = new DecimalFormat("#,###.##");
+
+    private boolean mainMenuDisplayed = true;
+    private boolean viewCarListingDisplayed;
+    private boolean viewAccountDisplayed;
+
     public Marketplace() {
         boolean keepGoing = true;
         String command = null;
 
         initialize();
         System.out.println("Welcome to AutoMarket!");
+        System.out.println("Enter any key to get started.");
         displayMenu();
-        //System.out.println("\nPress any key to view the car market, or type \"quit\" to quit the program.");
+
 
         while (keepGoing) {
             command = input.next();
             command = command.toLowerCase();
 
-
-            if (command.equals("quit")) {
+            if (command.equals("q")) {
                 keepGoing = false;
             } else {
                 processCommand(command);
             }
         }
+
+//            if (command.equals("quit")) {
+//                keepGoing = false;
+//            } else if (isMainMenuDisplayed()) {
+//                displayMenu();
+//                processCommand(input.next());
+//            } else if (isViewCarListingDisplayed()) {
+//                //processCommand("m");
+//                viewCarListing();
+//                processMarketCommands(input.next());
+//            } else if (isViewAccountDisplayed()) {
+//                //viewaccount
+//                processAccountCommands(input.next());
+//            }
+//        }
+
+//            if (command.equals("quit")) {
+//                keepGoing = false;
+//            } else if (isMainMenuDisplayed()) {
+//                displayMenu();
+//                processCommand(input.next());
+//            } else if (isViewCarListingDisplayed()) {
+//                processCommand("m");
+//                //viewCarListing();
+//                //processMarketCommands(input.next());
+//            } else if (isViewAccountDisplayed()) {
+//                //viewaccount
+//                processAccountCommands(input.next());
+//            }
+//        }
         System.out.println("Quitting...");
     }
 
@@ -91,25 +127,28 @@ public class Marketplace {
                 System.out.println("Type the number of the car you would like to buy:");
                 try {
                     processBuyCar(input.nextInt() - 1);
-                } catch (InputMismatchException e) {
-                    System.out.println("Please enter an integer.");
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Please choose from one of the cars listed.");
+                } catch (Exception e) {
+                    System.out.println("Please choose from one of the cars listed, or enter an integer.");
                 }
                 break;
             case "f":
-                String filter = "";
                 System.out.println("Select a filter: \nManufacturer\nModel\nYear\n"
                         + "Speed\nHandling\nAcceleration\nBraking\nDrive type\nPrice\n");
-                filter = input.nextLine();
-                filterCars(carListing, filter);
+                filterCars(carListing, input.next());
+            case "d":
+                viewDetailedStats();
+                break;
             case "s":
-                //helper method foreach loop through all the marketcars, displaying full stats
+                createCarListing();
+                break;
             default:
                 System.out.println("Invalid input. Please select one of the options.");
-                viewCarListing();
+                displayMenu();
         }
     }
+
+
+
 
     // EFFECTS: processes user commands in the buy car menu
     private void processBuyCar(int carNum) {
@@ -117,42 +156,59 @@ public class Marketplace {
         buyCar(carToBuy);
     }
 
+//    // EFFECTS: processes user commands in the buy car menu and catches user input exceptions
+//    private void processBuyCarCatchExceptions(int carNum) {
+//        try {
+//            processBuyCar(carNum);
+//        } catch (InputMismatchException e) {
+//            System.out.println("Please enter an integer.");
+//        } catch (IndexOutOfBoundsException e) {
+//            System.out.println("Please choose from one of the cars listed.");
+//        }
+//    }
+
     // EFFECTS: processes user commands for the account menu
     private void processAccountCommands(String command) {
         switch (command) {
             case "i":
                 account.increaseBalance();
-                System.out.println("Your account balance has been increased to " + "$" + account.getBalance());
+                System.out.println("Your account balance has been increased to " + "$" + formatAccountBalance(df));
                 break;
             case "o":
                 System.out.println("Set your account balance to any positive number:");
                 try {
-                    account.setBalance(input.nextInt());
+                    account.setBalance(input.nextDouble());
                 } catch (IllegalAccountBalanceException e) {
                     System.out.println("Cannot set balance to a negative number.");
-                    System.out.println("Your account balance is " + account.getBalance());
+                    System.out.println("Your account balance is $" + formatAccountBalance(df));
                     break;
                 }
-                System.out.println("Your account balance has been set to " + "$" + account.getBalance());
+                System.out.println("Your account balance has been set to " + "$" + formatAccountBalance(df));
+                displayMenu();
                 break;
             default:
                 System.out.println("Invalid input. Please select one of the options.");
-                displayAccountInfo();
+                displayMenu();
         }
 
     }
 
-    // EFFECTS: displays menu of options to user
+    // EFFECTS: displays menu of options to user, returns true if currently displayed
     private void displayMenu() {
+        viewAccountDisplayed = false;
+        viewCarListingDisplayed = false;
         System.out.println("\nSelect from:");
         System.out.println("\tm -> view the marketplace");
         System.out.println("\tg -> view your garage");
         System.out.println("\ta -> view your account information");
         System.out.println("\tquit -> exit the application");
+        mainMenuDisplayed = true;
     }
 
     // EFFECTS: displays the cars for sale on the market
     public void viewCarListing() {
+        viewAccountDisplayed = false;
+        mainMenuDisplayed = false;
         String carListings = "";
         for (int i = 0; i < carListing.size(); i++) {
             carListings += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
@@ -161,16 +217,46 @@ public class Marketplace {
         System.out.println(carListings);
         System.out.println("Type 'b' to choose a car to buy");
         System.out.println("Type 'f' to filter the cars");
-        System.out.println("Type 's' to view car specifications");
+        System.out.println("Type 'd' to view car specifications");
+        System.out.println("Type 's' to sell a car");
         //System.out.println("Type 'back' to return to the previous menu");
+        viewCarListingDisplayed = true;
+    }
 
+    public boolean isViewCarListingDisplayed() {
+        return viewCarListingDisplayed;
+    }
+
+    public boolean isViewAccountDisplayed() {
+        return viewAccountDisplayed;
+    }
+
+    public boolean isMainMenuDisplayed() {
+        return mainMenuDisplayed;
+    }
+
+    // EFFECTS: displays all the car's detailed specifications
+    private void viewDetailedStats() {
+        String detailedCars = "";
+        for (int i = 0; i < carListing.size(); i++) {
+            detailedCars += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
+                    + " " + carListing.get(i).getModel() + " $" + carListing.get(i).getPrice() + "\n"
+                + "Speed: " + carListing.get(i).getSpeed() + "\n" + "Handling: " + carListing.get(i).getHandling()
+                    + "\n" + "Acceleration: " + carListing.get(i).getAcceleration() + "\n" + "Braking: "
+                    + carListing.get(i).getBraking() + "\n" + "Drive type: " + carListing.get(i).getDriveType() + "\n"
+                + "\n";
+        }
+        System.out.println(detailedCars);
     }
 
     // EFFECTS: displays the options an Account can operate on
     public void displayAccountInfo() {
-        System.out.println("Your current account balance is: " + account.getBalance());
-        System.out.println("Type 'i' to increase your account balance by $10000");
+        viewCarListingDisplayed = false;
+        mainMenuDisplayed = false;
+        System.out.println("Your current account balance is: $" + formatAccountBalance(df));
+        System.out.println("Type 'i' to increase your account balance by $10,000");
         System.out.println("Type 'o' to set your account balance to any amount");
+        viewAccountDisplayed = true;
     }
 
     // MODIFIES: carList
@@ -196,34 +282,6 @@ public class Marketplace {
 
     }
 
-    public boolean checkCarManufacturer(String carToBuy) {
-        boolean sameCarManufacturer = false;
-        for (Car c : carListing) {
-            if (carToBuy.equals(c.getManufacturer())) {
-                sameCarManufacturer = true;
-            }
-        }
-        return sameCarManufacturer;
-    }
-
-    public boolean checkCarModel(String carToBuy) {
-        boolean sameCarModel = false;
-        for (Car c : carListing) {
-            if (carToBuy.equals(c.getModel())) {
-                sameCarModel = true;
-            }
-        }
-        return sameCarModel;
-    }
-
-//    public Car makePurchase(Car c) {
-//        if (checkCarManufacturer(c) && checkCarModel(c)) {
-//
-//        }
-//    }
-
-
-
     // MODIFIES: garage
     // EFFECTS: buys the car from the marketplace, adding it to the garage, and subtracting the car's
     // price from the account's.
@@ -231,8 +289,11 @@ public class Marketplace {
         if (account.boughtCar(c)) {
             garage.addCar(c);
             System.out.println("Purchase complete! Enjoy your new car!");
+            displayMenu();
         } else {
             System.out.println("Insufficient funds. Please get more money before purchasing.");
+            System.out.println("Your current account balance is: $" + formatAccountBalance(df));
+            displayMenu();
         }
 
     }
@@ -248,5 +309,8 @@ public class Marketplace {
         System.out.println(garage.carsInGarage());
     }
 
+    public String formatAccountBalance(DecimalFormat df) {
+        return df.format(account.getBalance());
+    }
 
 }
