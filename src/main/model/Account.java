@@ -8,21 +8,30 @@ public class Account {
     private int balance;
 
     // Constructs a new account with 0 dollars
-    public Account() {
-        this.balance = 0;
+    public Account(int initialBalance) {
+        if (initialBalance >= 0) {
+            balance = initialBalance;
+        } else {
+            balance = 0;
+        }
     }
 
     // REQUIRES: balance >= 0
     // MODIFIES: this
     // EFFECTS: increases the current account balance by 10000
     public void increaseBalance() {
-
+        balance += 10000;
     }
 
     // MODIFIES: this
-    // EFFECTS: subtracts the car's price from the account's balance
-    public void boughtCar(Car c) {
-
+    // EFFECTS: if balance is enough to buy car, subtracts the car's price from the account's balance and return true
+    // return false otherwise
+    public boolean boughtCar(Car c) {
+        if (balance >= c.getPrice()) {
+            balance -= c.getPrice();
+            return true;
+        }
+        return false;
     }
 
 
@@ -34,7 +43,7 @@ public class Account {
     // MODIFIES: this
     // EFFECTS: sets the account's balance to the given amount
     public void setBalance(int amount) {
-
+        this.balance = amount;
     }
 
 }

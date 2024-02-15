@@ -15,7 +15,7 @@ public class AccountTest {
 
     @BeforeEach
     public void runBefore() {
-        account = new Account();
+        account = new Account(0);
         car1 = new Car("Audi", "R8", 2016, 8.2,
                 7.6, 9.0, 9.2, DriveType.RWD, 242000);
         car2 = new Car("Audi", "R8", 2016, 8.2,
@@ -55,7 +55,7 @@ public class AccountTest {
         account.boughtCar(car2);
         assertEquals(758000-39120, account.getBalance());
         account.boughtCar(car3);
-        assertEquals(718790-584923, account.getBalance());
+        assertEquals(718880-584923, account.getBalance());
     }
 
     /* don't need to test getter and setter methods

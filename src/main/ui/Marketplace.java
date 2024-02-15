@@ -1,5 +1,6 @@
 package ui;
 
+import model.Account;
 import model.Garage;
 import model.cars.Car;
 import model.cars.DriveType;
@@ -14,8 +15,8 @@ public class Marketplace {
     private ArrayList<Car> carList;
     private Garage garage;
     private Car car1;
+    private Account account;
     private Scanner input;
-
 
     public Marketplace() {
         boolean keepGoing = true;
@@ -43,6 +44,7 @@ public class Marketplace {
     // EFFECTS: initializes the marketplace
     private void initialize() {
         carList = new ArrayList<>();
+        account = new Account(0);
         garage = new Garage();
         car1 = new Car("Audi", "R8", 2016, 8.2,
                 7.6, 9.0, 9.2, DriveType.RWD, 242000);
@@ -139,13 +141,17 @@ public class Marketplace {
 
     }
 
-    // MODIFIES: garage, account
-    // EFFECTS: buys the car from the marketplace, adding it to the garage, subtracting the car's
-    // price from the account's , and return true. If the account's balance is not sufficient, fail to buy car
-    // and return false.
-    // helper method: account.boughtCar
-    public boolean buyCar(Car c) {
-        return false;
+    // MODIFIES: garage
+    // EFFECTS: buys the car from the marketplace, adding it to the garage, and subtracting the car's
+    // price from the account's.
+    public void buyCar(Car c) {
+        if (account.boughtCar(c)) {
+            garage.addCar(c);
+            System.out.println("Purchase complete! Enjoy your new car!");
+        } else {
+            System.out.println("Insufficient funds. Please get more money before purchasing.");
+        }
+
     }
 
     // EFFECTS: displays the garage as a list of cars
