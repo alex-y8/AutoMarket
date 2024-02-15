@@ -9,7 +9,7 @@ public class Account {
 
     // Constructs a new account with 0 dollars
     public Account(int initialBalance) {
-        if (initialBalance >= 0) {
+        if (initialBalance > 0) {
             balance = initialBalance;
         } else {
             balance = 0;

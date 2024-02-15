@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CarTest {
     private Car car1;
     private Car car2;
+    private Car car3;
 
     @BeforeEach
     public void runBefore() {
@@ -17,6 +18,8 @@ public class CarTest {
                 7.6, 9.0, 9.2, DriveType.RWD, 242000);
         car2 = new Car("Nissan", "GT-R", 2017, 7.9,
                 7.2, 9.6, 7.6, DriveType.AWD, 132000);
+        car3 = new Car("Nissan", "GT-R", 2017, 7.9,
+                7.2, 9.6, 7.6, DriveType.FWD, 132000);
     }
 
     @Test
@@ -32,5 +35,6 @@ public class CarTest {
         assertEquals(242000, car1.getPrice());
 
         assertEquals(DriveType.AWD, car2.getDriveType());
+        assertEquals(DriveType.FWD, car3.getDriveType());
     }
 }
