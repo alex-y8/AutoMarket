@@ -17,20 +17,14 @@ public class Marketplace {
 
     private ArrayList<Car> carListing;
     private Garage garage;
-    private Car car1;
-    private Car car2;
     private Account account;
     private Scanner input;
 
     DecimalFormat df = new DecimalFormat("#,###.##");
 
-    private boolean mainMenuDisplayed = true;
-    private boolean viewCarListingDisplayed;
-    private boolean viewAccountDisplayed;
-
     public Marketplace() {
         boolean keepGoing = true;
-        String command = null;
+        String command;
 
         initialize();
         System.out.println("Welcome to AutoMarket!");
@@ -57,13 +51,55 @@ public class Marketplace {
         carListing = new ArrayList<>();
         account = new Account(0);
         garage = new Garage();
-        car1 = new Car("Audi", "R8", 2016, 8.2,
+        initializeCars1();
+        initializeCars2();
+        input = new Scanner(System.in);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes the cars being sold on the marketplace
+    private void initializeCars1() {
+        Car car1 = new Car("Audi", "R8", 2016, 8.2,
                 7.6, 9.0, 9.2, DriveType.AWD, 242000);
-        car2 = new Car("Nissan", "GT-R", 2017, 7.9,
+        Car car2 = new Car("Nissan", "GT-R", 2017, 7.9,
                 7.2, 9.6, 7.6, DriveType.AWD, 132000);
+        Car car3 = new Car("BMW", "M5", 1988, 6.5,
+                5.3, 6.0, 5.3, DriveType.RWD, 54000);
+        Car car4 = new Car("Bugatti", "Veyron", 2011, 9.9,
+                8.0, 9.9, 8.4, DriveType.AWD, 2200000);
+        Car car5 = new Car("Ferrari", "LaFerrari", 2013, 9.5,
+                9.8,8.2,10, DriveType.RWD, 1500000);
+        Car car6 = new Car("Lamborghini", "Aventador", 2012, 8.7,
+                7.8,9.8,8.3,DriveType.AWD, 310000);
+        Car car7 = new Car("Mazda", "MX-5 Miata", 1994, 5.5,
+                4.9, 5.2, 4.3, DriveType.RWD, 25000);
         carListing.add(car1);
         carListing.add(car2);
-        input = new Scanner(System.in);
+        carListing.add(car3);
+        carListing.add(car4);
+        carListing.add(car5);
+        carListing.add(car6);
+        carListing.add(car7);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes the cars being sold on the marketplace
+    private void initializeCars2() {
+        Car car8 = new Car("Porsche", "911 GT3 RS", 2019, 8.3,
+                9.7,8.3,10, DriveType.RWD, 255000);
+        Car car9 = new Car("Toyota", "Trueno AE86", 1985, 5.4,
+                4.7,5.6,4.5, DriveType.RWD, 22000);
+        Car car10 = new Car("Honda", "Civic Type R", 2018, 7.4,
+                6.7, 6.0, 6.8, DriveType.FWD, 59000);
+        Car car11 = new Car("Dodge", "Challenger", 2015, 8.1,
+                6.1, 5.9, 6.5, DriveType.RWD, 75000);
+        Car car12 = new Car("Chevrolet", "Stingray", 2020, 7.5,
+                7.6, 7.7, 7.7, DriveType.RWD, 87000);
+        carListing.add(car8);
+        carListing.add(car9);
+        carListing.add(car10);
+        carListing.add(car11);
+        carListing.add(car12);
     }
 
     // MODIFIES: this
@@ -103,8 +139,8 @@ public class Marketplace {
                 }
                 break;
             case "f":
-                System.out.println("Select a filter: \nManufacturer\nModel\nYear\n"
-                        + "Speed\nHandling\nAcceleration\nBraking\nDrive type\nPrice\n");
+//                System.out.println("Select a filter: \nManufacturer\nModel\nYear\n"
+//                        + "Speed\nHandling\nAcceleration\nBraking\nDrive type\nPrice\n");
                 filterCars(carListing, input.next());
             case "d":
                 viewDetailedStats();
@@ -154,24 +190,19 @@ public class Marketplace {
 
     // EFFECTS: displays menu of options to user, returns true if currently displayed
     private void displayMenu() {
-        viewAccountDisplayed = false;
-        viewCarListingDisplayed = false;
         System.out.println("\nSelect from:");
         System.out.println("\tm -> view the marketplace");
         System.out.println("\tg -> view your garage");
         System.out.println("\ta -> view your account information");
         System.out.println("\tquit -> exit the application");
-        mainMenuDisplayed = true;
     }
 
     // EFFECTS: displays the cars for sale on the market
     public void viewCarListing() {
-        viewAccountDisplayed = false;
-        mainMenuDisplayed = false;
         String carListings = "";
         for (int i = 0; i < carListing.size(); i++) {
             carListings += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
-                    + " " + carListing.get(i).getModel() + " $" + carListing.get(i).getPrice() + "\n";
+                    + " " + carListing.get(i).getModel() + " $" + df.format(carListing.get(i).getPrice()) + "\n";
         }
         System.out.println(carListings);
         System.out.println("Type 'b' to choose a car to buy");
@@ -179,43 +210,29 @@ public class Marketplace {
         System.out.println("Type 'd' to view car specifications");
         System.out.println("Type 's' to list a car for sale on the marketplace");
         //System.out.println("Type 'back' to return to the previous menu");
-        viewCarListingDisplayed = true;
-    }
-
-    public boolean isViewCarListingDisplayed() {
-        return viewCarListingDisplayed;
-    }
-
-    public boolean isViewAccountDisplayed() {
-        return viewAccountDisplayed;
-    }
-
-    public boolean isMainMenuDisplayed() {
-        return mainMenuDisplayed;
     }
 
     // EFFECTS: displays all the car's detailed specifications
     private void viewDetailedStats() {
+        System.out.println("Now displaying detailed car information.");
         String detailedCars = "";
         for (int i = 0; i < carListing.size(); i++) {
-            detailedCars += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
-                    + " " + carListing.get(i).getModel() + " $" + carListing.get(i).getPrice() + "\n"
+            detailedCars += "\n" + (i + 1) + ". " + carListing.get(i).getYear() + " "
+                    + carListing.get(i).getManufacturer() + " " + carListing.get(i).getModel() + " $"
+                    + df.format(carListing.get(i).getPrice()) + "\n"
                 + "Speed: " + carListing.get(i).getSpeed() + "\n" + "Handling: " + carListing.get(i).getHandling()
                     + "\n" + "Acceleration: " + carListing.get(i).getAcceleration() + "\n" + "Braking: "
-                    + carListing.get(i).getBraking() + "\n" + "Drive type: " + carListing.get(i).getDriveType() + "\n"
-                + "\n";
+                    + carListing.get(i).getBraking() + "\n" + "Drive type: " + carListing.get(i).getDriveType() + "\n";
         }
         System.out.println(detailedCars);
+        System.out.println("Enter any key to return to the main menu.");
     }
 
     // EFFECTS: displays the options an Account can operate on
     public void displayAccountInfo() {
-        viewCarListingDisplayed = false;
-        mainMenuDisplayed = false;
         System.out.println("Your current account balance is: $" + formatAccountBalance(df));
         System.out.println("Type 'i' to increase your account balance by $10,000");
         System.out.println("Type 'o' to set your account balance to any amount");
-        viewAccountDisplayed = true;
     }
 
     // MODIFIES: carList
