@@ -3,7 +3,7 @@ package model;
 import exceptions.IllegalAccountBalanceException;
 import model.cars.Car;
 
-// Represents an account with a cash balance in dollars
+// Represents an account with a cash balance in dollars ($)
 public class Account {
 
     private double balance;
