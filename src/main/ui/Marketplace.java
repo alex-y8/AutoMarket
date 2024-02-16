@@ -8,6 +8,7 @@ import model.cars.DriveType;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.Scanner;
 import java.text.DecimalFormat;
 
@@ -139,9 +140,9 @@ public class Marketplace {
                 }
                 break;
             case "f":
-//                System.out.println("Select a filter: \nManufacturer\nModel\nYear\n"
-//                        + "Speed\nHandling\nAcceleration\nBraking\nDrive type\nPrice\n");
-                filterCars(carListing, input.next());
+                System.out.println("Filter by: \nYear\nSpeed\nHandling\nAcceleration\nBraking\nDrivetype\nPrice\n");
+                filter(carListing, input.next());
+                break;
             case "d":
                 viewDetailedStats();
                 break;
@@ -153,9 +154,6 @@ public class Marketplace {
                 displayMenu();
         }
     }
-
-
-
 
     // EFFECTS: processes user commands in the buy car menu
     private void processBuyCar(int carNum) {
@@ -235,13 +233,78 @@ public class Marketplace {
         System.out.println("Type 'o' to set your account balance to any amount");
     }
 
+    // EFFECTS: checks for correct input, then different methods handle the type of variable based on the input string
+    public void filter(ArrayList<Car> carList, String filter) {
+        while (!filter.equals("year") && !filter.equals("speed") && !filter.equals("handling")
+                && !filter.equals("acceleration") && !filter.equals("braking") && !filter.equals("drivetype")
+                && !filter.equals("price")) {
+            System.out.println("Invalid filter. Please select from the options above.");
+            input.nextLine();
+            filter = input.next().toLowerCase();
+        }
+        if (filter.equals("year") || filter.equals("price")) {
+            filterCarsInts(carList, filter);
+        }
+        if (filter.equals("speed") || filter.equals("handling") || filter.equals("acceleration")
+                || filter.equals("braking")) {
+            filterCarsDoubles(carList, filter);
+        }
+    }
+
     // MODIFIES: carList
-    // EFFECTS: filters the car market listings according to the selected filter
+    // EFFECTS: filters the car market listings according to the selected filters with type int
     //
     // foreach car in carList, remove cars that don't satisfy predicate
     // if filter is not selected anymore, go to unfilter cars
-    public void filterCars(ArrayList<Car> carList, String filter) {
+    public void filterCarsInts(ArrayList<Car> carList, String filter) {
+        carList = new ArrayList<>();
+        int value = 0;
+        System.out.println("Select a comparison operator (> or <):");
+        String operator = input.next();
+        while (!operator.equals(">") && !operator.equals("<")) {
+            System.out.println("Invalid operator. Please select from the options above.");
+            input.nextLine();
+            operator = input.next();
+        }
+        System.out.println("Select a value to compare: ");
+        value = input.nextInt();
+        System.out.println("You selected: Filter by " + filter + " " + operator + " " + value);
+        if (filter.equals("year")) {
+            value = getCarListingInfo().getYear();
+        } else {
+            value = getCarListingInfo().getPrice();
+        }
+        if (operator.equals(">")) {
 
+        }
+//        for (Car c : carListing) {
+//            if (c.getYear() operator )
+//            carList.
+//        }
+    }
+
+    // MODIFIES: carList
+    // EFFECTS: filters the car market listings according to the selected filters with type double
+    //
+    // foreach car in carList, remove cars that don't satisfy predicate
+    // if filter is not selected anymore, go to unfilter cars
+    public void filterCarsDoubles(ArrayList<Car> carList, String filter) {
+        double value = 0;
+        System.out.println("Select a comparison operator (> or <):");
+        String operator = input.next();
+        while (!operator.equals(">") && !operator.equals("<")) {
+            System.out.println("Invalid operator. Please select from the options above.");
+            input.nextLine();
+            operator = input.next();
+        }
+        System.out.println("Select a value to filter with: ");
+        value = input.nextDouble();
+
+        System.out.println("How would you like to filter? (i.e. " + filter + " > 5)");
+
+        for (Car c : carList) {
+
+        }
     }
 
     // MODIFIES: carList
