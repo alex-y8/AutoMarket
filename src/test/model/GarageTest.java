@@ -32,9 +32,14 @@ public class GarageTest {
     }
 
     @Test
+    public void testCarsInGarageEmpty() {
+        assertEquals("Your garage is empty. Visit the marketplace to buy cars!", garage.carsInGarage());
+    }
+
+    @Test
     public void testCarsInGarageOneCar() {
         garage.addCar(car1);
-        assertEquals("Nissan GT-R" + "\n", garage.carsInGarage());
+        assertEquals("1. 2016 Nissan GT-R" + "\n", garage.carsInGarage());
     }
 
     @Test
@@ -42,9 +47,9 @@ public class GarageTest {
         garage.addCar(car1);
         garage.addCar(car2);
         garage.addCar(car3);
-        assertEquals("Nissan GT-R" + "\n"
-                + "Audi R8" + "\n" +
-                "Toyota Corolla" + "\n", garage.carsInGarage());
+        assertEquals("1. 2016 Nissan GT-R" + "\n"
+                + "2. 2016 Audi R8" + "\n" +
+                "3. 2016 Toyota Corolla" + "\n", garage.carsInGarage());
     }
 
     @Test
