@@ -7,6 +7,7 @@ import model.cars.Car;
 import model.cars.DriveType;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.text.DecimalFormat;
 
@@ -41,42 +42,12 @@ public class Marketplace {
             command = input.next();
             command = command.toLowerCase();
 
-            if (command.equals("q")) {
+            if (command.equals("quit")) {
                 keepGoing = false;
             } else {
                 processCommand(command);
             }
         }
-
-//            if (command.equals("quit")) {
-//                keepGoing = false;
-//            } else if (isMainMenuDisplayed()) {
-//                displayMenu();
-//                processCommand(input.next());
-//            } else if (isViewCarListingDisplayed()) {
-//                //processCommand("m");
-//                viewCarListing();
-//                processMarketCommands(input.next());
-//            } else if (isViewAccountDisplayed()) {
-//                //viewaccount
-//                processAccountCommands(input.next());
-//            }
-//        }
-
-//            if (command.equals("quit")) {
-//                keepGoing = false;
-//            } else if (isMainMenuDisplayed()) {
-//                displayMenu();
-//                processCommand(input.next());
-//            } else if (isViewCarListingDisplayed()) {
-//                processCommand("m");
-//                //viewCarListing();
-//                //processMarketCommands(input.next());
-//            } else if (isViewAccountDisplayed()) {
-//                //viewaccount
-//                processAccountCommands(input.next());
-//            }
-//        }
         System.out.println("Quitting...");
     }
 
@@ -156,17 +127,6 @@ public class Marketplace {
         buyCar(carToBuy);
     }
 
-//    // EFFECTS: processes user commands in the buy car menu and catches user input exceptions
-//    private void processBuyCarCatchExceptions(int carNum) {
-//        try {
-//            processBuyCar(carNum);
-//        } catch (InputMismatchException e) {
-//            System.out.println("Please enter an integer.");
-//        } catch (IndexOutOfBoundsException e) {
-//            System.out.println("Please choose from one of the cars listed.");
-//        }
-//    }
-
     // EFFECTS: processes user commands for the account menu
     private void processAccountCommands(String command) {
         switch (command) {
@@ -190,7 +150,6 @@ public class Marketplace {
                 System.out.println("Invalid input. Please select one of the options.");
                 displayMenu();
         }
-
     }
 
     // EFFECTS: displays menu of options to user, returns true if currently displayed
@@ -218,7 +177,7 @@ public class Marketplace {
         System.out.println("Type 'b' to choose a car to buy");
         System.out.println("Type 'f' to filter the cars");
         System.out.println("Type 'd' to view car specifications");
-        System.out.println("Type 's' to sell a car");
+        System.out.println("Type 's' to list a car for sale on the marketplace");
         //System.out.println("Type 'back' to return to the previous menu");
         viewCarListingDisplayed = true;
     }
@@ -277,11 +236,6 @@ public class Marketplace {
 
     }
 
-    // EFFECTS: displays the stats and specifications of the selected car
-    public void viewCarStats(Car c) {
-
-    }
-
     // MODIFIES: garage
     // EFFECTS: buys the car from the marketplace, adding it to the garage, and subtracting the car's
     // price from the account's.
@@ -298,17 +252,96 @@ public class Marketplace {
 
     }
 
-    // MODIFIES: car
+    // MODIFIES: carListing
     // EFFECTS: creates a new car and lists it for sale on the marketplace
     public void createCarListing() {
-
+        Car carToList = getCarListingInfo();
+        carListing.add(carToList);
+        System.out.println("Car successfully listed on the marketplace!");
+        displayMenu();
     }
+
+    // EFFECTS: creates a new car with the given specifications
+    public Car getCarListingInfo() {
+        int year = carInfoInts("year");
+        String manufacturer = carInfoStrings("manufacturer");
+        String model = carInfoStrings("model");
+        double speed = carInfoDoubles("speed");
+        double handling = carInfoDoubles("handling");
+        double acceleration = carInfoDoubles("acceleration");
+        double braking = carInfoDoubles("braking");
+        int price = carInfoInts("price");
+        DriveType driveType = carInfoDriveType();
+        return new Car(manufacturer, model, year, speed, handling, acceleration, braking, driveType, price);
+    }
+
+    // EFFECTS: gets the user input for the car fields that are Ints
+    public int carInfoInts(String intField) {
+        System.out.println("Enter the " + intField + " of the car: ");
+        while (true) {
+            try {
+                int value = input.nextInt();
+                input.nextLine();
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter an integer.");
+                input.nextLine();
+            }
+        }
+    }
+
+    // EFFECTS: gets the user input for the car fields that are doubles
+    public double carInfoDoubles(String doubleField) {
+        System.out.println("Enter the " + doubleField + " of the car: ");
+        while (true) {
+            try {
+                double value = input.nextDouble();
+                input.nextLine();
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a number.");
+                input.nextLine();
+            }
+        }
+    }
+
+    // EFFECTS: gets the user input for the car fields that are Strings
+    public String carInfoStrings(String stringField) {
+        System.out.println("Enter the " + stringField + " of the car: ");
+        while (true) {
+            try {
+                String value = input.next();
+                input.nextLine();
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a string.");
+                input.nextLine();
+            }
+        }
+    }
+
+    // EFFECTS: gets the user input for the car fields that are DriveTypes
+    public DriveType carInfoDriveType() {
+        System.out.println("Enter the drive type of the car (AWD, FWD, or RWD): ");
+        while (true) {
+            try {
+                DriveType driveType = DriveType.valueOf(input.next().toUpperCase());
+                input.nextLine();
+                return driveType;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Please enter one of the drive types listed above.");
+                input.nextLine();
+            }
+        }
+    }
+
 
     // EFFECTS: displays the garage as a list of cars
     public void viewGarage() {
         System.out.println(garage.carsInGarage());
     }
 
+    // EFFECTS: formats the account balance to return in a comprehensible format (i.e. 1,000,000)
     public String formatAccountBalance(DecimalFormat df) {
         return df.format(account.getBalance());
     }
