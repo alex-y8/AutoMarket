@@ -15,7 +15,6 @@ public class Garage {
     }
 
     // EFFECTS: returns the cars in the garage as a String in format "manufacturer model"
-    // foreach car in garagelist, return the car name as a String
     public String carsInGarage() {
         String garageCars = "";
         if (garage.isEmpty()) {

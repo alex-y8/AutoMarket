@@ -17,7 +17,6 @@ public class Account {
         }
     }
 
-    // REQUIRES: balance >= 0
     // MODIFIES: this
     // EFFECTS: increases the current account balance by 10000
     public void increaseBalance() {
@@ -36,12 +35,11 @@ public class Account {
     }
 
 
-    // getters
+    // getter
     public double getBalance() {
         return balance;
     }
 
-    // REQUIRES: amount >= 0
     // MODIFIES: this
     // EFFECTS: sets the account's balance to the given amount
     public void setBalance(double amount) throws IllegalAccountBalanceException {

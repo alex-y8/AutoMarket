@@ -13,7 +13,7 @@ public class Car {
     private DriveType driveType;
     private int price;
 
-    // constructs a new car with the given stats and specifications
+    // EFFECTS: constructs a new car with the given stats and specifications
     public Car(String manufacturer, String model, int year, double speed, double handling,
                double acceleration, double braking, DriveType driveType, int price) {
 
