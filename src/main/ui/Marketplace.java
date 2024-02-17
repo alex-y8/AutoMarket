@@ -8,7 +8,6 @@ import model.cars.DriveType;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.Locale;
 import java.util.Scanner;
 import java.text.DecimalFormat;
 
@@ -17,11 +16,13 @@ import java.text.DecimalFormat;
 public class Marketplace {
 
     private ArrayList<Car> carListing;
+    private ArrayList<Car> filteredCarListing;
     private Garage garage;
     private Account account;
     private Scanner input;
 
-    DecimalFormat df = new DecimalFormat("#,###.##");
+    private final DecimalFormat df = new DecimalFormat("#,###.##");
+    private boolean isFiltered = false;
 
     public Marketplace() {
         boolean keepGoing = true;
@@ -69,9 +70,9 @@ public class Marketplace {
         Car car4 = new Car("Bugatti", "Veyron", 2011, 9.9,
                 8.0, 9.9, 8.4, DriveType.AWD, 2200000);
         Car car5 = new Car("Ferrari", "LaFerrari", 2013, 9.5,
-                9.8,8.2,10, DriveType.RWD, 1500000);
+                9.8, 8.2, 10, DriveType.RWD, 1500000);
         Car car6 = new Car("Lamborghini", "Aventador", 2012, 8.7,
-                7.8,9.8,8.3,DriveType.AWD, 310000);
+                7.8, 9.8, 8.3, DriveType.AWD, 310000);
         Car car7 = new Car("Mazda", "MX-5 Miata", 1994, 5.5,
                 4.9, 5.2, 4.3, DriveType.RWD, 25000);
         carListing.add(car1);
@@ -87,9 +88,9 @@ public class Marketplace {
     // EFFECTS: initializes the cars being sold on the marketplace
     private void initializeCars2() {
         Car car8 = new Car("Porsche", "911 GT3 RS", 2019, 8.3,
-                9.7,8.3,10, DriveType.RWD, 255000);
+                9.7, 8.3, 10, DriveType.RWD, 255000);
         Car car9 = new Car("Toyota", "Trueno AE86", 1985, 5.4,
-                4.7,5.6,4.5, DriveType.RWD, 22000);
+                4.7, 5.6, 4.5, DriveType.RWD, 22000);
         Car car10 = new Car("Honda", "Civic Type R", 2018, 7.4,
                 6.7, 6.0, 6.8, DriveType.FWD, 59000);
         Car car11 = new Car("Dodge", "Challenger", 2015, 8.1,
@@ -106,61 +107,89 @@ public class Marketplace {
     // MODIFIES: this
     // EFFECTS: processes user command for the main menu
     private void processCommand(String command) {
-        switch (command) {
-            case "m":
-                System.out.println("Now displaying the marketplace.");
+        if (command.equals("m")) {
+            if (!isFiltered) {
+                System.out.println("Now displaying the marketplace.\n");
                 viewCarListing();
-                processMarketCommands(input.next());
-                break;
-            case "g":
-                System.out.println("Now displaying your garage.");
-                viewGarage();
-                break;
-            case "a":
-                System.out.println("Now displaying your account information.");
-                displayAccountInfo();
-                processAccountCommands(input.next());
-                break;
-            default:
-                System.out.println("Invalid input. Please select one of the options.");
-                displayMenu();
+                processMarketCommandsUnfiltered(input.next());
+            } else {
+                System.out.println("Now displaying the filtered marketplace.\n");
+                viewCarListing();
+                processMarketCommandsFiltered(input.next());
+            }
+        } else if (command.equals("g")) {
+            System.out.println("Now displaying your garage.\n");
+            viewGarage();
+        } else if (command.equals("a")) {
+            System.out.println("Now displaying your account information.\n");
+            displayAccountInfo();
+            processAccountCommands(input.next());
+        } else {
+            System.out.println("Invalid input. Please select one of the options.");
+            displayMenu();
         }
     }
 
-
-    // EFFECTS: processes user commands for the marketplace menu
-    private void processMarketCommands(String command) {
-        switch (command) {
-            case "b":
-                System.out.println("Type the number of the car you would like to buy:");
-                try {
-                    processBuyCar(input.nextInt() - 1);
-                } catch (Exception e) {
-                    System.out.println("Please choose from one of the cars listed, or enter an integer.");
-                }
-                break;
-            case "f":
-                System.out.println("Filter by: \nYear\nSpeed\nHandling\nAcceleration\nBraking\nDrivetype\nPrice\n");
-                filter(carListing, input.next());
-                break;
-            case "d":
-                viewDetailedStats();
-                break;
-            case "s":
-                createCarListing();
-                break;
-            default:
-                System.out.println("Invalid input. Please select one of the options.");
-                displayMenu();
+    // MODIFIES: this
+    // EFFECTS: processes user commands for the marketplace menu, where the market is unfiltered
+    private void processMarketCommandsUnfiltered(String command) {
+        if (command.equals("b")) {
+            System.out.println("Type the number of the car you would like to buy:");
+            try {
+                processBuyCar(input.nextInt() - 1);
+            } catch (IndexOutOfBoundsException | InputMismatchException e) {
+                System.out.println("Please choose from one of the cars listed, or enter an integer.");
+            }
+        } else if (command.equals("f")) {
+            System.out.println("Filter by: \nYear\nSpeed\nHandling\nAcceleration\nBraking\nDrivetype\nPrice\n");
+            filter(carListing, input.next());
+        } else if (command.equals("d")) {
+            viewDetailedStatsUnfiltered();
+        } else if (command.equals("s")) {
+            createCarListing();
+        } else {
+            System.out.println("Invalid input. Please select one of the options.");
+            displayMenu();
         }
     }
 
-    // EFFECTS: processes user commands in the buy car menu
+    // MODIFIES: this
+    // EFFECTS: processes user commands for the marketplace menu, where the market is filtered
+    private void processMarketCommandsFiltered(String command) {
+        if (command.equals("b")) {
+            System.out.println("Type the number of the car you would like to buy:");
+            try {
+                processBuyCar(input.nextInt() - 1);
+            } catch (IndexOutOfBoundsException | InputMismatchException e) {
+                System.out.println("Please choose from one of the cars listed, or enter an integer.");
+            }
+        } else if (command.equals("r")) {
+            isFiltered = false;
+            System.out.println("Reset the marketplace.");
+            displayMenu();
+        } else if (command.equals("d")) {
+            viewDetailedStatsFiltered();
+        } else if (command.equals("s")) {
+            createCarListing();
+        } else {
+            System.out.println("Invalid input. Please select one of the options.");
+            displayMenu();
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: processes user commands in the buy car menu, depending on if marketplace is filtered or not
     private void processBuyCar(int carNum) {
-        Car carToBuy = carListing.get(carNum);
-        buyCar(carToBuy);
+        if (!isFiltered) {
+            Car carToBuy = carListing.get(carNum);
+            buyCar(carToBuy);
+        } else {
+            Car carToBuy = filteredCarListing.get(carNum);
+            buyCar(carToBuy);
+        }
     }
 
+    // MODIFIES: this
     // EFFECTS: processes user commands for the account menu
     private void processAccountCommands(String command) {
         switch (command) {
@@ -195,34 +224,71 @@ public class Marketplace {
         System.out.println("\tquit -> exit the application");
     }
 
-    // EFFECTS: displays the cars for sale on the market
+    // EFFECTS: displays the cars for sale on the market, and brings up the marketplace menu
     public void viewCarListing() {
-        String carListings = "";
-        for (int i = 0; i < carListing.size(); i++) {
-            carListings += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
-                    + " " + carListing.get(i).getModel() + " $" + df.format(carListing.get(i).getPrice()) + "\n";
-        }
-        System.out.println(carListings);
+        displayCars();
         System.out.println("Type 'b' to choose a car to buy");
-        System.out.println("Type 'f' to filter the cars");
+        if (!isFiltered) {
+            System.out.println("Type 'f' to filter the cars");
+        } else {
+            System.out.println("Type 'r' to reset the filter");
+        }
         System.out.println("Type 'd' to view car specifications");
         System.out.println("Type 's' to list a car for sale on the marketplace");
-        //System.out.println("Type 'back' to return to the previous menu");
+    }
+
+    // EFFECTS: displays the cars for sale on the market
+    public void displayCars() {
+        String carListings = "";
+        String filteredCarListings = "";
+        if (!isFiltered) {
+            for (int i = 0; i < carListing.size(); i++) {
+                carListings += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
+                        + " " + carListing.get(i).getModel() + " $" + df.format(carListing.get(i).getPrice()) + "\n";
+            }
+            System.out.println(carListings);
+        } else {
+            for (int i = 0; i < filteredCarListing.size(); i++) {
+                filteredCarListings += (i + 1) + ". " + filteredCarListing.get(i).getYear() + " "
+                        + filteredCarListing.get(i).getManufacturer()
+                        + " " + filteredCarListing.get(i).getModel() + " $"
+                        + df.format(filteredCarListing.get(i).getPrice()) + "\n";
+            }
+            System.out.println(filteredCarListings);
+        }
     }
 
     // EFFECTS: displays all the car's detailed specifications
-    private void viewDetailedStats() {
+    private void viewDetailedStatsUnfiltered() {
         System.out.println("Now displaying detailed car information.");
         String detailedCars = "";
         for (int i = 0; i < carListing.size(); i++) {
             detailedCars += "\n" + (i + 1) + ". " + carListing.get(i).getYear() + " "
                     + carListing.get(i).getManufacturer() + " " + carListing.get(i).getModel() + " $"
                     + df.format(carListing.get(i).getPrice()) + "\n"
-                + "Speed: " + carListing.get(i).getSpeed() + "\n" + "Handling: " + carListing.get(i).getHandling()
+                    + "Speed: " + carListing.get(i).getSpeed() + "\n" + "Handling: " + carListing.get(i).getHandling()
                     + "\n" + "Acceleration: " + carListing.get(i).getAcceleration() + "\n" + "Braking: "
                     + carListing.get(i).getBraking() + "\n" + "Drive type: " + carListing.get(i).getDriveType() + "\n";
         }
         System.out.println(detailedCars);
+        System.out.println("Enter any key to return to the main menu.");
+    }
+
+    // EFFECTS: displays the filtered car's detailed specifications
+    private void viewDetailedStatsFiltered() {
+        System.out.println("Now displaying detailed car information.");
+        String filteredDetailedCars = "";
+        for (int i = 0; i < filteredCarListing.size(); i++) {
+            filteredDetailedCars += "\n" + (i + 1) + ". " + filteredCarListing.get(i).getYear() + " "
+                    + filteredCarListing.get(i).getManufacturer() + " " + filteredCarListing.get(i).getModel() + " $"
+                    + df.format(filteredCarListing.get(i).getPrice()) + "\n"
+                    + "Speed: " + filteredCarListing.get(i).getSpeed() + "\n" + "Handling: "
+                    + filteredCarListing.get(i).getHandling() + "\n" + "Acceleration: "
+                    + filteredCarListing.get(i).getAcceleration() + "\n" + "Braking: "
+                    + filteredCarListing.get(i).getBraking() + "\n" + "Drive type: "
+                    + filteredCarListing.get(i).getDriveType() + "\n";
+        }
+        System.out.println(filteredDetailedCars);
         System.out.println("Enter any key to return to the main menu.");
     }
 
@@ -251,59 +317,79 @@ public class Marketplace {
         }
     }
 
-    // MODIFIES: carList
+    // MODIFIES: filteredCarListing
     // EFFECTS: filters the car market listings according to the selected filters with type int
-    //
-    // foreach car in carList, remove cars that don't satisfy predicate
     // if filter is not selected anymore, go to unfilter cars
     public void filterCarsInts(ArrayList<Car> carList, String filter) {
-        carList = new ArrayList<>();
+        filteredCarListing = new ArrayList<>();
         int value = 0;
-        System.out.println("Select a comparison operator (> or <):");
-        String operator = input.next();
-        while (!operator.equals(">") && !operator.equals("<")) {
-            System.out.println("Invalid operator. Please select from the options above.");
-            input.nextLine();
-            operator = input.next();
-        }
-        System.out.println("Select a value to compare: ");
+        System.out.println("Select a less than value to compare against: ");
         value = input.nextInt();
-        System.out.println("You selected: Filter by " + filter + " " + operator + " " + value);
+        System.out.println("You selected: filter by " + filter + " < " + df.format(value));
         if (filter.equals("year")) {
-            value = getCarListingInfo().getYear();
+            for (Car c : carListing) {
+                if (c.getYear() < value) {
+                    filteredCarListing.add(c);
+                }
+            }
         } else {
-            value = getCarListingInfo().getPrice();
+            for (Car c : carListing) {
+                if (c.getPrice() < value) {
+                    filteredCarListing.add(c);
+                }
+            }
         }
-        if (operator.equals(">")) {
-
-        }
-//        for (Car c : carListing) {
-//            if (c.getYear() operator )
-//            carList.
-//        }
+        isFiltered = true;
+        displayMenu();
     }
 
-    // MODIFIES: carList
+    // MODIFIES: filteredCarListing
     // EFFECTS: filters the car market listings according to the selected filters with type double
-    //
-    // foreach car in carList, remove cars that don't satisfy predicate
     // if filter is not selected anymore, go to unfilter cars
     public void filterCarsDoubles(ArrayList<Car> carList, String filter) {
+        filteredCarListing = new ArrayList<>();
         double value = 0;
-        System.out.println("Select a comparison operator (> or <):");
-        String operator = input.next();
-        while (!operator.equals(">") && !operator.equals("<")) {
-            System.out.println("Invalid operator. Please select from the options above.");
-            input.nextLine();
-            operator = input.next();
-        }
-        System.out.println("Select a value to filter with: ");
+        System.out.println("Select a less than value to compare against: ");
         value = input.nextDouble();
+        System.out.println("You selected: filter by " + filter + " < " + df.format(value));
+        checkFilterDouble(filter, value);
+        isFiltered = true;
+        displayMenu();
+    }
 
-        System.out.println("How would you like to filter? (i.e. " + filter + " > 5)");
+    // MODIFIES: filteredCarListing
+    // EFFECTS: chooses which filters with type double to apply
+    private void checkFilterDouble(String filter, double value) {
+        if (filter.equals("speed")) {
+            for (Car c : carListing) {
+                if (c.getSpeed() < value) {
+                    filteredCarListing.add(c);
+                }
+            }
+        } else if (filter.equals("handling")) {
+            for (Car c : carListing) {
+                if (c.getHandling() < value) {
+                    filteredCarListing.add(c);
+                }
+            }
+        } else if (filter.equals("acceleration")) {
+            for (Car c : carListing) {
+                if (c.getAcceleration() < value) {
+                    filteredCarListing.add(c);
+                }
+            }
+        } else {
+            checkFilterBraking(filter, value);
+        }
+    }
 
-        for (Car c : carList) {
-
+    // MODIFIES: filteredCarListing
+    // EFFECTS: filters the carListing with filter braking
+    private void checkFilterBraking(String filter, double value) {
+        for (Car c : carListing) {
+            if (c.getBraking() < value) {
+                filteredCarListing.add(c);
+            }
         }
     }
 
@@ -340,6 +426,14 @@ public class Marketplace {
         System.out.println("Car successfully listed on the marketplace!");
         displayMenu();
     }
+
+//    // MODIFIES: filteredCarListing
+//    // EFFECTS: creates a new car and checks to see if it satisfies the current filter. If it does,
+//    // lists it for sale on the marketplace
+//    public boolean checkCarListingSatisfyFilter(Car carToList) {
+//        if ()
+//        return false;
+//    }
 
     // EFFECTS: creates a new car with the given specifications
     public Car getCarListingInfo() {
