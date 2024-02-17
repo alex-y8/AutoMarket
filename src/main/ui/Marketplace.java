@@ -197,6 +197,18 @@ public class Marketplace {
     }
 
     // MODIFIES: this
+    // EFFECTS: processes user commands in the garage menu
+    private void processGarageCommands(String command) {
+        if (command.equals("d")) {
+            viewDetailedGarage();
+        } else {
+            System.out.println("Invalid input. Please select 'd' if you want to view car details"
+                    + " or want to return to the main menu.");
+            viewGarage();
+        }
+    }
+
+    // MODIFIES: this
     // EFFECTS: processes user commands for the account menu
     private void processAccountCommands(String command) {
         switch (command) {
@@ -490,6 +502,26 @@ public class Marketplace {
     // EFFECTS: displays the garage as a list of cars
     public void viewGarage() {
         System.out.println(garage.carsInGarage());
+        System.out.println("Type 'd' to view car specifications");
+        processGarageCommands(input.next());
+    }
+
+    // EFFECTS: displays the stats and specifications of each car in the garage
+    private void viewDetailedGarage() {
+        String detailedGarage = "";
+        if (garage.getGarageSize() == 0) {
+            System.out.println("Your garage is empty.");
+        }
+        for (int i = 0; i < garage.getGarageSize(); i++) {
+            detailedGarage += "\n" + (i + 1) + ". " + garage.getGarage().get(i).getYear() + " "
+                    + garage.getGarage().get(i).getManufacturer() + " " + garage.getGarage().get(i).getModel() + "\n"
+                    + "Speed: " + garage.getGarage().get(i).getSpeed() + "\n"
+                + "Handling: " + garage.getGarage().get(i).getHandling() + "\n"
+                + "Acceleration: " + garage.getGarage().get(i).getAcceleration() + "\n"
+                + "Braking: " + garage.getGarage().get(i).getBraking() + "\n"
+                + "Drive type: " + garage.getGarage().get(i).getDriveType() + "\n";
+        }
+        System.out.println(detailedGarage);
     }
 
     // EFFECTS: formats the account balance to return in a comprehensible format (i.e. 1,000,000)
