@@ -17,7 +17,8 @@ import java.util.Scanner;
 import java.text.DecimalFormat;
 
 // Console car marketplace, where car listings are shown and up for sale
-// Inspired by CPSC210 TellerApp Scanner implementation
+// Inspired by CPSC210 TellerApp
+// https://github.students.cs.ubc.ca/CPSC210/TellerApp
 public class Marketplace {
 
     private static final String JSON_MARKET = "./data/carMarket.json";
@@ -33,6 +34,8 @@ public class Marketplace {
 
     private final DecimalFormat df = new DecimalFormat("#,###.##");
     private boolean isFiltered = false;
+    private boolean listedCar = false;
+    private boolean isDefaultMarket = true;
 
     private WorkRoom marketplace;
     private WorkRoom userMarketplace;
@@ -85,6 +88,8 @@ public class Marketplace {
         System.out.println("Would you like to load your marketplace listings from file? (Y/N)");
         if (input.next().toLowerCase().equals("y")) {
             loadUserListings();
+            isDefaultMarket = false;
+            listedCar = true;
         } else {
             loadListings();
         }
@@ -114,51 +119,51 @@ public class Marketplace {
         input = new Scanner(System.in);
     }
 
-    // MODIFIES: carListing
-    // EFFECTS: initializes the cars being sold on the marketplace
-    private void initializeCars1() {
-        Car car1 = new Car("Audi", "R8", 2016, 8.2,
-                7.6, 9.0, 9.2, DriveType.AWD, 242000);
-        Car car2 = new Car("Nissan", "GT-R", 2017, 7.9,
-                7.2, 9.6, 7.6, DriveType.AWD, 132000);
-        Car car3 = new Car("BMW", "M5", 1988, 6.5,
-                5.3, 6.0, 5.3, DriveType.RWD, 54000);
-        Car car4 = new Car("Bugatti", "Veyron", 2011, 9.9,
-                8.0, 9.9, 8.4, DriveType.AWD, 2200000);
-        Car car5 = new Car("Ferrari", "LaFerrari", 2013, 9.5,
-                9.8, 8.2, 10, DriveType.RWD, 1500000);
-        Car car6 = new Car("Lamborghini", "Aventador", 2012, 8.7,
-                7.8, 9.8, 8.3, DriveType.AWD, 310000);
-        Car car7 = new Car("Mazda", "MX-5 Miata", 1994, 5.5,
-                4.9, 5.2, 4.3, DriveType.RWD, 25000);
-        carListing.add(car1);
-        carListing.add(car2);
-        carListing.add(car3);
-        carListing.add(car4);
-        carListing.add(car5);
-        carListing.add(car6);
-        carListing.add(car7);
-    }
+//    // MODIFIES: carListing
+//    // EFFECTS: initializes the cars being sold on the marketplace
+//    private void initializeCars1() {
+//        Car car1 = new Car("Audi", "R8", 2016, 8.2,
+//                7.6, 9.0, 9.2, DriveType.AWD, 242000);
+//        Car car2 = new Car("Nissan", "GT-R", 2017, 7.9,
+//                7.2, 9.6, 7.6, DriveType.AWD, 132000);
+//        Car car3 = new Car("BMW", "M5", 1988, 6.5,
+//                5.3, 6.0, 5.3, DriveType.RWD, 54000);
+//        Car car4 = new Car("Bugatti", "Veyron", 2011, 9.9,
+//                8.0, 9.9, 8.4, DriveType.AWD, 2200000);
+//        Car car5 = new Car("Ferrari", "LaFerrari", 2013, 9.5,
+//                9.8, 8.2, 10, DriveType.RWD, 1500000);
+//        Car car6 = new Car("Lamborghini", "Aventador", 2012, 8.7,
+//                7.8, 9.8, 8.3, DriveType.AWD, 310000);
+//        Car car7 = new Car("Mazda", "MX-5 Miata", 1994, 5.5,
+//                4.9, 5.2, 4.3, DriveType.RWD, 25000);
+//        carListing.add(car1);
+//        carListing.add(car2);
+//        carListing.add(car3);
+//        carListing.add(car4);
+//        carListing.add(car5);
+//        carListing.add(car6);
+//        carListing.add(car7);
+//    }
 
-    // MODIFIES: carListing
-    // EFFECTS: initializes the cars being sold on the marketplace
-    private void initializeCars2() {
-        Car car8 = new Car("Porsche", "911 GT3 RS", 2019, 8.3,
-                9.7, 8.3, 10, DriveType.RWD, 255000);
-        Car car9 = new Car("Toyota", "Trueno AE86", 1985, 5.4,
-                4.7, 5.6, 4.5, DriveType.RWD, 22000);
-        Car car10 = new Car("Honda", "Civic Type R", 2018, 7.4,
-                6.7, 6.0, 6.8, DriveType.FWD, 59000);
-        Car car11 = new Car("Dodge", "Challenger", 2015, 8.1,
-                6.1, 5.9, 6.5, DriveType.RWD, 75000);
-        Car car12 = new Car("Chevrolet", "Stingray", 2020, 7.5,
-                7.6, 7.7, 7.7, DriveType.RWD, 87000);
-        carListing.add(car8);
-        carListing.add(car9);
-        carListing.add(car10);
-        carListing.add(car11);
-        carListing.add(car12);
-    }
+//    // MODIFIES: carListing
+//    // EFFECTS: initializes the cars being sold on the marketplace
+//    private void initializeCars2() {
+//        Car car8 = new Car("Porsche", "911 GT3 RS", 2019, 8.3,
+//                9.7, 8.3, 10, DriveType.RWD, 255000);
+//        Car car9 = new Car("Toyota", "Trueno AE86", 1985, 5.4,
+//                4.7, 5.6, 4.5, DriveType.RWD, 22000);
+//        Car car10 = new Car("Honda", "Civic Type R", 2018, 7.4,
+//                6.7, 6.0, 6.8, DriveType.FWD, 59000);
+//        Car car11 = new Car("Dodge", "Challenger", 2015, 8.1,
+//                6.1, 5.9, 6.5, DriveType.RWD, 75000);
+//        Car car12 = new Car("Chevrolet", "Stingray", 2020, 7.5,
+//                7.6, 7.7, 7.7, DriveType.RWD, 87000);
+//        carListing.add(car8);
+//        carListing.add(car9);
+//        carListing.add(car10);
+//        carListing.add(car11);
+//        carListing.add(car12);
+//    }
 
     // MODIFIES: this
     // EFFECTS: loads the user's garage cars
@@ -190,7 +195,7 @@ public class Marketplace {
         try {
             marketplace = jsonReaderMarket.read();
         } catch (IOException e) {
-            System.out.println("Unable to read from file: " + JSON_USER_MARKET);
+            System.out.println("Unable to read from file: " + JSON_MARKET);
         }
     }
 
@@ -227,7 +232,7 @@ public class Marketplace {
         if (command.equals("m")) {
             if (!isFiltered) {
                 System.out.println("Now displaying the marketplace.\n");
-                viewCarListingDefaultMarket();
+                chooseMarketListing();
                 processMarketCommandsUnfiltered(input.next());
             } else {
                 System.out.println("Now displaying the filtered marketplace.\n");
@@ -353,9 +358,31 @@ public class Marketplace {
         System.out.println("\tquit -> exit the application");
     }
 
+    // EFFECTS: choose which market list of cars to use
+    private void chooseMarketListing() {
+        if (isDefaultMarket) {
+            viewCarListingDefaultMarket();
+        } else {
+            viewCarListingUserMarket();
+        }
+    }
+
     // EFFECTS: displays the cars for sale on the default market, and brings up the marketplace menu
     public void viewCarListingDefaultMarket() {
         displayCarsDefaultMarket();
+        System.out.println("Type 'b' to choose a car to buy");
+        if (!isFiltered) {
+            System.out.println("Type 'f' to filter the cars");
+        } else {
+            System.out.println("Type 'r' to reset the filter");
+        }
+        System.out.println("Type 'd' to view car specifications");
+        System.out.println("Type 's' to list a car for sale on the marketplace");
+    }
+
+    // EFFECTS: displays the cars for sale on the user market, and brings up the marketplace menu
+    public void viewCarListingUserMarket() {
+        displayCarsUserMarket();
         System.out.println("Type 'b' to choose a car to buy");
         if (!isFiltered) {
             System.out.println("Type 'f' to filter the cars");
@@ -397,6 +424,18 @@ public class Marketplace {
                     + df.format(marketplace.getCars().get(i).getPrice()) + "\n";
         }
         System.out.println(carListings);
+    }
+
+    // TODO: implement filtering once everything else works
+    private void displayCarsUserMarket() {
+        String userCarListings = "";
+        for (int i = 0; i < userMarketplace.numCars(); i++) {
+            userCarListings += (i + 1) + ". " + userMarketplace.getCars().get(i).getYear() + " "
+                    + userMarketplace.getCars().get(i).getManufacturer() + " "
+                    + userMarketplace.getCars().get(i).getModel() + " $"
+                    + df.format(userMarketplace.getCars().get(i).getPrice()) + "\n";
+        }
+        System.out.println(userCarListings);
     }
 
     // EFFECTS: displays all the car's detailed specifications
@@ -551,8 +590,9 @@ public class Marketplace {
     // EFFECTS: creates a new car and lists it for sale on the marketplace
     public void createCarListing() {
         Car carToList = getCarListingInfo();
-        carListing.add(carToList);
+        userMarketplace.addCar(carToList);
         System.out.println("Car successfully listed on the marketplace!");
+        listedCar = true;
         displayMenu();
     }
 
@@ -659,7 +699,11 @@ public class Marketplace {
         }
         System.out.println("Would you like to save your marketplace listings to file? (Y/N)");
         if (input.next().toLowerCase().equals("y")) {
-            saveMarketplace();
+            if (listedCar) {
+                saveMarketplace();
+            } else {
+                System.out.println("Unable to save to file - you did not list any cars for sale on the marketplace.");
+            }
         }
     }
 

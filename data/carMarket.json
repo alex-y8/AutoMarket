@@ -41,6 +41,93 @@
     "braking": 8.4,
     "driveType": "AWD",
     "price": 2200000
+  },
+  {
+    "manufacturer": "Ferrari",
+    "model": "LaFerrari",
+    "year": 2013,
+    "speed": 9.5,
+    "handling": 9.8,
+    "acceleration": 8.2,
+    "braking": 10,
+    "driveType": "RWD",
+    "price": 1500000
+  },
+  {
+    "manufacturer": "Lamborghini",
+    "model": "Aventador",
+    "year": 2012,
+    "speed": 8.7,
+    "handling": 7.8,
+    "acceleration": 9.8,
+    "braking": 8.3,
+    "driveType": "AWD",
+    "price": 310000
+  },
+  {
+    "manufacturer": "Mazda",
+    "model": "MX-5 Miata",
+    "year": 1994,
+    "speed": 5.5,
+    "handling": 4.9,
+    "acceleration": 5.2,
+    "braking": 4.3,
+    "driveType": "RWD",
+    "price": 25000
+  },
+  {
+    "manufacturer": "Porsche",
+    "model": "911 GT3 RS",
+    "year": 2019,
+    "speed": 8.3,
+    "handling": 9.7,
+    "acceleration": 8.3,
+    "braking": 10,
+    "driveType": "RWD",
+    "price": 255000
+  },
+  {
+    "manufacturer": "Toyota",
+    "model": "Trueno AE86",
+    "year": 1985,
+    "speed": 5.4,
+    "handling": 4.7,
+    "acceleration": 5.6,
+    "braking": 4.5,
+    "driveType": "RWD",
+    "price": 22000
+  },
+  {
+    "manufacturer": "Honda",
+    "model": "Civic Type R",
+    "year": 2018,
+    "speed": 7.4,
+    "handling": 6.7,
+    "acceleration": 6.0,
+    "braking": 6.8,
+    "driveType": "FWD",
+    "price": 59000
+  },
+  {
+    "manufacturer": "Dodge",
+    "model": "Challenger",
+    "year": 2015,
+    "speed": 8.1,
+    "handling": 6.1,
+    "acceleration": 5.9,
+    "braking": 6.5,
+    "driveType": "RWD",
+    "price": 75000
+  },
+  {
+    "manufacturer": "Chevrolet",
+    "model": "Stingray",
+    "year": 2020,
+    "speed": 7.5,
+    "handling": 7.6,
+    "acceleration": 7.7,
+    "braking": 7.7,
+    "driveType": "RWD",
+    "price": 87000
   }
-
 ]}

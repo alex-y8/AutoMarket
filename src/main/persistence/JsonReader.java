@@ -13,7 +13,8 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 // Represents a reader that reads workroom from JSON data stored in file
-// Referenced from CPSC210 JsonSerializationDemo
+// Referenced from the JsonSerialization Demo
+// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonReader {
 
     private String source;
