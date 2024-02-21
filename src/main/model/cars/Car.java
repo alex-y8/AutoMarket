@@ -1,7 +1,10 @@
 package model.cars;
 
+import org.json.JSONObject;
+import persistence.Writeable;
+
 // Represents a car, with stats and specifications and a price in dollars
-public class Car {
+public class Car implements Writeable {
 
     private String manufacturer;
     private String model;
@@ -63,5 +66,21 @@ public class Car {
 
     public int getPrice() {
         return price;
+    }
+
+    // EFFECTS: creates a JSON object with the given fields
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("manufacturer", manufacturer);
+        json.put("model", model);
+        json.put("year", year);
+        json.put("speed", speed);
+        json.put("handling", handling);
+        json.put("acceleration", acceleration);
+        json.put("braking", braking);
+        json.put("driveType", driveType);
+        json.put("price", price);
+        return json;
     }
 }
