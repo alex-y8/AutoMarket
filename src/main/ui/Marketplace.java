@@ -3,9 +3,14 @@ package ui;
 import exceptions.IllegalAccountBalanceException;
 import model.Account;
 import model.Garage;
+import model.WorkRoom;
 import model.cars.Car;
 import model.cars.DriveType;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -15,6 +20,11 @@ import java.text.DecimalFormat;
 // Inspired by CPSC210 TellerApp Scanner implementation
 public class Marketplace {
 
+    private static final String JSON_MARKET = "./data/carMarket.json";
+    private static final String JSON_FILTERED_MARKET = "./data/filteredCarMarket.json";
+    private static final String JSON_USER_MARKET = "./data/userCarMarket.json";
+    private static final String JSON_GARAGE = "./data/garage.json";
+
     private ArrayList<Car> carListing;
     private ArrayList<Car> filteredCarListing;
     private Garage garage;
@@ -23,6 +33,19 @@ public class Marketplace {
 
     private final DecimalFormat df = new DecimalFormat("#,###.##");
     private boolean isFiltered = false;
+
+    private WorkRoom marketplace;
+    private WorkRoom userMarketplace;
+    private WorkRoom userGarage;
+    //private JsonWriter jsonWriterMarket; probably won't want to write to this file
+    private JsonWriter jsonWriterUserMarket;
+    private JsonWriter jsonWriterGarage;
+    private JsonWriter jsonWriterFilteredMarket;
+
+    private JsonReader jsonReaderMarket;
+    private JsonReader jsonReaderUserMarket;
+    private JsonReader jsonReaderGarage;
+    private JsonReader jsonReaderFilteredMarket;
 
     // EFFECTS: runs the marketplace application
     public Marketplace() {
@@ -37,15 +60,15 @@ public class Marketplace {
 
         initialize();
         System.out.println("Welcome to AutoMarket!");
-        System.out.println("Enter any key to get started.");
+        askLoadFiles();
         displayMenu();
-
 
         while (keepGoing) {
             command = input.next();
             command = command.toLowerCase();
 
             if (command.equals("quit")) {
+                quit();
                 keepGoing = false;
             } else {
                 processCommand(command);
@@ -54,14 +77,40 @@ public class Marketplace {
         System.out.println("Quitting...");
     }
 
+    private void askLoadFiles() {
+        System.out.println("Would you like to load your garage from file? (Y/N)");
+        if (input.next().toLowerCase().equals("y")) {
+            loadGarage();
+        }
+        System.out.println("Would you like to load your marketplace listings from file? (Y/N)");
+        if (input.next().toLowerCase().equals("y")) {
+            loadUserListings();
+        } else {
+            loadListings();
+        }
+    }
+
     // MODIFIES: this
-    // EFFECTS: initializes the marketplace
+    // EFFECTS: initializes the JSON reader, JSON writer, and marketplace
     private void initialize() {
+        marketplace = new WorkRoom();
+        userMarketplace = new WorkRoom();
+        userGarage = new WorkRoom();
+
+        jsonWriterUserMarket = new JsonWriter(JSON_USER_MARKET);
+        jsonWriterGarage = new JsonWriter(JSON_GARAGE);
+        jsonWriterFilteredMarket = new JsonWriter(JSON_FILTERED_MARKET);
+
+        jsonReaderMarket = new JsonReader(JSON_MARKET);
+        jsonReaderUserMarket = new JsonReader(JSON_USER_MARKET);
+        jsonReaderGarage = new JsonReader(JSON_GARAGE);
+        jsonReaderFilteredMarket = new JsonReader(JSON_FILTERED_MARKET);
+
         carListing = new ArrayList<>();
         account = new Account(0);
         garage = new Garage();
-        initializeCars1();
-        initializeCars2();
+        //initializeCars1();
+        //initializeCars2();
         input = new Scanner(System.in);
     }
 
@@ -112,16 +161,77 @@ public class Marketplace {
     }
 
     // MODIFIES: this
+    // EFFECTS: loads the user's garage cars
+    private void loadGarage() {
+        if (userGarage.getCars().isEmpty()) {
+            System.out.println("No file loaded - your garage is empty. Visit the marketplace to buy cars!");
+        } else {
+            try {
+                userGarage = jsonReaderGarage.read();
+            } catch (IOException e) {
+                System.out.println("Unable to read from file: " + JSON_GARAGE);
+            }
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads the user's marketplace car listings
+    private void loadUserListings() {
+        try {
+            userMarketplace = jsonReaderUserMarket.read();
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_USER_MARKET);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads the default marketplace car listings
+    private void loadListings() {
+        try {
+            marketplace = jsonReaderMarket.read();
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_USER_MARKET);
+        }
+    }
+
+    // MODIFIES: userGarage workroom
+    // EFFECTS: saves the user's garage workroom to file
+    private void saveGarage() {
+        try {
+            jsonWriterGarage.open();
+            jsonWriterGarage.write(userGarage);
+            jsonWriterGarage.close();
+            System.out.println("Garage successfully saved!");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_GARAGE);
+        }
+    }
+
+    // MODIFIES: marketplace workroom
+    // EFFECTS: saves the user's marketplace listings to file
+    private void saveMarketplace() {
+        try {
+            jsonWriterUserMarket.open();
+            jsonWriterUserMarket.write(userMarketplace);
+            jsonWriterUserMarket.close();
+            System.out.println("Marketplace successfully saved!");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_USER_MARKET);
+        }
+    }
+
+
+    // MODIFIES: this
     // EFFECTS: processes user command for the main menu
     private void processCommand(String command) {
         if (command.equals("m")) {
             if (!isFiltered) {
                 System.out.println("Now displaying the marketplace.\n");
-                viewCarListing();
+                viewCarListingDefaultMarket();
                 processMarketCommandsUnfiltered(input.next());
             } else {
                 System.out.println("Now displaying the filtered marketplace.\n");
-                viewCarListing();
+                viewCarListingDefaultMarket();
                 processMarketCommandsFiltered(input.next());
             }
         } else if (command.equals("g")) {
@@ -243,9 +353,9 @@ public class Marketplace {
         System.out.println("\tquit -> exit the application");
     }
 
-    // EFFECTS: displays the cars for sale on the market, and brings up the marketplace menu
-    public void viewCarListing() {
-        displayCars();
+    // EFFECTS: displays the cars for sale on the default market, and brings up the marketplace menu
+    public void viewCarListingDefaultMarket() {
+        displayCarsDefaultMarket();
         System.out.println("Type 'b' to choose a car to buy");
         if (!isFiltered) {
             System.out.println("Type 'f' to filter the cars");
@@ -256,25 +366,37 @@ public class Marketplace {
         System.out.println("Type 's' to list a car for sale on the marketplace");
     }
 
-    // EFFECTS: displays the cars for sale on the market
-    public void displayCars() {
+//    // EFFECTS: displays the cars for sale on the market
+//    public void displayCars() {
+//        String carListings = "";
+//        String filteredCarListings = "";
+//        if (!isFiltered) {
+//            for (int i = 0; i < carListing.size(); i++) {
+//               carListings += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
+//                        + " " + carListing.get(i).getModel() + " $" + df.format(carListing.get(i).getPrice()) + "\n";
+//            }
+//            System.out.println(carListings);
+//        } else {
+//            for (int i = 0; i < filteredCarListing.size(); i++) {
+//                filteredCarListings += (i + 1) + ". " + filteredCarListing.get(i).getYear() + " "
+//                        + filteredCarListing.get(i).getManufacturer()
+//                        + " " + filteredCarListing.get(i).getModel() + " $"
+//                        + df.format(filteredCarListing.get(i).getPrice()) + "\n";
+//            }
+//            System.out.println(filteredCarListings);
+//        }
+//    }
+
+    // TODO: implement filtering once everything else works
+    private void displayCarsDefaultMarket() {
         String carListings = "";
-        String filteredCarListings = "";
-        if (!isFiltered) {
-            for (int i = 0; i < carListing.size(); i++) {
-                carListings += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
-                        + " " + carListing.get(i).getModel() + " $" + df.format(carListing.get(i).getPrice()) + "\n";
-            }
-            System.out.println(carListings);
-        } else {
-            for (int i = 0; i < filteredCarListing.size(); i++) {
-                filteredCarListings += (i + 1) + ". " + filteredCarListing.get(i).getYear() + " "
-                        + filteredCarListing.get(i).getManufacturer()
-                        + " " + filteredCarListing.get(i).getModel() + " $"
-                        + df.format(filteredCarListing.get(i).getPrice()) + "\n";
-            }
-            System.out.println(filteredCarListings);
+        for (int i = 0; i < marketplace.numCars(); i++) {
+            carListings += (i + 1) + ". " + marketplace.getCars().get(i).getYear() + " "
+                    + marketplace.getCars().get(i).getManufacturer() + " "
+                    + marketplace.getCars().get(i).getModel() + " $"
+                    + df.format(marketplace.getCars().get(i).getPrice()) + "\n";
         }
+        System.out.println(carListings);
     }
 
     // EFFECTS: displays all the car's detailed specifications
@@ -527,6 +649,18 @@ public class Marketplace {
     // EFFECTS: formats the account balance to return in a comprehensible format (i.e. 1,000,000)
     public String formatAccountBalance(DecimalFormat df) {
         return df.format(account.getBalance());
+    }
+
+    // EFFECTS: reminds the user to save their garage and/or marketplace to file, then quits the program
+    private void quit() {
+        System.out.println("Would you like to save your garage to file? (Y/N)");
+        if (input.next().toLowerCase().equals("y")) {
+            saveGarage();
+        }
+        System.out.println("Would you like to save your marketplace listings to file? (Y/N)");
+        if (input.next().toLowerCase().equals("y")) {
+            saveMarketplace();
+        }
     }
 
 }
