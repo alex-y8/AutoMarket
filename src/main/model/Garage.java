@@ -1,11 +1,13 @@
 package model;
 
 import model.cars.Car;
+import org.json.JSONObject;
+import persistence.Writeable;
 
 import java.util.ArrayList;
 
 // Represents the user's garage as a list of cars
-public class Garage {
+public class Garage extends WorkRoom {
 
     private ArrayList<Car> garage;
 
@@ -14,18 +16,18 @@ public class Garage {
         garage = new ArrayList<>();
     }
 
-    // EFFECTS: returns the cars in the garage as a String in format "manufacturer model"
-    public String carsInGarage() {
-        String garageCars = "";
-        if (garage.isEmpty()) {
-            return "Your garage is empty. Visit the marketplace to buy cars!";
-        }
-        for (int i = 0; i < garage.size(); i++) {
-            garageCars += (i + 1) + ". " + garage.get(i).getYear() + " " + garage.get(i).getManufacturer()
-                    + " " + garage.get(i).getModel() + "\n";
-        }
-        return garageCars;
-    }
+//    // EFFECTS: returns the cars in the garage as a String in format "manufacturer model"
+//    public String carsInGarage() {
+//        String garageCars = "";
+//        if (garage.isEmpty()) {
+//            return "Your garage is empty. Visit the marketplace to buy cars!";
+//        }
+//        for (int i = 0; i < garage.size(); i++) {
+//            garageCars += (i + 1) + ". " + garage.get(i).getYear() + " " + garage.get(i).getManufacturer()
+//                    + " " + garage.get(i).getModel() + "\n";
+//        }
+//        return garageCars;
+//    }
 
     // MODIFIES: this
     // EFFECTS: adds a car to the garage, regardless if the car is already in the garage
@@ -53,5 +55,14 @@ public class Garage {
     public ArrayList<Car> getGarage() {
         return garage;
     }
+
+//    // EFFECTS: creates a JSON object with the given fields
+//    @Override
+//    public JSONObject toJson() {
+//        JSONObject json = new JSONObject();
+//        json.put("cars", );
+//        return json;
+//    }
+
 
 }

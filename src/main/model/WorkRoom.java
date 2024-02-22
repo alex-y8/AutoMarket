@@ -20,7 +20,7 @@ public class WorkRoom implements Writeable {
         carList = new ArrayList<>();
     }
 
-    // EFFECTS: returns an unmodifiable list of thingies in this workroom
+    // EFFECTS: returns an unmodifiable list of cars in this workroom
     public List<Car> getCars() {
         return carList;
     }
@@ -31,9 +31,22 @@ public class WorkRoom implements Writeable {
         carList.add(car);
     }
 
-    // EFFECTS: returns number of thingies in this workroom
+    // EFFECTS: returns number of cars in this workroom
     public int numCars() {
         return carList.size();
+    }
+
+    // EFFECTS: returns the cars in the garage as a String in format "manufacturer model"
+    public String carsInGarage() {
+        String garageCars = "";
+        if (carList.isEmpty()) {
+            return "Your garage is empty. Visit the marketplace to buy cars!";
+        }
+        for (int i = 0; i < carList.size(); i++) {
+            garageCars += (i + 1) + ". " + carList.get(i).getYear() + " " + carList.get(i).getManufacturer()
+                    + " " + carList.get(i).getModel() + "\n";
+        }
+        return garageCars;
     }
 
     // EFFECTS: creates a JSON object with the given fields

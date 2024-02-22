@@ -40,6 +40,8 @@ public class Marketplace {
     private WorkRoom marketplace;
     private WorkRoom userMarketplace;
     private WorkRoom userGarage;
+    private WorkRoom filteredMarketplace;
+
     //private JsonWriter jsonWriterMarket; probably won't want to write to this file
     private JsonWriter jsonWriterUserMarket;
     private JsonWriter jsonWriterGarage;
@@ -101,6 +103,7 @@ public class Marketplace {
         marketplace = new WorkRoom();
         userMarketplace = new WorkRoom();
         userGarage = new WorkRoom();
+        filteredMarketplace = new WorkRoom();
 
         jsonWriterUserMarket = new JsonWriter(JSON_USER_MARKET);
         jsonWriterGarage = new JsonWriter(JSON_GARAGE);
@@ -111,7 +114,7 @@ public class Marketplace {
         jsonReaderGarage = new JsonReader(JSON_GARAGE);
         jsonReaderFilteredMarket = new JsonReader(JSON_FILTERED_MARKET);
 
-        carListing = new ArrayList<>();
+        //carListing = new ArrayList<>();
         account = new Account(0);
         garage = new Garage();
         //initializeCars1();
@@ -168,14 +171,13 @@ public class Marketplace {
     // MODIFIES: this
     // EFFECTS: loads the user's garage cars
     private void loadGarage() {
-        if (userGarage.getCars().isEmpty()) {
-            System.out.println("No file loaded - your garage is empty. Visit the marketplace to buy cars!");
-        } else {
-            try {
-                userGarage = jsonReaderGarage.read();
-            } catch (IOException e) {
-                System.out.println("Unable to read from file: " + JSON_GARAGE);
+        try {
+            userGarage = jsonReaderGarage.read();
+            if (userGarage.getCars().isEmpty()) {
+                System.out.println("No file loaded - your garage is empty. Visit the marketplace to buy cars!");
             }
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_GARAGE);
         }
     }
 
@@ -236,7 +238,7 @@ public class Marketplace {
                 processMarketCommandsUnfiltered(input.next());
             } else {
                 System.out.println("Now displaying the filtered marketplace.\n");
-                viewCarListingDefaultMarket();
+                chooseMarketListing();
                 processMarketCommandsFiltered(input.next());
             }
         } else if (command.equals("g")) {
@@ -266,7 +268,7 @@ public class Marketplace {
             System.out.println("Filter by: \nYear\nSpeed\nHandling\nAcceleration\nBraking\nDrivetype\nPrice\n");
             filter(input.next());
         } else if (command.equals("d")) {
-            viewDetailedStatsUnfiltered();
+            checkMarketStats();
         } else if (command.equals("s")) {
             createCarListing();
         } else {
@@ -290,7 +292,7 @@ public class Marketplace {
             System.out.println("Reset the marketplace.");
             displayMenu();
         } else if (command.equals("d")) {
-            viewDetailedStatsFiltered();
+            checkMarketStats();
         } else if (command.equals("s")) {
             createCarListing();
         } else {
@@ -303,10 +305,12 @@ public class Marketplace {
     // EFFECTS: processes user commands in the buy car menu, depending on if marketplace is filtered or not
     private void processBuyCar(int carNum) {
         Car carToBuy;
-        if (!isFiltered) {
-            carToBuy = carListing.get(carNum);
+        if (!isFiltered && isDefaultMarket) {
+            carToBuy = marketplace.getCars().get(carNum);
+        } else if (!isFiltered && !isDefaultMarket) {
+            carToBuy = userMarketplace.getCars().get(carNum);
         } else {
-            carToBuy = filteredCarListing.get(carNum);
+            carToBuy = filteredMarketplace.getCars().get(carNum);
         }
         buyCar(carToBuy);
     }
@@ -358,18 +362,15 @@ public class Marketplace {
         System.out.println("\tquit -> exit the application");
     }
 
-    // EFFECTS: choose which market list of cars to use
+    // EFFECTS: choose which market list of cars to use, displays the cars, then brings up the marketplace menu
     private void chooseMarketListing() {
         if (isDefaultMarket) {
-            viewCarListingDefaultMarket();
+            //viewCarListingDefaultMarket();
+            displayCarsDefaultMarket();
         } else {
-            viewCarListingUserMarket();
+            //viewCarListingUserMarket();
+            displayCarsUserMarket();
         }
-    }
-
-    // EFFECTS: displays the cars for sale on the default market, and brings up the marketplace menu
-    public void viewCarListingDefaultMarket() {
-        displayCarsDefaultMarket();
         System.out.println("Type 'b' to choose a car to buy");
         if (!isFiltered) {
             System.out.println("Type 'f' to filter the cars");
@@ -380,18 +381,31 @@ public class Marketplace {
         System.out.println("Type 's' to list a car for sale on the marketplace");
     }
 
-    // EFFECTS: displays the cars for sale on the user market, and brings up the marketplace menu
-    public void viewCarListingUserMarket() {
-        displayCarsUserMarket();
-        System.out.println("Type 'b' to choose a car to buy");
-        if (!isFiltered) {
-            System.out.println("Type 'f' to filter the cars");
-        } else {
-            System.out.println("Type 'r' to reset the filter");
-        }
-        System.out.println("Type 'd' to view car specifications");
-        System.out.println("Type 's' to list a car for sale on the marketplace");
-    }
+//    // EFFECTS: displays the cars for sale on the default market, and brings up the marketplace menu
+//    public void viewCarListingDefaultMarket() {
+//        displayCarsDefaultMarket();
+//        System.out.println("Type 'b' to choose a car to buy");
+//        if (!isFiltered) {
+//            System.out.println("Type 'f' to filter the cars");
+//        } else {
+//            System.out.println("Type 'r' to reset the filter");
+//        }
+//        System.out.println("Type 'd' to view car specifications");
+//        System.out.println("Type 's' to list a car for sale on the marketplace");
+//    }
+//
+//    // EFFECTS: displays the cars for sale on the user market, and brings up the marketplace menu
+//    public void viewCarListingUserMarket() {
+//        displayCarsUserMarket();
+//        System.out.println("Type 'b' to choose a car to buy");
+//        if (!isFiltered) {
+//            System.out.println("Type 'f' to filter the cars");
+//        } else {
+//            System.out.println("Type 'r' to reset the filter");
+//        }
+//        System.out.println("Type 'd' to view car specifications");
+//        System.out.println("Type 's' to list a car for sale on the marketplace");
+//    }
 
 //    // EFFECTS: displays the cars for sale on the market
 //    public void displayCars() {
@@ -414,62 +428,89 @@ public class Marketplace {
 //        }
 //    }
 
-    // TODO: implement filtering once everything else works
+    // EFFECTS: displays the listed cars from the default market, depending on if filtered
     private void displayCarsDefaultMarket() {
         String carListings = "";
-        for (int i = 0; i < marketplace.numCars(); i++) {
-            carListings += (i + 1) + ". " + marketplace.getCars().get(i).getYear() + " "
-                    + marketplace.getCars().get(i).getManufacturer() + " "
-                    + marketplace.getCars().get(i).getModel() + " $"
-                    + df.format(marketplace.getCars().get(i).getPrice()) + "\n";
+        String filteredCarListings = "";
+        if (!isFiltered) {
+            carListings = filteredCarListingsToString(marketplace, carListings);
+            System.out.println(carListings);
+        } else {
+            filteredCarListings = filteredCarListingsToString(filteredMarketplace, filteredCarListings);
+            System.out.println(filteredCarListings);
         }
-        System.out.println(carListings);
     }
 
-    // TODO: implement filtering once everything else works
+    // EFFECTS: displays the listed cars from the user market, depending on if filtered
     private void displayCarsUserMarket() {
         String userCarListings = "";
-        for (int i = 0; i < userMarketplace.numCars(); i++) {
-            userCarListings += (i + 1) + ". " + userMarketplace.getCars().get(i).getYear() + " "
-                    + userMarketplace.getCars().get(i).getManufacturer() + " "
-                    + userMarketplace.getCars().get(i).getModel() + " $"
-                    + df.format(userMarketplace.getCars().get(i).getPrice()) + "\n";
+        String filteredCarListings = "";
+        if (!isFiltered) {
+            userCarListings = filteredCarListingsToString(userMarketplace, userCarListings);
+            System.out.println(userCarListings);
+        } else {
+            filteredCarListings = filteredCarListingsToString(filteredMarketplace, filteredCarListings);
+            System.out.println(filteredCarListings);
         }
-        System.out.println(userCarListings);
+
     }
 
-    // EFFECTS: displays all the car's detailed specifications
-    private void viewDetailedStatsUnfiltered() {
+    // EFFECTS: returns the list of cars in the filtered marketplace as a string
+    private String filteredCarListingsToString(WorkRoom filteredMarketplace, String filteredCarListings) {
+        for (int i = 0; i < filteredMarketplace.numCars(); i++) {
+            filteredCarListings += (i + 1) + ". " + filteredMarketplace.getCars().get(i).getYear() + " "
+                    + filteredMarketplace.getCars().get(i).getManufacturer()
+                    + " " + filteredMarketplace.getCars().get(i).getModel() + " $"
+                    + df.format(filteredMarketplace.getCars().get(i).getPrice()) + "\n";
+        }
+        return filteredCarListings;
+    }
+
+    // EFFECTS: checks which market to display detailed stats for
+    private void checkMarketStats() {
         System.out.println("Now displaying detailed car information.");
+        if (isDefaultMarket && !isFiltered) {
+            viewDetailedStatsUnfilteredDefault();
+        } else if (!isDefaultMarket && !isFiltered) {
+            viewDetailedStatsUnfilteredUser();
+        } else {
+            viewDetailedStatsFiltered();
+        }
+        System.out.println("Enter any key to return to the main menu.");
+    }
+
+    // EFFECTS: displays all the car's detailed specifications for the default market
+    private void viewDetailedStatsUnfilteredDefault() {
         String detailedCars = "";
-        for (int i = 0; i < carListing.size(); i++) {
-            detailedCars += "\n" + (i + 1) + ". " + carListing.get(i).getYear() + " "
-                    + carListing.get(i).getManufacturer() + " " + carListing.get(i).getModel() + " $"
-                    + df.format(carListing.get(i).getPrice()) + "\n"
-                    + "Speed: " + carListing.get(i).getSpeed() + "\n" + "Handling: " + carListing.get(i).getHandling()
-                    + "\n" + "Acceleration: " + carListing.get(i).getAcceleration() + "\n" + "Braking: "
-                    + carListing.get(i).getBraking() + "\n" + "Drive type: " + carListing.get(i).getDriveType() + "\n";
-        }
-        System.out.println(detailedCars);
-        System.out.println("Enter any key to return to the main menu.");
+        printDetailedStatsUnfiltered(marketplace.numCars(), detailedCars, marketplace);
     }
 
-    // EFFECTS: displays the filtered car's detailed specifications
-    private void viewDetailedStatsFiltered() {
-        System.out.println("Now displaying detailed car information.");
-        String filteredDetailedCars = "";
-        for (int i = 0; i < filteredCarListing.size(); i++) {
-            filteredDetailedCars += "\n" + (i + 1) + ". " + filteredCarListing.get(i).getYear() + " "
-                    + filteredCarListing.get(i).getManufacturer() + " " + filteredCarListing.get(i).getModel() + " $"
-                    + df.format(filteredCarListing.get(i).getPrice()) + "\n"
-                    + "Speed: " + filteredCarListing.get(i).getSpeed() + "\n" + "Handling: "
-                    + filteredCarListing.get(i).getHandling() + "\n" + "Acceleration: "
-                    + filteredCarListing.get(i).getAcceleration() + "\n" + "Braking: "
-                    + filteredCarListing.get(i).getBraking() + "\n" + "Drive type: "
-                    + filteredCarListing.get(i).getDriveType() + "\n";
+    // EFFECTS: displays all the car's detailed specifications for the user market
+    private void viewDetailedStatsUnfilteredUser() {
+        String detailedCarsUser = "";
+        printDetailedStatsUnfiltered(userMarketplace.numCars(), detailedCarsUser, userMarketplace);
+    }
+
+    // EFFECTS: prints each car's detailed specifications according to the specific marketplace
+    private void printDetailedStatsUnfiltered(int userMarketplace, String detailedCarsUser, WorkRoom userMarketplace1) {
+        for (int i = 0; i < userMarketplace; i++) {
+            detailedCarsUser += "\n" + (i + 1) + ". " + userMarketplace1.getCars().get(i).getYear() + " "
+                    + userMarketplace1.getCars().get(i).getManufacturer() + " "
+                    + userMarketplace1.getCars().get(i).getModel() + " $"
+                    + df.format(userMarketplace1.getCars().get(i).getPrice()) + "\n" + "Speed: "
+                    + userMarketplace1.getCars().get(i).getSpeed() + "\n" + "Handling: "
+                    + userMarketplace1.getCars().get(i).getHandling() + "\n" + "Acceleration: "
+                    + userMarketplace1.getCars().get(i).getAcceleration() + "\n" + "Braking: "
+                    + userMarketplace1.getCars().get(i).getBraking() + "\n" + "Drive type: "
+                    + userMarketplace1.getCars().get(i).getDriveType() + "\n";
         }
-        System.out.println(filteredDetailedCars);
-        System.out.println("Enter any key to return to the main menu.");
+        System.out.println(detailedCarsUser);
+    }
+
+    // EFFECTS: displays the filtered car's detailed specifications for the both the default and user market
+    private void viewDetailedStatsFiltered() {
+        String filteredDetailedCars = "";
+        printDetailedStatsUnfiltered(filteredMarketplace.getCars().size(), filteredDetailedCars, filteredMarketplace);
     }
 
     // EFFECTS: displays the options an Account can operate on
@@ -500,26 +541,51 @@ public class Marketplace {
     // MODIFIES: filteredCarListing
     // EFFECTS: filters the car market listings according to the selected filters with type int
     public void filterCarsInts(String filter) {
-        filteredCarListing = new ArrayList<>();
         int value;
         System.out.println("Select a less than value to compare against: ");
         value = input.nextInt();
         System.out.println("You selected: filter by " + filter + " < " + df.format(value));
         if (filter.equals("year")) {
-            for (Car c : carListing) {
-                if (c.getYear() < value) {
-                    filteredCarListing.add(c);
-                }
-            }
+            checkMarketYear(value);
         } else {
-            for (Car c : carListing) {
-                if (c.getPrice() < value) {
-                    filteredCarListing.add(c);
-                }
-            }
+            checkMarketPrice(value);
         }
         isFiltered = true;
         displayMenu();
+    }
+
+    // EFFECTS: checks which market to base filtering on, for the year field
+    private void checkMarketYear(int value) {
+        if (isDefaultMarket) {
+            for (Car c : marketplace.getCars()) {
+                if (c.getYear() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        } else {
+            for (Car c : userMarketplace.getCars()) {
+                if (c.getYear() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        }
+    }
+
+    // EFFECTS: checks which market to base filtering on, for the price field
+    private void checkMarketPrice(int value) {
+        if (isDefaultMarket) {
+            for (Car c : marketplace.getCars()) {
+                if (c.getPrice() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        } else {
+            for (Car c : userMarketplace.getCars()) {
+                if (c.getPrice() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        }
     }
 
     // MODIFIES: filteredCarListing
@@ -576,7 +642,7 @@ public class Marketplace {
     // price from the account's.
     public void buyCar(Car c) {
         if (account.boughtCar(c)) {
-            garage.addCar(c);
+            userGarage.addCar(c);
             System.out.println("Purchase complete! Enjoy your new car!");
             displayMenu();
         } else {
@@ -663,7 +729,7 @@ public class Marketplace {
 
     // EFFECTS: displays the garage as a list of cars
     public void viewGarage() {
-        System.out.println(garage.carsInGarage());
+        System.out.println(userGarage.carsInGarage());
         System.out.println("Type 'd' to view car specifications");
         processGarageCommands(input.next());
     }
@@ -671,17 +737,17 @@ public class Marketplace {
     // EFFECTS: displays the stats and specifications of each car in the garage
     private void viewDetailedGarage() {
         String detailedGarage = "";
-        if (garage.getGarageSize() == 0) {
+        if (userGarage.getCars().isEmpty()) {
             System.out.println("Your garage is empty.");
         }
-        for (int i = 0; i < garage.getGarageSize(); i++) {
-            detailedGarage += "\n" + (i + 1) + ". " + garage.getGarage().get(i).getYear() + " "
-                    + garage.getGarage().get(i).getManufacturer() + " " + garage.getGarage().get(i).getModel() + "\n"
-                    + "Speed: " + garage.getGarage().get(i).getSpeed() + "\n"
-                + "Handling: " + garage.getGarage().get(i).getHandling() + "\n"
-                + "Acceleration: " + garage.getGarage().get(i).getAcceleration() + "\n"
-                + "Braking: " + garage.getGarage().get(i).getBraking() + "\n"
-                + "Drive type: " + garage.getGarage().get(i).getDriveType() + "\n";
+        for (int i = 0; i < userGarage.getCars().size(); i++) {
+            detailedGarage += "\n" + (i + 1) + ". " + userGarage.getCars().get(i).getYear() + " "
+                    + userGarage.getCars().get(i).getManufacturer() + " " + userGarage.getCars().get(i).getModel()
+                    + "\n" + "Speed: " + userGarage.getCars().get(i).getSpeed() + "\n"
+                + "Handling: " + userGarage.getCars().get(i).getHandling() + "\n"
+                + "Acceleration: " + userGarage.getCars().get(i).getAcceleration() + "\n"
+                + "Braking: " + userGarage.getCars().get(i).getBraking() + "\n"
+                + "Drive type: " + userGarage.getCars().get(i).getDriveType() + "\n";
         }
         System.out.println(detailedGarage);
     }
