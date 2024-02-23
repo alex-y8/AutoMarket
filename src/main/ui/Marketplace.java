@@ -26,9 +26,6 @@ public class Marketplace {
     private static final String JSON_USER_MARKET = "./data/userCarMarket.json";
     private static final String JSON_GARAGE = "./data/garage.json";
 
-    private ArrayList<Car> carListing;
-    private ArrayList<Car> filteredCarListing;
-    private Garage garage;
     private Account account;
     private Scanner input;
 
@@ -86,10 +83,12 @@ public class Marketplace {
         System.out.println("Would you like to load your garage from file? (Y/N)");
         if (input.next().toLowerCase().equals("y")) {
             loadGarage();
+            System.out.println("Garage successfully loaded.");
         }
         System.out.println("Would you like to load your marketplace listings from file? (Y/N)");
         if (input.next().toLowerCase().equals("y")) {
             loadUserListings();
+            System.out.println("Marketplace listings successfully loaded.");
             isDefaultMarket = false;
             listedCar = true;
         } else {
@@ -116,57 +115,11 @@ public class Marketplace {
 
         //carListing = new ArrayList<>();
         account = new Account(0);
-        garage = new Garage();
+        //garage = new Garage();
         //initializeCars1();
         //initializeCars2();
         input = new Scanner(System.in);
     }
-
-//    // MODIFIES: carListing
-//    // EFFECTS: initializes the cars being sold on the marketplace
-//    private void initializeCars1() {
-//        Car car1 = new Car("Audi", "R8", 2016, 8.2,
-//                7.6, 9.0, 9.2, DriveType.AWD, 242000);
-//        Car car2 = new Car("Nissan", "GT-R", 2017, 7.9,
-//                7.2, 9.6, 7.6, DriveType.AWD, 132000);
-//        Car car3 = new Car("BMW", "M5", 1988, 6.5,
-//                5.3, 6.0, 5.3, DriveType.RWD, 54000);
-//        Car car4 = new Car("Bugatti", "Veyron", 2011, 9.9,
-//                8.0, 9.9, 8.4, DriveType.AWD, 2200000);
-//        Car car5 = new Car("Ferrari", "LaFerrari", 2013, 9.5,
-//                9.8, 8.2, 10, DriveType.RWD, 1500000);
-//        Car car6 = new Car("Lamborghini", "Aventador", 2012, 8.7,
-//                7.8, 9.8, 8.3, DriveType.AWD, 310000);
-//        Car car7 = new Car("Mazda", "MX-5 Miata", 1994, 5.5,
-//                4.9, 5.2, 4.3, DriveType.RWD, 25000);
-//        carListing.add(car1);
-//        carListing.add(car2);
-//        carListing.add(car3);
-//        carListing.add(car4);
-//        carListing.add(car5);
-//        carListing.add(car6);
-//        carListing.add(car7);
-//    }
-
-//    // MODIFIES: carListing
-//    // EFFECTS: initializes the cars being sold on the marketplace
-//    private void initializeCars2() {
-//        Car car8 = new Car("Porsche", "911 GT3 RS", 2019, 8.3,
-//                9.7, 8.3, 10, DriveType.RWD, 255000);
-//        Car car9 = new Car("Toyota", "Trueno AE86", 1985, 5.4,
-//                4.7, 5.6, 4.5, DriveType.RWD, 22000);
-//        Car car10 = new Car("Honda", "Civic Type R", 2018, 7.4,
-//                6.7, 6.0, 6.8, DriveType.FWD, 59000);
-//        Car car11 = new Car("Dodge", "Challenger", 2015, 8.1,
-//                6.1, 5.9, 6.5, DriveType.RWD, 75000);
-//        Car car12 = new Car("Chevrolet", "Stingray", 2020, 7.5,
-//                7.6, 7.7, 7.7, DriveType.RWD, 87000);
-//        carListing.add(car8);
-//        carListing.add(car9);
-//        carListing.add(car10);
-//        carListing.add(car11);
-//        carListing.add(car12);
-//    }
 
     // MODIFIES: this
     // EFFECTS: loads the user's garage cars
@@ -265,7 +218,7 @@ public class Marketplace {
                 System.out.println("Please choose from one of the cars listed, or enter an integer.");
             }
         } else if (command.equals("f")) {
-            System.out.println("Filter by: \nYear\nSpeed\nHandling\nAcceleration\nBraking\nDrivetype\nPrice\n");
+            System.out.println("Filter by: \nYear\nSpeed\nHandling\nAcceleration\nBraking\nDrivetype\nPrice");
             filter(input.next());
         } else if (command.equals("d")) {
             checkMarketStats();
@@ -289,6 +242,7 @@ public class Marketplace {
             }
         } else if (command.equals("r")) {
             isFiltered = false;
+            filteredMarketplace = new WorkRoom();
             System.out.println("Reset the marketplace.");
             displayMenu();
         } else if (command.equals("d")) {
@@ -428,6 +382,7 @@ public class Marketplace {
 //        }
 //    }
 
+    // TODO: if not filtered, car listings should be normal
     // EFFECTS: displays the listed cars from the default market, depending on if filtered
     private void displayCarsDefaultMarket() {
         String carListings = "";
@@ -536,9 +491,11 @@ public class Marketplace {
                 || filter.equals("braking")) {
             filterCarsDoubles(filter);
         }
+        if (filter.equals("drivetype")) {
+            filterCarsDriveType(filter);
+        }
     }
 
-    // MODIFIES: filteredCarListing
     // EFFECTS: filters the car market listings according to the selected filters with type int
     public void filterCarsInts(String filter) {
         int value;
@@ -588,10 +545,21 @@ public class Marketplace {
         }
     }
 
+    // EFFECTS: filters the car market listings according to drive type
+    private void filterCarsDriveType(String filter) {
+        String value;
+        System.out.println("Select from: AWD, FWD, or RWD");
+        value = input.next();
+        System.out.println("You selected: filter by " + value.toUpperCase() + " " + filter);
+        checkFilterDriveType(value);
+        isFiltered = true;
+        displayMenu();
+    }
+
     // MODIFIES: filteredCarListing
     // EFFECTS: filters the car market listings according to the selected filters with type double
     public void filterCarsDoubles(String filter) {
-        filteredCarListing = new ArrayList<>();
+        //filteredCarListing = new ArrayList<>();
         double value;
         System.out.println("Select a less than value to compare against: ");
         value = input.nextDouble();
@@ -605,37 +573,134 @@ public class Marketplace {
     // EFFECTS: chooses which filters with type double to apply
     private void checkFilterDouble(String filter, double value) {
         if (filter.equals("speed")) {
-            for (Car c : carListing) {
-                if (c.getSpeed() < value) {
-                    filteredCarListing.add(c);
-                }
-            }
+            checkMarketFilterSpeed(value);
+            //checkMarketFieldsDouble(, value);
         } else if (filter.equals("handling")) {
-            for (Car c : carListing) {
-                if (c.getHandling() < value) {
-                    filteredCarListing.add(c);
-                }
-            }
+            checkMarketFilterHandling(value);
         } else if (filter.equals("acceleration")) {
-            for (Car c : carListing) {
-                if (c.getAcceleration() < value) {
-                    filteredCarListing.add(c);
-                }
-            }
+            checkMarketFilterAcceleration(value);
         } else {
-            checkFilterBraking(value);
+            checkMarketFilterBraking(value);
         }
     }
 
     // MODIFIES: filteredCarListing
-    // EFFECTS: filters the carListing with filter braking
-    private void checkFilterBraking(double value) {
-        for (Car c : carListing) {
-            if (c.getBraking() < value) {
-                filteredCarListing.add(c);
+    // EFFECTS: chooses which filters with type double to apply
+    private void checkFilterDriveType(String value) {
+        if (value.toUpperCase().equals("AWD")) {
+            checkMarketFilterDriveType(value);
+        } else if (value.toUpperCase().equals("FWD")) {
+            checkMarketFilterDriveType(value);
+        } else if (value.toUpperCase().equals("RWD")) {
+            checkMarketFilterDriveType(value);
+        } else {
+            System.out.println("Please select one of the options above.");
+        }
+    }
+
+    // EFFECTS: checks which market to base filtering on, for the DriveType field
+    private void checkMarketFilterDriveType(String value) {
+        DriveType driveType = DriveType.valueOf(value.toUpperCase());
+        if (isDefaultMarket) {
+            for (Car c : marketplace.getCars()) {
+                if (c.getDriveType() == driveType) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        } else {
+            for (Car c : userMarketplace.getCars()) {
+                if (c.getDriveType() == driveType) {
+                    filteredMarketplace.addCar(c);
+                }
             }
         }
     }
+
+    // EFFECTS: checks which market to base filtering on, for the speed field
+    private void checkMarketFilterSpeed(double value) {
+        if (isDefaultMarket) {
+            for (Car c : marketplace.getCars()) {
+                if (c.getSpeed() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        } else {
+            for (Car c : userMarketplace.getCars()) {
+                if (c.getSpeed() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        }
+    }
+
+    // EFFECTS: checks which market to base filtering on, for the handling field
+    private void checkMarketFilterHandling(double value) {
+        if (isDefaultMarket) {
+            for (Car c : marketplace.getCars()) {
+                if (c.getHandling() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        } else {
+            for (Car c : userMarketplace.getCars()) {
+                if (c.getHandling() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        }
+    }
+
+    // EFFECTS: checks which market to base filtering on, for the acceleration field
+    private void checkMarketFilterAcceleration(double value) {
+        if (isDefaultMarket) {
+            for (Car c : marketplace.getCars()) {
+                if (c.getAcceleration() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        } else {
+            for (Car c : userMarketplace.getCars()) {
+                if (c.getAcceleration() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        }
+    }
+
+    // EFFECTS: checks which market to base filtering on, for the braking field
+    private void checkMarketFilterBraking(double value) {
+        if (isDefaultMarket) {
+            for (Car c : marketplace.getCars()) {
+                if (c.getBraking() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        } else {
+            for (Car c : userMarketplace.getCars()) {
+                if (c.getBraking() < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        }
+    }
+
+    // EFFECTS: checks which market to base filtering on, for any car field
+    private void checkMarketFieldsDouble(double field, double value) {
+        if (isDefaultMarket) {
+            for (Car c : marketplace.getCars()) {
+                if (field < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        } else {
+            for (Car c : userMarketplace.getCars()) {
+                if (field < value) {
+                    filteredMarketplace.addCar(c);
+                }
+            }
+        }
+    }
+
 
     // MODIFIES: garage
     // EFFECTS: buys the car from the marketplace, adding it to the garage, and subtracting the car's
@@ -656,7 +721,11 @@ public class Marketplace {
     // EFFECTS: creates a new car and lists it for sale on the marketplace
     public void createCarListing() {
         Car carToList = getCarListingInfo();
-        userMarketplace.addCar(carToList);
+        if (isDefaultMarket) {
+            marketplace.addCar(carToList);
+        } else {
+            userMarketplace.addCar(carToList);
+        }
         System.out.println("Car successfully listed on the marketplace!");
         listedCar = true;
         displayMenu();
