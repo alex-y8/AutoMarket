@@ -42,12 +42,10 @@ public class Marketplace {
     //private JsonWriter jsonWriterMarket; probably won't want to write to this file
     private JsonWriter jsonWriterUserMarket;
     private JsonWriter jsonWriterGarage;
-    private JsonWriter jsonWriterFilteredMarket;
 
     private JsonReader jsonReaderMarket;
     private JsonReader jsonReaderUserMarket;
     private JsonReader jsonReaderGarage;
-    private JsonReader jsonReaderFilteredMarket;
 
     // EFFECTS: runs the marketplace application
     public Marketplace() {
@@ -79,11 +77,12 @@ public class Marketplace {
         System.out.println("Quitting...");
     }
 
+    // MODIFIES: this
+    // EFFECTS: asks the user if they want to load from their files
     private void askLoadFiles() {
         System.out.println("Would you like to load your garage from file? (Y/N)");
         if (input.next().toLowerCase().equals("y")) {
             loadGarage();
-            System.out.println("Garage successfully loaded.");
         }
         System.out.println("Would you like to load your marketplace listings from file? (Y/N)");
         if (input.next().toLowerCase().equals("y")) {
@@ -106,18 +105,12 @@ public class Marketplace {
 
         jsonWriterUserMarket = new JsonWriter(JSON_USER_MARKET);
         jsonWriterGarage = new JsonWriter(JSON_GARAGE);
-        jsonWriterFilteredMarket = new JsonWriter(JSON_FILTERED_MARKET);
 
         jsonReaderMarket = new JsonReader(JSON_MARKET);
         jsonReaderUserMarket = new JsonReader(JSON_USER_MARKET);
         jsonReaderGarage = new JsonReader(JSON_GARAGE);
-        jsonReaderFilteredMarket = new JsonReader(JSON_FILTERED_MARKET);
 
-        //carListing = new ArrayList<>();
         account = new Account(0);
-        //garage = new Garage();
-        //initializeCars1();
-        //initializeCars2();
         input = new Scanner(System.in);
     }
 
@@ -128,6 +121,8 @@ public class Marketplace {
             userGarage = jsonReaderGarage.read();
             if (userGarage.getCars().isEmpty()) {
                 System.out.println("No file loaded - your garage is empty. Visit the marketplace to buy cars!");
+            } else {
+                System.out.println("Garage successfully loaded.");
             }
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_GARAGE);
@@ -319,10 +314,8 @@ public class Marketplace {
     // EFFECTS: choose which market list of cars to use, displays the cars, then brings up the marketplace menu
     private void chooseMarketListing() {
         if (isDefaultMarket) {
-            //viewCarListingDefaultMarket();
             displayCarsDefaultMarket();
         } else {
-            //viewCarListingUserMarket();
             displayCarsUserMarket();
         }
         System.out.println("Type 'b' to choose a car to buy");
@@ -335,54 +328,6 @@ public class Marketplace {
         System.out.println("Type 's' to list a car for sale on the marketplace");
     }
 
-//    // EFFECTS: displays the cars for sale on the default market, and brings up the marketplace menu
-//    public void viewCarListingDefaultMarket() {
-//        displayCarsDefaultMarket();
-//        System.out.println("Type 'b' to choose a car to buy");
-//        if (!isFiltered) {
-//            System.out.println("Type 'f' to filter the cars");
-//        } else {
-//            System.out.println("Type 'r' to reset the filter");
-//        }
-//        System.out.println("Type 'd' to view car specifications");
-//        System.out.println("Type 's' to list a car for sale on the marketplace");
-//    }
-//
-//    // EFFECTS: displays the cars for sale on the user market, and brings up the marketplace menu
-//    public void viewCarListingUserMarket() {
-//        displayCarsUserMarket();
-//        System.out.println("Type 'b' to choose a car to buy");
-//        if (!isFiltered) {
-//            System.out.println("Type 'f' to filter the cars");
-//        } else {
-//            System.out.println("Type 'r' to reset the filter");
-//        }
-//        System.out.println("Type 'd' to view car specifications");
-//        System.out.println("Type 's' to list a car for sale on the marketplace");
-//    }
-
-//    // EFFECTS: displays the cars for sale on the market
-//    public void displayCars() {
-//        String carListings = "";
-//        String filteredCarListings = "";
-//        if (!isFiltered) {
-//            for (int i = 0; i < carListing.size(); i++) {
-//               carListings += (i + 1) + ". " + carListing.get(i).getYear() + " " + carListing.get(i).getManufacturer()
-//                        + " " + carListing.get(i).getModel() + " $" + df.format(carListing.get(i).getPrice()) + "\n";
-//            }
-//            System.out.println(carListings);
-//        } else {
-//            for (int i = 0; i < filteredCarListing.size(); i++) {
-//                filteredCarListings += (i + 1) + ". " + filteredCarListing.get(i).getYear() + " "
-//                        + filteredCarListing.get(i).getManufacturer()
-//                        + " " + filteredCarListing.get(i).getModel() + " $"
-//                        + df.format(filteredCarListing.get(i).getPrice()) + "\n";
-//            }
-//            System.out.println(filteredCarListings);
-//        }
-//    }
-
-    // TODO: if not filtered, car listings should be normal
     // EFFECTS: displays the listed cars from the default market, depending on if filtered
     private void displayCarsDefaultMarket() {
         String carListings = "";
@@ -721,11 +666,8 @@ public class Marketplace {
     // EFFECTS: creates a new car and lists it for sale on the marketplace
     public void createCarListing() {
         Car carToList = getCarListingInfo();
-        if (isDefaultMarket) {
-            marketplace.addCar(carToList);
-        } else {
-            userMarketplace.addCar(carToList);
-        }
+        marketplace.addCar(carToList);
+        userMarketplace.addCar(carToList);
         System.out.println("Car successfully listed on the marketplace!");
         listedCar = true;
         displayMenu();
