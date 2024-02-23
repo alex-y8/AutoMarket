@@ -56,13 +56,5 @@ public class Garage extends WorkRoom {
         return garage;
     }
 
-//    // EFFECTS: creates a JSON object with the given fields
-//    @Override
-//    public JSONObject toJson() {
-//        JSONObject json = new JSONObject();
-//        json.put("cars", );
-//        return json;
-//    }
-
 
 }
