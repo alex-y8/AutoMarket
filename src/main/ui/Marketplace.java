@@ -214,7 +214,7 @@ public class Marketplace {
             }
         } else if (command.equals("f")) {
             System.out.println("Filter by: \nYear\nSpeed\nHandling\nAcceleration\nBraking\nDrivetype\nPrice");
-            filter(input.next());
+            filter(input.next().toLowerCase());
         } else if (command.equals("d")) {
             checkMarketStats();
         } else if (command.equals("s")) {
