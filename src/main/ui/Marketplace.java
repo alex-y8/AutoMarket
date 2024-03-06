@@ -441,10 +441,12 @@ public class Marketplace {
         }
     }
 
+    // REQUIRES: user input must be an integer
+    // MODIFIES: filteredCarListing
     // EFFECTS: filters the car market listings according to the selected filters with type int
     public void filterCarsInts(String filter) {
         int value;
-        System.out.println("Select a less than value to compare against: ");
+        System.out.println("Select a less than value (integer) to compare against: ");
         value = input.nextInt();
         System.out.println("You selected: filter by " + filter + " < " + df.format(value));
         if (filter.equals("year")) {
@@ -501,12 +503,13 @@ public class Marketplace {
         displayMenu();
     }
 
+    // REQUIRES: user input must be a double
     // MODIFIES: filteredCarListing
     // EFFECTS: filters the car market listings according to the selected filters with type double
     public void filterCarsDoubles(String filter) {
         //filteredCarListing = new ArrayList<>();
         double value;
-        System.out.println("Select a less than value to compare against: ");
+        System.out.println("Select a less than value (double) to compare against: ");
         value = input.nextDouble();
         System.out.println("You selected: filter by " + filter + " < " + df.format(value));
         checkFilterDouble(filter, value);
