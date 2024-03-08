@@ -78,15 +78,14 @@ public class AccountWorkRoom implements Writeable {
     // return false otherwise
     public boolean boughtCar(Car c) {
         if (getBalance() >= c.getPrice()) {
-            try {
-                account.get(0).setBalance(getBalance() - c.getPrice()); //-= c.getPrice();
-                return true;
-            } catch (IllegalAccountBalanceException e) {
-                return false;
-            }
-
+            setBalanceBoughtCar(getBalance() - c.getPrice());
+            return true;
         }
         return false;
+    }
+
+    public void setBalanceBoughtCar(double balance) {
+        account.get(0).setBalanceNoException(balance);
     }
 
     // getter

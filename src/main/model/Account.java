@@ -53,6 +53,12 @@ public class Account implements Writeable {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the account's balance to the given amount
+    public void setBalanceNoException(double amount) {
+        this.balance = amount;
+    }
+
     // EFFECTS: creates a JSON object with the given fields
     @Override
     public JSONObject toJson() {

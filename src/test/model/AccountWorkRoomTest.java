@@ -100,7 +100,7 @@ public class AccountWorkRoomTest {
     public void testBoughtCarIllegalAccountBalanceException() {
         try {
             accountWorkRoom.setBalance(-1);
-            fail("IllegalAccountBalanceException was not thrown.");
+            fail("IllegalAccountBalanceException should have been thrown");
         } catch (IllegalAccountBalanceException e) {
             // pass
         }
