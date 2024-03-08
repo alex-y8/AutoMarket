@@ -1,21 +1,15 @@
 package persistence;
 
-import model.WorkRoom;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-// Represents a writer that writes JSON representation of workroom to file
-// Referenced from the JsonSerialization Demo
-// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class JsonWriter {
-    private static final int TAB = 4;
-    private PrintWriter writer;
-    private String destination;
+public abstract class JsonWriter {
 
-    // EFFECTS: constructs writer to write to destination file
+    protected static final int TAB = 4;
+    protected PrintWriter writer;
+    protected String destination;
+
     public JsonWriter(String destination) {
         this.destination = destination;
     }
@@ -28,13 +22,6 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of workroom to file
-    public void write(WorkRoom wr) {
-        JSONObject json = wr.toJson();
-        saveToFile(json.toString(TAB));
-    }
-
-    // MODIFIES: this
     // EFFECTS: closes writer
     public void close() {
         writer.close();
@@ -42,7 +29,8 @@ public class JsonWriter {
 
     // MODIFIES: this
     // EFFECTS: writes string to file
-    private void saveToFile(String json) {
+    protected void saveToFile(String json) {
         writer.print(json);
     }
+
 }

@@ -1,6 +1,6 @@
 package persistence;
 
-import model.WorkRoom;
+import model.GarageWorkRoom;
 import model.cars.Car;
 import model.cars.DriveType;
 import org.junit.jupiter.api.Test;
@@ -13,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 // Referenced from the JsonSerialization Demo
 // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class JsonWriterTest extends JsonTest {
+public class JsonWriterGarageTest extends JsonTest {
     @Test
     void testWriterInvalidFile() {
         try {
-            WorkRoom wr = new WorkRoom();
-            JsonWriter writer = new JsonWriter("./data/my\0illegal:fileName.json");
+            GarageWorkRoom wr = new GarageWorkRoom();
+            JsonWriterGarage writer = new JsonWriterGarage("./data/my\0illegal:fileName.json");
             writer.open();
             fail("IOException was expected");
         } catch (IOException e) {
@@ -29,13 +29,13 @@ public class JsonWriterTest extends JsonTest {
     @Test
     void testWriterEmptyWorkroom() {
         try {
-            WorkRoom wr = new WorkRoom();
-            JsonWriter writer = new JsonWriter("./data/testWriterEmptyWorkroom.json");
+            GarageWorkRoom wr = new GarageWorkRoom();
+            JsonWriterGarage writer = new JsonWriterGarage("./data/testWriterEmptyWorkroom.json");
             writer.open();
             writer.write(wr);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterEmptyWorkroom.json");
+            JsonReaderGarage reader = new JsonReaderGarage("./data/testWriterEmptyWorkroom.json");
             wr = reader.read();
             assertEquals(0, wr.numCars());
         } catch (IOException e) {
@@ -46,17 +46,17 @@ public class JsonWriterTest extends JsonTest {
     @Test
     void testWriterGeneralWorkroom() {
         try {
-            WorkRoom wr = new WorkRoom();
+            GarageWorkRoom wr = new GarageWorkRoom();
             wr.addCar(new Car("Audi", "R8", 2016, 8.2, 7.6, 9.0,
                     9.2, DriveType.RWD, 100000));
             wr.addCar(new Car("Nissan", "GT-R", 2017, 7.9, 7.2, 9.6,
                     7.6, DriveType.AWD, 50000));
-            JsonWriter writer = new JsonWriter("./data/testWriterGeneralWorkroom.json");
+            JsonWriterGarage writer = new JsonWriterGarage("./data/testWriterGeneralWorkroom.json");
             writer.open();
             writer.write(wr);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterGeneralWorkroom.json");
+            JsonReaderGarage reader = new JsonReaderGarage("./data/testWriterGeneralWorkroom.json");
             wr = reader.read();
             List<Car> carList = wr.getCars();
             assertEquals(2, carList.size());

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AccountTest {
+
     private Account account1;
     private Account account2;
     private Car car1;

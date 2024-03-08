@@ -1,5 +1,6 @@
 package persistence;
 
+import model.Account;
 import model.cars.Car;
 import model.cars.DriveType;
 
@@ -19,5 +20,9 @@ public class JsonTest {
         assertEquals(braking, car.getBraking());
         assertEquals(driveType, car.getDriveType());
         assertEquals(price, car.getPrice());
+    }
+
+    protected void checkAccount(double balance, Account a) {
+        assertEquals(balance, a.getBalance());
     }
 }

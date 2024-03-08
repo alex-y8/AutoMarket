@@ -2,13 +2,15 @@ package model;
 
 import exceptions.IllegalAccountBalanceException;
 import model.cars.Car;
+import org.json.JSONObject;
+import persistence.Writeable;
 
 // Represents an account with a cash balance in dollars ($)
-public class Account {
+public class Account implements Writeable {
 
     private double balance;
 
-    // Constructs a new account with 0 dollars
+    // Constructs a new account with an initial balance dollars
     public Account(double initialBalance) {
         if (initialBalance > 0) {
             balance = initialBalance;
@@ -49,6 +51,14 @@ public class Account {
             throw new IllegalAccountBalanceException();
         }
 
+    }
+
+    // EFFECTS: creates a JSON object with the given fields
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("balance", balance);
+        return json;
     }
 
 }

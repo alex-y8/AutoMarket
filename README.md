@@ -26,5 +26,6 @@ So, I have decided to create a car marketplace application with cars on sale, hi
 - As a user, I want to be able to add/sell my own cars on the market
 - As a user, I want to be able to save and load a file that contains cars in my garage
 - As a user, when I select the quit option from the application menu, 
-I want to be reminded to save my garage to file and have the _option_ to do so or not
-- As a user, when I start the application, I want to be given the _option_ to load my garage from file
+I want to be reminded to save my garage, marketplace, and account to file and have the _option_ to do so or not
+- As a user, when I start the application, I want to be given the _option_ to load my garage, marketplace, and account
+from file

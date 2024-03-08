@@ -1,13 +1,11 @@
 package model;
 
 import model.cars.Car;
-import org.json.JSONObject;
-import persistence.Writeable;
 
 import java.util.ArrayList;
 
 // Represents the user's garage as a list of cars
-public class Garage extends WorkRoom {
+public class Garage extends GarageWorkRoom {
 
     private ArrayList<Car> garage;
 

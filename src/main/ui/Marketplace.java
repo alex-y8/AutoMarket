@@ -2,16 +2,17 @@ package ui;
 
 import exceptions.IllegalAccountBalanceException;
 import model.Account;
-import model.Garage;
-import model.WorkRoom;
+import model.AccountWorkRoom;
+import model.GarageWorkRoom;
 import model.cars.Car;
 import model.cars.DriveType;
-import persistence.JsonReader;
-import persistence.JsonWriter;
+import persistence.JsonReaderAccount;
+import persistence.JsonReaderGarage;
+import persistence.JsonWriterAccount;
+import persistence.JsonWriterGarage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.text.DecimalFormat;
@@ -25,8 +26,9 @@ public class Marketplace {
     private static final String JSON_FILTERED_MARKET = "./data/filteredCarMarket.json";
     private static final String JSON_USER_MARKET = "./data/userCarMarket.json";
     private static final String JSON_GARAGE = "./data/garage.json";
+    private static final String JSON_ACCOUNT = "./data/account.json";
 
-    private Account account;
+    //private Account userAccount;
     private Scanner input;
 
     private final DecimalFormat df = new DecimalFormat("#,###.##");
@@ -34,18 +36,21 @@ public class Marketplace {
     private boolean listedCar = false;
     private boolean isDefaultMarket = true;
 
-    private WorkRoom marketplace;
-    private WorkRoom userMarketplace;
-    private WorkRoom userGarage;
-    private WorkRoom filteredMarketplace;
+    private GarageWorkRoom marketplace;
+    private GarageWorkRoom userMarketplace;
+    private GarageWorkRoom userGarage;
+    private GarageWorkRoom filteredMarketplace;
+    private AccountWorkRoom userAccount;
 
     //private JsonWriter jsonWriterMarket; probably won't want to write to this file
-    private JsonWriter jsonWriterUserMarket;
-    private JsonWriter jsonWriterGarage;
+    private JsonWriterGarage jsonWriterUserMarket;
+    private JsonWriterGarage jsonWriterGarage;
+    private JsonWriterAccount jsonWriterAccount;
 
-    private JsonReader jsonReaderMarket;
-    private JsonReader jsonReaderUserMarket;
-    private JsonReader jsonReaderGarage;
+    private JsonReaderGarage jsonReaderMarket;
+    private JsonReaderGarage jsonReaderUserMarket;
+    private JsonReaderGarage jsonReaderGarage;
+    private JsonReaderAccount jsonReaderAccount;
 
     // EFFECTS: runs the marketplace application
     public Marketplace() {
@@ -87,30 +92,38 @@ public class Marketplace {
         System.out.println("Would you like to load your marketplace listings from file? (Y/N)");
         if (input.next().toLowerCase().equals("y")) {
             loadUserListings();
-            System.out.println("Marketplace listings successfully loaded.");
             isDefaultMarket = false;
             listedCar = true;
         } else {
             loadListings();
+        }
+        System.out.println("Would you like to load your account balance from file? (Y/N)");
+        if (input.next().toLowerCase().equals("y")) {
+            loadAccount();
+        } else {
+            userAccount.getAccount().set(0, new Account(0));
         }
     }
 
     // MODIFIES: this
     // EFFECTS: initializes the JSON reader, JSON writer, and marketplace
     private void initialize() {
-        marketplace = new WorkRoom();
-        userMarketplace = new WorkRoom();
-        userGarage = new WorkRoom();
-        filteredMarketplace = new WorkRoom();
+        marketplace = new GarageWorkRoom();
+        userMarketplace = new GarageWorkRoom();
+        userGarage = new GarageWorkRoom();
+        filteredMarketplace = new GarageWorkRoom();
+        userAccount = new AccountWorkRoom();
 
-        jsonWriterUserMarket = new JsonWriter(JSON_USER_MARKET);
-        jsonWriterGarage = new JsonWriter(JSON_GARAGE);
+        jsonWriterUserMarket = new JsonWriterGarage(JSON_USER_MARKET);
+        jsonWriterGarage = new JsonWriterGarage(JSON_GARAGE);
+        jsonWriterAccount = new JsonWriterAccount(JSON_ACCOUNT);
 
-        jsonReaderMarket = new JsonReader(JSON_MARKET);
-        jsonReaderUserMarket = new JsonReader(JSON_USER_MARKET);
-        jsonReaderGarage = new JsonReader(JSON_GARAGE);
+        jsonReaderMarket = new JsonReaderGarage(JSON_MARKET);
+        jsonReaderUserMarket = new JsonReaderGarage(JSON_USER_MARKET);
+        jsonReaderGarage = new JsonReaderGarage(JSON_GARAGE);
+        jsonReaderAccount = new JsonReaderAccount(JSON_ACCOUNT);
 
-        account = new Account(0);
+        //account = new Account(0);
         input = new Scanner(System.in);
     }
 
@@ -130,10 +143,22 @@ public class Marketplace {
     }
 
     // MODIFIES: this
+    // EFFECTS: loads the user's account balance
+    private void loadAccount() {
+        try {
+            userAccount = jsonReaderAccount.read();
+            System.out.println("Account balance successfully loaded.");
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_GARAGE);
+        }
+    }
+
+    // MODIFIES: this
     // EFFECTS: loads the user's marketplace car listings
     private void loadUserListings() {
         try {
             userMarketplace = jsonReaderUserMarket.read();
+            System.out.println("Marketplace listings successfully loaded.");
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_USER_MARKET);
         }
@@ -172,6 +197,19 @@ public class Marketplace {
             System.out.println("Marketplace successfully saved!");
         } catch (FileNotFoundException e) {
             System.out.println("Unable to write to file: " + JSON_USER_MARKET);
+        }
+    }
+
+    // MODIFIES: userAccount workroom
+    // EFFECTS: saves the user's account balance to file
+    private void saveAccount() {
+        try {
+            jsonWriterAccount.open();
+            jsonWriterAccount.write(userAccount);
+            jsonWriterAccount.close();
+            System.out.println("Account balance successfully saved!");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_ACCOUNT);
         }
     }
 
@@ -237,7 +275,7 @@ public class Marketplace {
             }
         } else if (command.equals("r")) {
             isFiltered = false;
-            filteredMarketplace = new WorkRoom();
+            filteredMarketplace = new GarageWorkRoom();
             System.out.println("Reset the marketplace.");
             displayMenu();
         } else if (command.equals("d")) {
@@ -279,26 +317,20 @@ public class Marketplace {
     // MODIFIES: this
     // EFFECTS: processes user commands for the account menu
     private void processAccountCommands(String command) {
-        switch (command) {
-            case "i":
-                account.increaseBalance();
-                System.out.println("Your account balance has been increased to " + "$" + formatAccountBalance(df));
-                break;
-            case "o":
-                System.out.println("Set your account balance to any positive number:");
-                try {
-                    account.setBalance(input.nextDouble());
-                } catch (IllegalAccountBalanceException e) {
-                    System.out.println("Cannot set balance to a negative number.");
-                    System.out.println("Your account balance is $" + formatAccountBalance(df));
-                    break;
-                }
-                System.out.println("Your account balance has been set to " + "$" + formatAccountBalance(df));
-                displayMenu();
-                break;
-            default:
-                System.out.println("Invalid input. Please select one of the options.");
-                displayMenu();
+        if (command.equals("o")) {
+            System.out.println("Set your account balance to any positive number:");
+            try {
+                userAccount.setBalance(input.nextDouble());
+            } catch (IllegalAccountBalanceException e) {
+                System.out.println("Cannot set balance to a negative number.");
+                System.out.println("Your account balance is $" + formatAccountBalance(df));
+                return;
+            }
+            System.out.println("Your account balance has been set to " + "$" + formatAccountBalance(df));
+            displayMenu();
+        } else {
+            System.out.println("Invalid input. Please select one of the options.");
+            displayMenu();
         }
     }
 
@@ -356,7 +388,7 @@ public class Marketplace {
     }
 
     // EFFECTS: returns the list of cars in the filtered marketplace as a string
-    private String filteredCarListingsToString(WorkRoom filteredMarketplace, String filteredCarListings) {
+    private String filteredCarListingsToString(GarageWorkRoom filteredMarketplace, String filteredCarListings) {
         for (int i = 0; i < filteredMarketplace.numCars(); i++) {
             filteredCarListings += (i + 1) + ". " + filteredMarketplace.getCars().get(i).getYear() + " "
                     + filteredMarketplace.getCars().get(i).getManufacturer()
@@ -392,7 +424,8 @@ public class Marketplace {
     }
 
     // EFFECTS: prints each car's detailed specifications according to the specific marketplace
-    private void printDetailedStatsUnfiltered(int userMarketplace, String detailedCarsUser, WorkRoom userMarketplace1) {
+    private void printDetailedStatsUnfiltered(int userMarketplace, String detailedCarsUser,
+                                              GarageWorkRoom userMarketplace1) {
         for (int i = 0; i < userMarketplace; i++) {
             detailedCarsUser += "\n" + (i + 1) + ". " + userMarketplace1.getCars().get(i).getYear() + " "
                     + userMarketplace1.getCars().get(i).getManufacturer() + " "
@@ -416,7 +449,7 @@ public class Marketplace {
     // EFFECTS: displays the options an Account can operate on
     public void displayAccountInfo() {
         System.out.println("Your current account balance is: $" + formatAccountBalance(df));
-        System.out.println("Type 'i' to increase your account balance by $10,000");
+        //System.out.println("Type 'i' to increase your account balance by $10,000");
         System.out.println("Type 'o' to set your account balance to any amount");
     }
 
@@ -654,7 +687,7 @@ public class Marketplace {
     // EFFECTS: buys the car from the marketplace, adding it to the garage, and subtracting the car's
     // price from the account's.
     public void buyCar(Car c) {
-        if (account.boughtCar(c)) {
+        if (userAccount.boughtCar(c)) {
             userGarage.addCar(c);
             System.out.println("Purchase complete! Enjoy your new car!");
             displayMenu();
@@ -768,7 +801,7 @@ public class Marketplace {
 
     // EFFECTS: formats the account balance to return in a comprehensible format (i.e. 1,000,000)
     public String formatAccountBalance(DecimalFormat df) {
-        return df.format(account.getBalance());
+        return df.format(userAccount.getBalance());
     }
 
     // EFFECTS: reminds the user to save their garage and/or marketplace to file, then quits the program
@@ -784,6 +817,10 @@ public class Marketplace {
             } else {
                 System.out.println("Unable to save to file - you did not list any cars for sale on the marketplace.");
             }
+        }
+        System.out.println("Would you like to save your account balance to file? (Y/N)");
+        if (input.next().toLowerCase().equals("y")) {
+            saveAccount();
         }
     }
 

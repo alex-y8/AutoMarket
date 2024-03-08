@@ -11,12 +11,12 @@ import java.util.List;
 // Represents a workroom having a collection of cars
 // Referenced from the JsonSerialization Demo
 // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class WorkRoom implements Writeable {
+public class GarageWorkRoom implements Writeable {
 
     private List<Car> carList;
 
     // EFFECTS: constructs workroom with a name and empty list of cars
-    public WorkRoom() {
+    public GarageWorkRoom() {
         carList = new ArrayList<>();
     }
 

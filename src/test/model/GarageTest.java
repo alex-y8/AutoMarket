@@ -5,12 +5,10 @@ import model.cars.DriveType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GarageTest {
-    private WorkRoom garageWorkRoom;
+    private GarageWorkRoom garageWorkRoom;
     private Garage garage;
     private Car car1;
     private Car car2;
@@ -18,7 +16,7 @@ public class GarageTest {
 
     @BeforeEach
     public void runBefore() {
-        garageWorkRoom = new WorkRoom();
+        garageWorkRoom = new GarageWorkRoom();
         garage = new Garage();
         car1 = new Car("Nissan", "GT-R", 2016, 8.2,
                 7.6, 9.0, 9.2, DriveType.RWD, 242000);
@@ -133,5 +131,20 @@ public class GarageTest {
         garage.addCar(car2);
         garage.addCar(car3);
         assertEquals(3, garage.getGarageSize());
+    }
+
+    @Test
+    public void testGetCars() {
+        garageWorkRoom.addCar(car1);
+        garageWorkRoom.addCar(car2);
+        assertEquals(car1, garageWorkRoom.getCars().get(0));
+        assertEquals(car2, garageWorkRoom.getCars().get(1));
+    }
+
+    @Test
+    public void testNumCars() {
+        garageWorkRoom.addCar(car1);
+        garageWorkRoom.addCar(car2);
+        assertEquals(2, garageWorkRoom.numCars());
     }
 }
