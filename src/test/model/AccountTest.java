@@ -78,7 +78,7 @@ public class AccountTest {
     }
 
     @Test
-    public void testIllegalAccountBalanceException() {
+    public void testBoughtCarIllegalAccountBalanceException() {
         try {
             account1.setBalance(-1);
             fail("IllegalAccountBalanceException was not thrown.");

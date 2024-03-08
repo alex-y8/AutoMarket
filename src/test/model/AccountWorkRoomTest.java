@@ -96,4 +96,15 @@ public class AccountWorkRoomTest {
         assertEquals(1, accountWorkRoom.getBalance());
     }
 
+    @Test
+    public void testBoughtCarIllegalAccountBalanceException() {
+        try {
+            accountWorkRoom.setBalance(-1);
+            fail("IllegalAccountBalanceException was not thrown.");
+        } catch (IllegalAccountBalanceException e) {
+
+        }
+        assertEquals(0, accountWorkRoom.getBalance());
+    }
+
 }
