@@ -102,7 +102,7 @@ public class AccountWorkRoomTest {
             accountWorkRoom.setBalance(-1);
             fail("IllegalAccountBalanceException was not thrown.");
         } catch (IllegalAccountBalanceException e) {
-
+            // pass
         }
         assertEquals(0, accountWorkRoom.getBalance());
     }

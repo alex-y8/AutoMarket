@@ -83,7 +83,7 @@ public class AccountTest {
             account1.setBalance(-1);
             fail("IllegalAccountBalanceException was not thrown.");
         } catch (IllegalAccountBalanceException e) {
-
+            // pass
         }
         assertEquals(0, account1.getBalance());
     }
