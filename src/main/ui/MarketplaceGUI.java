@@ -12,6 +12,7 @@ public class MarketplaceGUI extends JFrame {
     public static final int HEIGHT = 1000;
 
     private JPanel mainMenu;
+    private JPanel marketplaceMenu;
 
     // EFFECTS: constructs the marketplace gui
     public MarketplaceGUI() {
@@ -22,18 +23,8 @@ public class MarketplaceGUI extends JFrame {
     // MODIFIES: this
     // EFFECTS:  draws the JFrame window where this Marketplace will operate, creates the menu buttons
     private void initializeGraphics() {
-        mainMenu = new JPanel();
-
-        mainMenu.setLayout(new BorderLayout());
-
-        //createMainMenu();
-
-
-        mainMenu.add(createMarketplaceButton());
-        mainMenu.add(createGarageButton());
-        mainMenu.add(createAccountButton());
-        mainMenu.add(quitButton());
-
+        initializeMainMenu();
+        initializeMarketplaceMenu();
 
 
         setLayout(new BorderLayout());
@@ -43,18 +34,43 @@ public class MarketplaceGUI extends JFrame {
         setVisible(true);
         setResizable(false);
 
-        mainMenu.setBounds(50, 100, 300, 300);
-        //mainMenu.setLayout(new GridLayout(10, 1, 10, 10));
 
-        mainMenu.setLayout(new GridLayout(0, 1, 0, 10));
-        mainMenu.setBorder(BorderFactory.createEmptyBorder(700, 20, 20, 20));
+
+
 
         add(mainMenu);
     }
 
-    private void createMainMenu() {
-
+    // MODIFIES: this
+    // EFFECTS: sets up the main menu's borders and buttons
+    private void initializeMainMenu() {
+        mainMenu = new JPanel();
+        mainMenu.setLayout(new BorderLayout());
         mainMenu.add(createMarketplaceButton());
+        mainMenu.add(createGarageButton());
+        mainMenu.add(createAccountButton());
+        mainMenu.add(quitButton());
+        mainMenu.setBounds(50, 100, 300, 300);
+        mainMenu.setLayout(new GridLayout(0, 1, 0, 10));
+        mainMenu.setBorder(BorderFactory.createEmptyBorder(700, 20, 20, 20));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets up the marketplace's borders and buttons
+    private void initializeMarketplaceMenu() {
+        marketplaceMenu = new JPanel();
+        marketplaceMenu.setLayout(new BorderLayout());
+
+        marketplaceMenu.setBounds(50, 100, 300, 300);
+        marketplaceMenu.setLayout(new GridLayout(0, 1, 0, 10));
+        marketplaceMenu.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JScrollPane scroll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        marketplaceMenu.add(scroll);
+
+        marketplaceMenu.setVisible(false);
+        loadCars();
     }
 
     // MODIFIES: this
@@ -68,6 +84,7 @@ public class MarketplaceGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //bring up marketplace window with cars
+                displayMarketplaceCars();
             }
         });
 
@@ -128,6 +145,20 @@ public class MarketplaceGUI extends JFrame {
 
         return accountButton;
 
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads the cars listed for sale onto the marketplace menu
+    private void loadCars() {
+
+    }
+
+    // MODIFIES: this
+    // EFFECTS: displays the cars listed for sale on the marketplace
+    private void displayMarketplaceCars() {
+        add(marketplaceMenu);
+        marketplaceMenu.setVisible(true);
+        mainMenu.setVisible(false);
     }
 
     // MODIFIES: this
