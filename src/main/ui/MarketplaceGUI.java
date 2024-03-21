@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.List;
 
 // Graphical interface for the marketplace
 public class MarketplaceGUI extends JFrame {
@@ -80,7 +81,8 @@ public class MarketplaceGUI extends JFrame {
     // EFFECTS:  draws the JFrame window where this Marketplace will operate, creates the menu buttons
     private void initializeGraphics() {
         initializeMainMenu();
-        initializeMarketplaceMenu();
+        //initializeMarketplaceMenu();
+        loadCars();
         initializeGarageMenu();
 
         setLayout(new BorderLayout());
@@ -154,7 +156,10 @@ public class MarketplaceGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //bring up marketplace window with cars
-                displayMarketplaceMenu();
+                //displayMarketplaceMenu();
+                loadCars();
+                List<Car> carList = marketplace.getCars();
+                new MarketplaceMenu(carList);
             }
         });
 

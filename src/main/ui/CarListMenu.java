@@ -4,6 +4,9 @@ import model.cars.Car;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 
 public class CarListMenu implements ListCellRenderer<Car> {
@@ -24,23 +27,24 @@ public class CarListMenu implements ListCellRenderer<Car> {
     private JList<? extends Car> carList;
     private Car car;
 
+    private static final double IMAGE_WIDTH = 500;
+    private static final double IMAGE_HEIGHT = IMAGE_WIDTH / 1.7;
+    private Dimension fontSize;
+
     private final DecimalFormat df = new DecimalFormat("#,###.##");
 
 
     // EFFECTS: construct the menu for the car list
     public CarListMenu() {
         carListPanel = new JPanel();
-        //carListPanel.setLayout(new BorderLayout());
-        carListPanel.setLayout(new GridLayout(0, 2, 0, 0));
-        carListPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
+        carListPanel.setLayout(new BorderLayout());
+        //carListPanel.setLayout(new GridLayout(0, 2, 0, 0));
+        carListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setUpLabels();
-
         setUpPanels();
 
         carListPanel.add(textPanel, BorderLayout.CENTER);
         carListPanel.add(carImage, BorderLayout.WEST);
-
     }
 
     @Override
@@ -51,13 +55,10 @@ public class CarListMenu implements ListCellRenderer<Car> {
         this.car = car;
         setUpInfo();
 
-
         if (isSelected) {
             select();
-            System.out.println("selected");
         } else {
             unselect();
-            System.out.println("unselected");
         }
 
         return carListPanel;
@@ -102,6 +103,14 @@ public class CarListMenu implements ListCellRenderer<Car> {
         carDriveType = new JLabel();
         carImage = new JLabel();
 
+        carManufacturer.setFont(new Font("Urbanist", Font.BOLD, 30));
+        carModel.setFont(new Font("Urbanist", Font.BOLD, 25));
+        carPrice.setFont(new Font("", Font.PLAIN, 18));
+        carSpeed.setFont(new Font("", Font.PLAIN, 18));
+        carHandling.setFont(new Font("", Font.PLAIN, 18));
+        carAcceleration.setFont(new Font("", Font.PLAIN, 18));
+        carBraking.setFont(new Font("", Font.PLAIN, 18));
+        carDriveType.setFont(new Font("", Font.PLAIN, 18));
     }
 
     private void setUpPanels() {
@@ -120,15 +129,17 @@ public class CarListMenu implements ListCellRenderer<Car> {
         carManufacturer.setText(car.getManufacturer());
         carModel.setText(car.getModel());
         carPrice.setText("Price: $" + df.format(car.getPrice()));
-        carSpeed.setText(String.valueOf(car.getSpeed()));
-        carHandling.setText(String.valueOf(car.getHandling()));
-        carAcceleration.setText(String.valueOf(car.getAcceleration()));
-        carBraking.setText(String.valueOf(car.getBraking()));
-        carDriveType.setText(String.valueOf(car.getDriveType()));
-        carImage.setPreferredSize(new Dimension(150, 150));
+        carSpeed.setText("Speed: " + (car.getSpeed()));
+        carHandling.setText("Handling: " + (car.getHandling()));
+        carAcceleration.setText("Acceleration: " + (car.getAcceleration()));
+        carBraking.setText("Braking: " + (car.getBraking()));
+        carDriveType.setText("Drive Type: " + (car.getDriveType()));
+        carImage.setPreferredSize(new Dimension((int) IMAGE_WIDTH, (int) IMAGE_HEIGHT));
         String imageFile = "src/images/" + car.getImage();
         ImageIcon image = new ImageIcon(imageFile);
-        carImage.setIcon(image);
+        Image scaled = image.getImage().getScaledInstance((int) IMAGE_WIDTH, (int) IMAGE_HEIGHT, Image.SCALE_SMOOTH);
+        ImageIcon scaledImage = new ImageIcon(scaled);
+        carImage.setIcon(scaledImage);
     }
 
 }
