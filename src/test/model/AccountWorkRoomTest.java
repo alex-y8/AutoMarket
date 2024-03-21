@@ -20,9 +20,9 @@ public class AccountWorkRoomTest {
         accountWorkRoom = new AccountWorkRoom();
         a = new Account(0);
         car1 = new Car("Audi", "R8", 2016, 8.2,
-                7.6, 9.0, 9.2, DriveType.RWD, 242000);
+                7.6, 9.0, 9.2, DriveType.RWD, 242000, null);
         car2 = new Car("Audi", "R8", 2016, 8.2,
-                7.6, 9.0, 9.2, DriveType.RWD, 39120);
+                7.6, 9.0, 9.2, DriveType.RWD, 39120, null);
     }
 
     @Test

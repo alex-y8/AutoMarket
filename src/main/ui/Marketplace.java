@@ -720,7 +720,8 @@ public class Marketplace {
         double braking = carInfoDoubles("braking");
         int price = carInfoInts("price");
         DriveType driveType = carInfoDriveType();
-        return new Car(manufacturer, model, year, speed, handling, acceleration, braking, driveType, price);
+        String image = null;
+        return new Car(manufacturer, model, year, speed, handling, acceleration, braking, driveType, price, image);
     }
 
     // EFFECTS: gets the user input for the car fields that are Ints

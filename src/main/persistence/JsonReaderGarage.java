@@ -61,7 +61,8 @@ public class JsonReaderGarage extends JsonReader {
         double braking = jsonObject.getDouble("braking");
         DriveType driveType = DriveType.valueOf(jsonObject.getString("driveType"));
         int price = jsonObject.getInt("price");
-        Car car = new Car(manufacturer, model, year, speed, handling, acceleration, braking, driveType, price);
+        String image = jsonObject.getString("image");
+        Car car = new Car(manufacturer, model, year, speed, handling, acceleration, braking, driveType, price, image);
         wr.addCar(car);
     }
 

@@ -2,12 +2,15 @@ package ui;
 
 import model.AccountWorkRoom;
 import model.GarageWorkRoom;
+import model.cars.Car;
 import persistence.JsonReaderAccount;
 import persistence.JsonReaderGarage;
 import persistence.JsonWriterAccount;
 import persistence.JsonWriterGarage;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -107,18 +110,16 @@ public class MarketplaceGUI extends JFrame {
     // MODIFIES: this
     // EFFECTS: sets up the marketplace's borders and buttons
     private void initializeMarketplaceMenu() {
+        CarListMenu carListMenu = new CarListMenu();
+
         marketplaceMenu = new JPanel();
         marketplaceMenu.setLayout(new BorderLayout());
 
-        //marketplaceMenu.setBounds(0, 0, WIDTH - 20, HEIGHT - 20);
-        marketplaceMenu.setLayout(new GridLayout(0, 1, 0, 75));
-        marketplaceMenu.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        JScrollPane scroll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//        marketplaceMenu.setLayout(new GridLayout(0, 1, 0, 10));
+//        marketplaceMenu.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
 
-        marketplaceMenu.setVisible(false);
+//        marketplaceMenu.setVisible(false);
         loadCars();
 
     }
@@ -231,8 +232,6 @@ public class MarketplaceGUI extends JFrame {
     // MODIFIES: this
     // EFFECTS: loads the cars in the garage onto the garage menu
     private void loadGarage() {
-        //convert json file to list
-        // for each loop : car list, convert to text
         try {
             userGarage = jsonReaderGarage.read();
             if (userGarage.getCars().isEmpty()) {
@@ -244,31 +243,62 @@ public class MarketplaceGUI extends JFrame {
             //System.out.println("Unable to read from file: " + JSON_GARAGE);
         }
 
-
-
     }
 
     // MODIFIES: this
     // EFFECTS: displays the cars listed for sale on the marketplace
     private void displayMarketplaceMenu() {
 
-        add(marketplaceMenu);
-        JScrollPane scrollBar = new JScrollPane(marketplaceMenu, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        add(scrollBar, BorderLayout.CENTER);
+
         //add(carStats);
         marketplaceMenu.setVisible(true);
         mainMenu.setVisible(false);
         garageMenu.setVisible(false);
         displayMarketplaceCars();
+        add(marketplaceMenu);
+        JScrollPane scrollBar = new JScrollPane(marketplaceMenu);
+        add(scrollBar, BorderLayout.CENTER);
     }
+
+    private String[] createCarList() {
+        String[] cars = new String[marketplace.numCars()];
+        for (int i = 0; i < marketplace.numCars(); i++) {
+            cars[i] = marketplace.getCars().get(i).toString();
+        }
+        return cars;
+
+    }
+
+    private Car[] createCarJList() {
+        Car[] cars = new Car[marketplace.numCars()];
+        for (int i = 0; i < marketplace.numCars(); i++) {
+            cars[i] = marketplace.getCars().get(i);
+        }
+        return cars;
+    }
+
+    private void displayMarketplaceCars() {
+
+        //JList<String> carsList = new JList<>(createCarList());
+
+        CarListMenu carListMenu = new CarListMenu();
+        JList<Car> carJList = new JList<>(createCarJList());
+        carJList.setCellRenderer(carListMenu);
+
+//        carsList.setVisibleRowCount(marketplace.numCars());
+//        carsList.setFixedCellHeight(100);
+
+//        marketplaceMenu.add(carsList);
+        marketplaceMenu.add(carJList);
+    }
+
+
 
     // MODIFIES: this
     // EFFECTS: loads the cars from the JSON file
-    private void displayMarketplaceCars() {
+    private void displayMarketplaceCars2() {
 
         String stats = "";
-        int lastPosition = 0;
         for (int i = 0; i < marketplace.numCars(); i++) {
             JLabel statsLabel = new JLabel();
             stats = (i + 1) + ". " + marketplace.getCars().get(i).getYear() + " "
@@ -281,13 +311,8 @@ public class MarketplaceGUI extends JFrame {
                     + marketplace.getCars().get(i).getBraking() + "\n" + "Drive type: "
                     + marketplace.getCars().get(i).getDriveType() + "\n";
             statsLabel.setText(stats);
-            //statsLabel.setBounds(10, i * 50, WIDTH, 50);
             marketplaceMenu.add(statsLabel);
-//            lastPosition += 1;
         }
-//        statsLabel.setBounds(10, lastPosition * 50, 600, 30);
-
-        //carStats.setText(stats);
     }
 
     // MODIFIES: this

@@ -7,7 +7,8 @@
   "acceleration": 9.0,
   "braking": 9.2,
   "driveType": "RWD",
-  "price": 242000
+  "price": 242000,
+  "image": "audi_r8.png"
 },
   {
     "manufacturer": "Nissan",
@@ -18,7 +19,8 @@
     "acceleration": 9.6,
     "braking": 7.6,
     "driveType": "AWD",
-    "price": 132000
+    "price": 132000,
+    "image": "nissan_gt-r.png"
   },
   {
     "manufacturer": "BMW",
@@ -29,7 +31,8 @@
     "acceleration": 6.0,
     "braking": 5.3,
     "driveType": "RWD",
-    "price": 54000
+    "price": 54000,
+    "image": "bmw_m5.png"
   },
   {
     "manufacturer": "Bugatti",
@@ -40,7 +43,8 @@
     "acceleration": 9.9,
     "braking": 8.4,
     "driveType": "AWD",
-    "price": 2200000
+    "price": 2200000,
+    "image": "bugatti_veyron.png"
   },
   {
     "manufacturer": "Ferrari",
@@ -51,7 +55,8 @@
     "acceleration": 8.2,
     "braking": 10,
     "driveType": "RWD",
-    "price": 1500000
+    "price": 1500000,
+    "image": "ferrari_laferrari.png"
   },
   {
     "manufacturer": "Lamborghini",
@@ -62,7 +67,8 @@
     "acceleration": 9.8,
     "braking": 8.3,
     "driveType": "AWD",
-    "price": 310000
+    "price": 310000,
+    "image": "lambo_aventador.png"
   },
   {
     "manufacturer": "Mazda",
@@ -73,7 +79,8 @@
     "acceleration": 5.2,
     "braking": 4.3,
     "driveType": "RWD",
-    "price": 25000
+    "price": 25000,
+    "image": "mazda_mx-5.png"
   },
   {
     "manufacturer": "Porsche",
@@ -84,7 +91,8 @@
     "acceleration": 8.3,
     "braking": 10,
     "driveType": "RWD",
-    "price": 255000
+    "price": 255000,
+    "image": "porsche_911_gt3-rs.png"
   },
   {
     "manufacturer": "Toyota",
@@ -95,7 +103,8 @@
     "acceleration": 5.6,
     "braking": 4.5,
     "driveType": "RWD",
-    "price": 22000
+    "price": 22000,
+    "image": "toyota_trueno-ae86.png"
   },
   {
     "manufacturer": "Honda",
@@ -106,7 +115,8 @@
     "acceleration": 6.0,
     "braking": 6.8,
     "driveType": "FWD",
-    "price": 59000
+    "price": 59000,
+    "image": "honda_civic-type-r.png"
   },
   {
     "manufacturer": "Dodge",
@@ -117,7 +127,8 @@
     "acceleration": 5.9,
     "braking": 6.5,
     "driveType": "RWD",
-    "price": 75000
+    "price": 75000,
+    "image": "dodge_challenger.png"
   },
   {
     "manufacturer": "Chevrolet",
@@ -128,6 +139,7 @@
     "acceleration": 7.7,
     "braking": 7.7,
     "driveType": "RWD",
-    "price": 87000
+    "price": 87000,
+    "image": "chevrolet_stingray.png"
   }
 ]}

@@ -21,11 +21,11 @@ public class AccountTest {
         account1 = new Account(0);
         account2 = new Account(10000);
         car1 = new Car("Audi", "R8", 2016, 8.2,
-                7.6, 9.0, 9.2, DriveType.RWD, 242000);
+                7.6, 9.0, 9.2, DriveType.RWD, 242000, null);
         car2 = new Car("Audi", "R8", 2016, 8.2,
-                7.6, 9.0, 9.2, DriveType.RWD, 39120);
+                7.6, 9.0, 9.2, DriveType.RWD, 39120, null);
         car3 = new Car("Audi", "R8", 2016, 8.2,
-                7.6, 9.0, 9.2, DriveType.RWD, 584923);
+                7.6, 9.0, 9.2, DriveType.RWD, 584923, null);
     }
 
     @Test

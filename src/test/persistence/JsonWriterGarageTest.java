@@ -48,9 +48,9 @@ public class JsonWriterGarageTest extends JsonTest {
         try {
             GarageWorkRoom wr = new GarageWorkRoom();
             wr.addCar(new Car("Audi", "R8", 2016, 8.2, 7.6, 9.0,
-                    9.2, DriveType.RWD, 100000));
+                    9.2, DriveType.RWD, 100000, null));
             wr.addCar(new Car("Nissan", "GT-R", 2017, 7.9, 7.2, 9.6,
-                    7.6, DriveType.AWD, 50000));
+                    7.6, DriveType.AWD, 50000, null));
             JsonWriterGarage writer = new JsonWriterGarage("./data/testWriterGeneralWorkroom.json");
             writer.open();
             writer.write(wr);
