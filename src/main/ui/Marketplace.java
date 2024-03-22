@@ -129,7 +129,7 @@ public class Marketplace {
 
     // MODIFIES: this
     // EFFECTS: loads the user's garage cars
-    private void loadGarage() {
+    public void loadGarage() {
         try {
             userGarage = jsonReaderGarage.read();
             if (userGarage.getCars().isEmpty()) {
@@ -144,7 +144,7 @@ public class Marketplace {
 
     // MODIFIES: this
     // EFFECTS: loads the user's account balance
-    private void loadAccount() {
+    public void loadAccount() {
         try {
             userAccount = jsonReaderAccount.read();
             System.out.println("Account balance successfully loaded.");
@@ -155,7 +155,7 @@ public class Marketplace {
 
     // MODIFIES: this
     // EFFECTS: loads the user's marketplace car listings
-    private void loadUserListings() {
+    public void loadUserListings() {
         try {
             userMarketplace = jsonReaderUserMarket.read();
             System.out.println("Marketplace listings successfully loaded.");

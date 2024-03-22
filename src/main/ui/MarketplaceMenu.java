@@ -46,9 +46,6 @@ public class MarketplaceMenu extends AbstractMenu {
         createOrderComboBox();
         buttonPanel.add(orderComboBox);
 
-//        filterCarButton = new JButton("Filter cars");
-//        buttonPanel.add(filterCarButton);
-
         balanceLabel = new JLabel();
         balanceLabel.setText("Balance: $" + df.format(marketplace.getUserAccount().getBalance()));
         buttonPanel.add(balanceLabel);
@@ -187,11 +184,5 @@ public class MarketplaceMenu extends AbstractMenu {
             }
         });
     }
-
-//    private void actionPerformed(ActionEvent e) {
-//        if (e.getSource() == filterComboBox) {
-//
-//        }
-//    }
 
 }

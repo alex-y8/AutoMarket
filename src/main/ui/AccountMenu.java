@@ -12,7 +12,7 @@ import java.util.List;
 public class AccountMenu extends AbstractMenu {
 
     private static final int TEXT_FIELD_FRAME_HEIGHT = 200;
-    private static final int TEXT_FIELD_FRAME_WIDTH = 600;
+    private static final int TEXT_FIELD_FRAME_WIDTH = 500;
 
     private JPanel balancePanel;
 
@@ -22,6 +22,7 @@ public class AccountMenu extends AbstractMenu {
     private JTextField textField;
 
     private JLabel textLabel;
+    private JLabel balanceLabel;
 
     private JFrame textFieldFrame;
 
@@ -33,15 +34,21 @@ public class AccountMenu extends AbstractMenu {
     // EFFECTS: don't need upper panel for account menu
     @Override
     protected JPanel createUpperPanel() {
-        return new JPanel();
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        setBalanceButton = new JButton("Set balance");
+        buttonPanel.add(setBalanceButton);
+        return buttonPanel;
     }
 
     @Override
     // EFFECTS: creates the buttons for the account menu
     protected JPanel createMainPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
-        setBalanceButton = new JButton("Set balance");
-        buttonPanel.add(setBalanceButton);
+
+        balanceLabel = new JLabel("Your account balance is: $"
+                + df.format(marketplace.getUserAccount().getBalance()));
+        balanceLabel.setFont(new Font("", Font.PLAIN, 25));
+        buttonPanel.add(balanceLabel);
         return buttonPanel;
     }
 
@@ -107,9 +114,10 @@ public class AccountMenu extends AbstractMenu {
 
     private JTextField createTextField() {
         textField = new JTextField();
-        textField.setPreferredSize(new Dimension(TEXT_FIELD_FRAME_WIDTH - 30,
+        textField.setPreferredSize(new Dimension(TEXT_FIELD_FRAME_WIDTH - 200,
                 TEXT_FIELD_FRAME_HEIGHT - 150));
         textField.setFont(new Font("", Font.PLAIN, 24));
+
         return textField;
     }
 }

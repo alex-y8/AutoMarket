@@ -51,7 +51,9 @@ public class MarketplaceGUI extends JFrame {
     public MarketplaceGUI() {
         initialize();
         initializeGraphics();
-
+        createLoadMarketplaceWindow();
+        createLoadGarageWindow();
+        createLoadAccountWindow();
     }
 
     private void initialize() {
@@ -101,6 +103,41 @@ public class MarketplaceGUI extends JFrame {
         mainMenu.setBounds(50, 100, WIDTH, HEIGHT);
         mainMenu.setLayout(new GridLayout(0, 1, 0, 10));
         mainMenu.setBorder(BorderFactory.createEmptyBorder(HEIGHT - 300, 20, 20, 20));
+    }
+
+    private void createLoadMarketplaceWindow() {
+        String[] options = {"Yes", "No"};
+
+        int loadData = JOptionPane.showOptionDialog(getContentPane(), "Load marketplace listings from file?",
+                "", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        if (loadData == 0) {
+            AbstractMenu.marketplace.loadUserListings();
+        }
+
+    }
+
+
+    private void createLoadGarageWindow() {
+        String[] options = {"Yes", "No"};
+
+        int loadData = JOptionPane.showOptionDialog(getContentPane(), "Load garage from file?",
+                "", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        if (loadData == 0) {
+            AbstractMenu.marketplace.loadGarage();
+        }
+    }
+
+    private void createLoadAccountWindow() {
+        String[] options = {"Yes", "No"};
+
+        int loadData = JOptionPane.showOptionDialog(getContentPane(), "Load account balance from file?",
+                "", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        if (loadData == 0) {
+            AbstractMenu.marketplace.loadAccount();
+        }
     }
 
     // MODIFIES: this
