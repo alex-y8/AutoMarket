@@ -4,10 +4,8 @@ import model.cars.Car;
 
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class CarListMenu implements ListCellRenderer<Car> {
 
@@ -16,6 +14,7 @@ public class CarListMenu implements ListCellRenderer<Car> {
 
     private JLabel carManufacturer;
     private JLabel carModel;
+    private JLabel carYear;
     private JLabel carPrice;
     private JLabel carSpeed;
     private JLabel carHandling;
@@ -25,26 +24,31 @@ public class CarListMenu implements ListCellRenderer<Car> {
     private JLabel carImage;
 
     private JList<? extends Car> carList;
+    private ArrayList<Car> selectedCars;
     private Car car;
 
     private static final double IMAGE_WIDTH = 500;
     private static final double IMAGE_HEIGHT = IMAGE_WIDTH / 1.7;
-    private Dimension fontSize;
 
     private final DecimalFormat df = new DecimalFormat("#,###.##");
 
 
     // EFFECTS: construct the menu for the car list
     public CarListMenu() {
+        selectedCars = new ArrayList<>();
         carListPanel = new JPanel();
         carListPanel.setLayout(new BorderLayout());
-        //carListPanel.setLayout(new GridLayout(0, 2, 0, 0));
         carListPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        carListPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         setUpLabels();
         setUpPanels();
 
         carListPanel.add(textPanel, BorderLayout.CENTER);
         carListPanel.add(carImage, BorderLayout.WEST);
+    }
+
+    public ArrayList<Car> getSelectedCarList() {
+        return selectedCars;
     }
 
     @Override
@@ -69,6 +73,7 @@ public class CarListMenu implements ListCellRenderer<Car> {
         textPanel.setBackground(carList.getSelectionBackground());
         carManufacturer.setBackground(carList.getSelectionBackground());
         carModel.setBackground(carList.getSelectionBackground());
+        carYear.setBackground(carList.getSelectionBackground());
         carPrice.setBackground(carList.getSelectionBackground());
         carSpeed.setBackground(carList.getSelectionBackground());
         carHandling.setBackground(carList.getSelectionBackground());
@@ -76,6 +81,10 @@ public class CarListMenu implements ListCellRenderer<Car> {
         carBraking.setBackground(carList.getSelectionBackground());
         carDriveType.setBackground(carList.getSelectionBackground());
         carImage.setBackground(carList.getSelectionBackground());
+        if (!selectedCars.contains(car)) {
+            selectedCars.add(car);
+        }
+
     }
 
     private void unselect() {
@@ -83,6 +92,7 @@ public class CarListMenu implements ListCellRenderer<Car> {
         textPanel.setBackground(carList.getBackground());
         carManufacturer.setBackground(carList.getBackground());
         carModel.setBackground(carList.getBackground());
+        carYear.setBackground(carList.getBackground());
         carPrice.setBackground(carList.getBackground());
         carSpeed.setBackground(carList.getBackground());
         carHandling.setBackground(carList.getBackground());
@@ -90,12 +100,15 @@ public class CarListMenu implements ListCellRenderer<Car> {
         carBraking.setBackground(carList.getBackground());
         carDriveType.setBackground(carList.getBackground());
         carImage.setBackground(carList.getBackground());
+        selectedCars.remove(car);
+
     }
 
     private void setUpLabels() {
         carManufacturer = new JLabel();
         carModel = new JLabel();
         carPrice = new JLabel();
+        carYear = new JLabel();
         carSpeed = new JLabel();
         carHandling = new JLabel();
         carAcceleration = new JLabel();
@@ -105,6 +118,7 @@ public class CarListMenu implements ListCellRenderer<Car> {
 
         carManufacturer.setFont(new Font("Urbanist", Font.BOLD, 30));
         carModel.setFont(new Font("Urbanist", Font.BOLD, 25));
+        carYear.setFont(new Font("", Font.PLAIN, 18));
         carPrice.setFont(new Font("", Font.PLAIN, 18));
         carSpeed.setFont(new Font("", Font.PLAIN, 18));
         carHandling.setFont(new Font("", Font.PLAIN, 18));
@@ -114,9 +128,10 @@ public class CarListMenu implements ListCellRenderer<Car> {
     }
 
     private void setUpPanels() {
-        textPanel = new JPanel(new GridLayout(0, 1));
+        textPanel = new JPanel(new GridLayout(0, 1, 0, -10));
         textPanel.add(carManufacturer);
         textPanel.add(carModel);
+        textPanel.add(carYear);
         textPanel.add(carPrice);
         textPanel.add(carSpeed);
         textPanel.add(carHandling);
@@ -128,6 +143,7 @@ public class CarListMenu implements ListCellRenderer<Car> {
     private void setUpInfo() {
         carManufacturer.setText(car.getManufacturer());
         carModel.setText(car.getModel());
+        carYear.setText("Year: " + car.getYear());
         carPrice.setText("Price: $" + df.format(car.getPrice()));
         carSpeed.setText("Speed: " + (car.getSpeed()));
         carHandling.setText("Handling: " + (car.getHandling()));

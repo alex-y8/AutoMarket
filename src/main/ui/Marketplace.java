@@ -54,7 +54,8 @@ public class Marketplace {
 
     // EFFECTS: runs the marketplace application
     public Marketplace() {
-        runMarketplace();
+        //runMarketplace();
+        initialize();
     }
 
     // MODIFIES: this
@@ -63,7 +64,6 @@ public class Marketplace {
         boolean keepGoing = true;
         String command;
 
-        initialize();
         System.out.println("Welcome to AutoMarket!");
         askLoadFiles();
         displayMenu();
@@ -823,6 +823,14 @@ public class Marketplace {
         if (input.next().toLowerCase().equals("y")) {
             saveAccount();
         }
+    }
+
+    public GarageWorkRoom getUserGarage() {
+        return userGarage;
+    }
+
+    public AccountWorkRoom getUserAccount() {
+        return userAccount;
     }
 
 }

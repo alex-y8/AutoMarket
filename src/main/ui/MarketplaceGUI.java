@@ -83,7 +83,9 @@ public class MarketplaceGUI extends JFrame {
         initializeMainMenu();
         //initializeMarketplaceMenu();
         loadCars();
-        initializeGarageMenu();
+        //initializeGarageMenu();
+        loadGarage();
+        loadAccount();
 
         setLayout(new BorderLayout());
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -173,13 +175,14 @@ public class MarketplaceGUI extends JFrame {
         JButton garageButton = new JButton("Garage");
         garageButton.setFocusable(false);
         garageButton.setFont(new Font("p", Font.PLAIN, 24));
-        //garageButton.setBounds(200, 200, 10, 10);
 
         garageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //bring up marketplace window with garage
-                displayGarage();
+                //displayGarage();
+                List<Car> garageList = userGarage.getCars();
+                new GarageMenu(garageList);
             }
         });
 
@@ -198,6 +201,7 @@ public class MarketplaceGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //bring up marketplace window with account info
+                new AccountMenu();
             }
         });
 
@@ -248,6 +252,18 @@ public class MarketplaceGUI extends JFrame {
             //System.out.println("Unable to read from file: " + JSON_GARAGE);
         }
 
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads the user's account information
+    private void loadAccount() {
+        try {
+            userAccount = jsonReaderAccount.read();
+            System.out.println("Account balance successfully loaded.");
+            System.out.println(userAccount.getBalance());
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_GARAGE);
+        }
     }
 
     // MODIFIES: this
