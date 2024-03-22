@@ -6,7 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MarketplaceMenu extends AbstractMenu {
@@ -15,6 +17,14 @@ public class MarketplaceMenu extends AbstractMenu {
     private JButton sellCarButton;
     private JButton filterCarButton;
     private JLabel balanceLabel;
+    private JComboBox sortComboBox;
+    private JComboBox orderComboBox;
+
+    private String selectedFilter;
+    private String selectedOrderFilter;
+    private List<Car> sortedList;
+
+    private boolean isAscendingOrder = true;
 
     public MarketplaceMenu(List<Car> cars) {
         super(cars);
@@ -29,8 +39,15 @@ public class MarketplaceMenu extends AbstractMenu {
         buttonPanel.add(buyCarButton);
         sellCarButton = new JButton("List/Sell car");
         buttonPanel.add(sellCarButton);
-        filterCarButton = new JButton("Filter cars");
-        buttonPanel.add(filterCarButton);
+
+        createSortComboBox();
+        buttonPanel.add(sortComboBox);
+
+        createOrderComboBox();
+        buttonPanel.add(orderComboBox);
+
+//        filterCarButton = new JButton("Filter cars");
+//        buttonPanel.add(filterCarButton);
 
         balanceLabel = new JLabel();
         balanceLabel.setText("Balance: $" + df.format(marketplace.getUserAccount().getBalance()));
@@ -39,12 +56,86 @@ public class MarketplaceMenu extends AbstractMenu {
         return buttonPanel;
     }
 
+    private void createOrderComboBox() {
+        String[] order = {"Ascending order", "Descending order"};
+        orderComboBox = new JComboBox(order);
+        orderComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chooseSortOrder();
+            }
+        });
+    }
+
+    private void createSortComboBox() {
+        String[] filters = {"Sort by:", "Year", "Speed", "Handling", "Acceleration", "Braking", "Drive Type", "Price"};
+        sortComboBox = new JComboBox(filters);
+        sortComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isAscendingOrder) {
+                    updateCarListAscending();
+                } else {
+                    updateCarListDescending();
+                }
+            }
+        });
+    }
+
+    private void updateCarListAscending() {
+        setupLists();
+
+        if (selectedFilter.equals("Year")) {
+            sortedList.sort(Comparator.comparingInt(Car::getYear));
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Speed")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getSpeed));
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Handling")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getHandling));
+            addCarToSortedList();
+        }
+    }
+
+    private void updateCarListDescending() {
+        setupLists();
+
+        if (selectedFilter.equals("Year")) {
+            sortedList.sort(Comparator.comparingInt(Car::getYear).reversed());
+            addCarToSortedList();
+        }
+    }
+
+    private void setupLists() {
+        carDefaultListModel.clear();
+        sortedList = new ArrayList<>(carList);
+        selectedFilter = (String) sortComboBox.getSelectedItem();
+
+        if (selectedFilter.equals("Sort by:")) {
+            for (Car c : carList) {
+                carDefaultListModel.addElement(c);
+            }
+        }
+    }
+
+
+    private void addCarToSortedList() {
+        for (Car c : sortedList) {
+            carDefaultListModel.addElement(c);
+        }
+    }
+
+    private void chooseSortOrder() {
+        selectedOrderFilter = (String) orderComboBox.getSelectedItem();
+        isAscendingOrder = selectedOrderFilter.equals("Ascending order");
+    }
+
     // EFFECTS: creates the menu scroll panel
     @Override
     protected JPanel createMainPanel() {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
-        JScrollPane scrollPane = new JScrollPane(super.createCarsJList(carList));
+        JScrollPane scrollPane = new JScrollPane(createCarsJList(carList));
         centerPanel.add(scrollPane);
         return centerPanel;
     }
@@ -55,13 +146,17 @@ public class MarketplaceMenu extends AbstractMenu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (Car c : carListMenu.getSelectedCarList()) {
-                    //if ()
-                    //marketplace.getUserGarage().addCar(c);
                     marketplace.buyCar(c);
                     balanceLabel.setText("Balance: $" + df.format(marketplace.getUserAccount().getBalance()));
                 }
             }
         });
     }
+
+//    private void actionPerformed(ActionEvent e) {
+//        if (e.getSource() == filterComboBox) {
+//
+//        }
+//    }
 
 }

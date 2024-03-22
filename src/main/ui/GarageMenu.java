@@ -11,7 +11,6 @@ public class GarageMenu extends AbstractMenu {
     public GarageMenu(List<Car> garageList) {
         super(garageList);
 
-        //setVisible(true);
     }
 
     @Override
@@ -23,7 +22,7 @@ public class GarageMenu extends AbstractMenu {
     protected JPanel createMainPanel() {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
-        JScrollPane scrollPane = new JScrollPane(super.createCarsJList(carList));
+        JScrollPane scrollPane = new JScrollPane(createCarsJList(carList));
         centerPanel.add(scrollPane);
         return centerPanel;
     }

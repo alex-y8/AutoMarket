@@ -13,6 +13,7 @@ public abstract class AbstractMenu extends JFrame {
     protected CarListMenu carListMenu;
     protected List<Car> carList;
     protected static Marketplace marketplace = new Marketplace();
+    protected DefaultListModel<Car> carDefaultListModel;
 
     protected final DecimalFormat df;
 
@@ -45,7 +46,7 @@ public abstract class AbstractMenu extends JFrame {
 
     // EFFECTS: creates the list of cars as a JList
     protected JList<Car> createCarsJList(List<Car> carList) {
-        DefaultListModel<Car> carDefaultListModel = new DefaultListModel<>();
+        carDefaultListModel = new DefaultListModel<>();
         for (Car c : carList) {
             carDefaultListModel.addElement(c);
         }

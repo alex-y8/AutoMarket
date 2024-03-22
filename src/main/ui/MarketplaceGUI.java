@@ -138,7 +138,7 @@ public class MarketplaceGUI extends JFrame {
                 //bring up marketplace window with garage
                 //displayGarage();
                 loadGarage();
-                List<Car> garageList = userGarage.getCars();
+                List<Car> garageList = AbstractMenu.marketplace.getUserGarage().getCars();
                 new GarageMenu(garageList);
             }
         });
