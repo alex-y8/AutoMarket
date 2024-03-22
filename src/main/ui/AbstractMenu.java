@@ -12,12 +12,11 @@ public abstract class AbstractMenu extends JFrame {
     private JPanel panel;
     protected CarListMenu carListMenu;
     protected List<Car> carList;
-    protected final Marketplace marketplace;
+    protected static Marketplace marketplace = new Marketplace();
 
     protected final DecimalFormat df;
 
     public AbstractMenu(List<Car> carList) {
-        marketplace = new Marketplace();
         df = new DecimalFormat("#,###.##");
         this.carList = carList;
         carListMenu = new CarListMenu();
@@ -42,16 +41,10 @@ public abstract class AbstractMenu extends JFrame {
     protected abstract JPanel createUpperPanel();
 
     // EFFECTS: creates the menu scroll panel
-    private JPanel createMainPanel() {
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BorderLayout());
-        JScrollPane scrollPane = new JScrollPane(createCarsJList(carList));
-        centerPanel.add(scrollPane);
-        return centerPanel;
-    }
+    protected abstract JPanel createMainPanel();
 
     // EFFECTS: creates the list of cars as a JList
-    private JList<Car> createCarsJList(List<Car> carList) {
+    protected JList<Car> createCarsJList(List<Car> carList) {
         DefaultListModel<Car> carDefaultListModel = new DefaultListModel<>();
         for (Car c : carList) {
             carDefaultListModel.addElement(c);

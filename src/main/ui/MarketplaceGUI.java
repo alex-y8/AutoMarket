@@ -46,12 +46,6 @@ public class MarketplaceGUI extends JFrame {
     public static final int HEIGHT = 800;
 
     private JPanel mainMenu;
-    private JPanel marketplaceMenu;
-    private JPanel garageMenu;
-
-    private JLabel carStats;
-
-    private final DecimalFormat df = new DecimalFormat("#,###.##");
 
     // EFFECTS: constructs the marketplace gui
     public MarketplaceGUI() {
@@ -81,9 +75,7 @@ public class MarketplaceGUI extends JFrame {
     // EFFECTS:  draws the JFrame window where this Marketplace will operate, creates the menu buttons
     private void initializeGraphics() {
         initializeMainMenu();
-        //initializeMarketplaceMenu();
         loadCars();
-        //initializeGarageMenu();
         loadGarage();
         loadAccount();
 
@@ -112,47 +104,11 @@ public class MarketplaceGUI extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: sets up the marketplace's borders and buttons
-    private void initializeMarketplaceMenu() {
-        CarListMenu carListMenu = new CarListMenu();
-
-        marketplaceMenu = new JPanel();
-        marketplaceMenu.setLayout(new BorderLayout());
-
-//        marketplaceMenu.setLayout(new GridLayout(0, 1, 0, 10));
-//        marketplaceMenu.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-
-//        marketplaceMenu.setVisible(false);
-        loadCars();
-
-    }
-
-    // MODIFIES: this
-    // EFFECTS: sets up the garage menu's borders and buttons
-    private void initializeGarageMenu() {
-        garageMenu = new JPanel();
-        garageMenu.setLayout(new BorderLayout());
-
-        garageMenu.setBounds(0, 0, WIDTH - 20, HEIGHT - 20);
-        garageMenu.setLayout(new GridLayout(0, 1, 0, 10));
-        garageMenu.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        JScrollPane scroll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        garageMenu.add(scroll);
-
-        garageMenu.setVisible(false);
-        loadGarage();
-
-    }
-
-    // MODIFIES: this
     // EFFECTS:  creates the marketplace button for the menu
     private JButton createMarketplaceButton() {
         JButton marketplaceButton = new JButton("Marketplace");
         marketplaceButton.setFocusable(false);
-        marketplaceButton.setFont(new Font("/", Font.PLAIN, 24));
+        marketplaceButton.setFont(new Font("", Font.PLAIN, 24));
 
         marketplaceButton.addActionListener(new ActionListener() {
             @Override
@@ -174,13 +130,14 @@ public class MarketplaceGUI extends JFrame {
     private JButton createGarageButton() {
         JButton garageButton = new JButton("Garage");
         garageButton.setFocusable(false);
-        garageButton.setFont(new Font("p", Font.PLAIN, 24));
+        garageButton.setFont(new Font("", Font.PLAIN, 24));
 
         garageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //bring up marketplace window with garage
                 //displayGarage();
+                loadGarage();
                 List<Car> garageList = userGarage.getCars();
                 new GarageMenu(garageList);
             }
@@ -200,8 +157,9 @@ public class MarketplaceGUI extends JFrame {
         accountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //bring up marketplace window with account info
-                new AccountMenu();
+                //garage list just for placeholder value
+                List<Car> garageList = userGarage.getCars();
+                new AccountMenu(garageList);
             }
         });
 
@@ -264,85 +222,6 @@ public class MarketplaceGUI extends JFrame {
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_GARAGE);
         }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: displays the cars listed for sale on the marketplace
-    private void displayMarketplaceMenu() {
-
-
-        //add(carStats);
-        marketplaceMenu.setVisible(true);
-        mainMenu.setVisible(false);
-        garageMenu.setVisible(false);
-        displayMarketplaceCars();
-        add(marketplaceMenu);
-        JScrollPane scrollBar = new JScrollPane(marketplaceMenu);
-        add(scrollBar, BorderLayout.CENTER);
-    }
-
-    private String[] createCarList() {
-        String[] cars = new String[marketplace.numCars()];
-        for (int i = 0; i < marketplace.numCars(); i++) {
-            cars[i] = marketplace.getCars().get(i).toString();
-        }
-        return cars;
-
-    }
-
-    private Car[] createCarJList() {
-        Car[] cars = new Car[marketplace.numCars()];
-        for (int i = 0; i < marketplace.numCars(); i++) {
-            cars[i] = marketplace.getCars().get(i);
-        }
-        return cars;
-    }
-
-    private void displayMarketplaceCars() {
-
-        //JList<String> carsList = new JList<>(createCarList());
-
-        CarListMenu carListMenu = new CarListMenu();
-        JList<Car> carJList = new JList<>(createCarJList());
-        carJList.setCellRenderer(carListMenu);
-
-//        carsList.setVisibleRowCount(marketplace.numCars());
-//        carsList.setFixedCellHeight(100);
-
-//        marketplaceMenu.add(carsList);
-        marketplaceMenu.add(carJList);
-    }
-
-
-
-    // MODIFIES: this
-    // EFFECTS: loads the cars from the JSON file
-    private void displayMarketplaceCars2() {
-
-        String stats = "";
-        for (int i = 0; i < marketplace.numCars(); i++) {
-            JLabel statsLabel = new JLabel();
-            stats = (i + 1) + ". " + marketplace.getCars().get(i).getYear() + " "
-                    + marketplace.getCars().get(i).getManufacturer()
-                    + " " + marketplace.getCars().get(i).getModel() + " $"
-                    + df.format(marketplace.getCars().get(i).getPrice()) + "\n" + "Speed: "
-                    + marketplace.getCars().get(i).getSpeed() + "\n" + "Handling: "
-                    + marketplace.getCars().get(i).getHandling() + "\n" + "Acceleration: "
-                    + marketplace.getCars().get(i).getAcceleration() + "\n" + "Braking: "
-                    + marketplace.getCars().get(i).getBraking() + "\n" + "Drive type: "
-                    + marketplace.getCars().get(i).getDriveType() + "\n";
-            statsLabel.setText(stats);
-            marketplaceMenu.add(statsLabel);
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: displays the cars in the user's garage
-    private void displayGarage() {
-        add(garageMenu);
-        garageMenu.setVisible(true);
-        marketplaceMenu.setVisible(false);
-        mainMenu.setVisible(false);
     }
 
     // MODIFIES: this

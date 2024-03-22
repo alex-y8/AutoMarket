@@ -7,12 +7,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
 import java.util.List;
 
-public class AccountMenu extends JFrame {
+public class AccountMenu extends AbstractMenu {
 
-    private JPanel accountPanel;
+    private static final int TEXT_FIELD_FRAME_HEIGHT = 200;
+    private static final int TEXT_FIELD_FRAME_WIDTH = 600;
+
     private JPanel balancePanel;
 
     private JButton setBalanceButton;
@@ -24,34 +25,20 @@ public class AccountMenu extends JFrame {
 
     private JFrame textFieldFrame;
 
-    private static final int TEXT_FIELD_FRAME_HEIGHT = 200;
-    private static final int TEXT_FIELD_FRAME_WIDTH = 600;
-
-    private Marketplace marketplace = new Marketplace();
-    private final DecimalFormat df = new DecimalFormat("#,###.##");
-
-    public AccountMenu() {
-        accountPanel = new JPanel();
-        createFrame();
-        accountPanel.setLayout(new BorderLayout());
-        accountPanel.add(buttons(), BorderLayout.CENTER);
-        add(accountPanel);
-
+    public AccountMenu(List<Car> carList) {
+        super(carList);
         setBalanceButtonListener();
-
-
-        setVisible(true);
     }
 
-    // EFFECTS: creates the account menu window frame
-    private void createFrame() {
-        setSize(MarketplaceGUI.WIDTH, MarketplaceGUI.HEIGHT);
-        setResizable(false);
-        setLocationRelativeTo(null);
+    // EFFECTS: don't need upper panel for account menu
+    @Override
+    protected JPanel createUpperPanel() {
+        return new JPanel();
     }
 
+    @Override
     // EFFECTS: creates the buttons for the account menu
-    private JPanel buttons() {
+    protected JPanel createMainPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         setBalanceButton = new JButton("Set balance");
         buttonPanel.add(setBalanceButton);
@@ -63,18 +50,12 @@ public class AccountMenu extends JFrame {
         setBalanceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                balanceTextField();
-                //userAccount.setBalance(input.nextDouble());
+                initializeTextField();
             }
         });
     }
 
-    private void balanceTextField() {
-        initializeTextField();
-
-
-    }
-
+    // EFFECTS: initializes the input text field
     private void initializeTextField() {
         textFieldFrame = new JFrame();
         textFieldFrame.setSize(TEXT_FIELD_FRAME_WIDTH, TEXT_FIELD_FRAME_HEIGHT);
@@ -112,9 +93,6 @@ public class AccountMenu extends JFrame {
                     String text = textField.getText();
                     balanceToSet = Double.parseDouble(text);
                     marketplace.getUserAccount().setBalance(balanceToSet);
-                    //marketplace.getUserAccount().getAccount().get(0).setBalance(balanceToSet);
-//                    textLabel.setText("Your account balance has been set to: $"
-//                            + df.format(marketplace.getUserAccount().getAccount().get(0).getBalance()));
                     textLabel.setText("Your account balance has been set to: $"
                             + df.format(marketplace.getUserAccount().getBalance()));
                 } catch (NumberFormatException exception) {

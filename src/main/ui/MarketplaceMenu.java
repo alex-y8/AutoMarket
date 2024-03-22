@@ -14,11 +14,11 @@ public class MarketplaceMenu extends AbstractMenu {
     private JButton buyCarButton;
     private JButton sellCarButton;
     private JButton filterCarButton;
+    private JLabel balanceLabel;
 
     public MarketplaceMenu(List<Car> cars) {
         super(cars);
         buyCarButtonListener();
-
     }
 
     @Override
@@ -32,11 +32,21 @@ public class MarketplaceMenu extends AbstractMenu {
         filterCarButton = new JButton("Filter cars");
         buttonPanel.add(filterCarButton);
 
-        JLabel balanceLabel = new JLabel();
-        balanceLabel.setText("Balance: $" + df.format(marketplace.getUserAccount().getAccount().get(0).getBalance()));
+        balanceLabel = new JLabel();
+        balanceLabel.setText("Balance: $" + df.format(marketplace.getUserAccount().getBalance()));
         buttonPanel.add(balanceLabel);
 
         return buttonPanel;
+    }
+
+    // EFFECTS: creates the menu scroll panel
+    @Override
+    protected JPanel createMainPanel() {
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BorderLayout());
+        JScrollPane scrollPane = new JScrollPane(super.createCarsJList(carList));
+        centerPanel.add(scrollPane);
+        return centerPanel;
     }
 
     // EFFECTS: button listener for the buy car button, buys the selected car when clicked
@@ -48,6 +58,7 @@ public class MarketplaceMenu extends AbstractMenu {
                     //if ()
                     //marketplace.getUserGarage().addCar(c);
                     marketplace.buyCar(c);
+                    balanceLabel.setText("Balance: $" + df.format(marketplace.getUserAccount().getBalance()));
                 }
             }
         });
