@@ -94,6 +94,18 @@ public class MarketplaceMenu extends AbstractMenu {
         } else if (selectedFilter.equals("Handling")) {
             sortedList.sort(Comparator.comparingDouble(Car::getHandling));
             addCarToSortedList();
+        } else if (selectedFilter.equals("Acceleration")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getAcceleration));
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Braking")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getBraking));
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Drive Type")) {
+            sortedList.sort(Comparator.comparing(Car::getDriveType));
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Price")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getPrice));
+            addCarToSortedList();
         }
     }
 
@@ -102,6 +114,24 @@ public class MarketplaceMenu extends AbstractMenu {
 
         if (selectedFilter.equals("Year")) {
             sortedList.sort(Comparator.comparingInt(Car::getYear).reversed());
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Speed")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getSpeed).reversed());
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Handling")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getHandling).reversed());
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Acceleration")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getAcceleration).reversed());
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Braking")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getBraking).reversed());
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Drive Type")) {
+            sortedList.sort(Comparator.comparing(Car::getDriveType).reversed());
+            addCarToSortedList();
+        } else if (selectedFilter.equals("Price")) {
+            sortedList.sort(Comparator.comparingDouble(Car::getPrice).reversed());
             addCarToSortedList();
         }
     }
@@ -128,6 +158,11 @@ public class MarketplaceMenu extends AbstractMenu {
     private void chooseSortOrder() {
         selectedOrderFilter = (String) orderComboBox.getSelectedItem();
         isAscendingOrder = selectedOrderFilter.equals("Ascending order");
+        if (isAscendingOrder) {
+            updateCarListAscending();
+        } else {
+            updateCarListDescending();
+        }
     }
 
     // EFFECTS: creates the menu scroll panel

@@ -36,6 +36,10 @@ public class GarageWorkRoom implements Writeable {
         return carList.size();
     }
 
+    public void removeCar(Car car) {
+        carList.remove(car);
+    }
+
     // EFFECTS: returns the cars in the garage as a String in format "manufacturer model"
     public String carsInGarage() {
         String garageCars = "";
