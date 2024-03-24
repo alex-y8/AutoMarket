@@ -14,8 +14,9 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.List;
 
 // Graphical interface for the marketplace
@@ -25,7 +26,6 @@ public class MarketplaceGUI extends JFrame {
     private static final String JSON_USER_MARKET = "./data/userCarMarket.json";
     private static final String JSON_GARAGE = "./data/garage.json";
     private static final String JSON_ACCOUNT = "./data/account.json";
-
 
     private GarageWorkRoom marketplace;
     private GarageWorkRoom userMarketplace;
@@ -77,6 +77,7 @@ public class MarketplaceGUI extends JFrame {
     // EFFECTS:  draws the JFrame window where this Marketplace will operate, creates the menu buttons
     private void initializeGraphics() {
         initializeMainMenu();
+        exitButton();
         loadCars();
         loadGarage();
         loadAccount();
@@ -150,9 +151,6 @@ public class MarketplaceGUI extends JFrame {
         marketplaceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //bring up marketplace window with cars
-                //displayMarketplaceMenu();
-                loadCars();
                 List<Car> carList = marketplace.getCars();
                 new MarketplaceMenu(carList);
             }
@@ -172,9 +170,6 @@ public class MarketplaceGUI extends JFrame {
         garageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //bring up marketplace window with garage
-                //displayGarage();
-                loadGarage();
                 List<Car> garageList = AbstractMenu.marketplace.getUserGarage().getCars();
                 new GarageMenu(garageList);
             }
@@ -262,6 +257,17 @@ public class MarketplaceGUI extends JFrame {
     }
 
     // MODIFIES: this
+    // EFFECTS: listener for when the user clicks the "x" button in the top-right corner
+    private void exitButton() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                processQuit();
+            }
+        });
+    }
+
+    // MODIFIES: this
     // EFFECTS: prompt user to save data, then quits the program
     private void processQuit() {
         String[] options = {"Save and quit", "Quit without saving"};
@@ -269,8 +275,10 @@ public class MarketplaceGUI extends JFrame {
         int saveData = JOptionPane.showOptionDialog(getContentPane(), "Data is unsaved", "",
                 JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
-        if (saveData == 1) {
-            //save data
+        if (saveData == 0) {
+            AbstractMenu.marketplace.saveMarketplace();
+            AbstractMenu.marketplace.saveGarage();
+            AbstractMenu.marketplace.saveAccount();
             System.exit(0);
         } else {
             System.exit(0);

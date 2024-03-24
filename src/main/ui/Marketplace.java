@@ -176,7 +176,7 @@ public class Marketplace {
 
     // MODIFIES: userGarage workroom
     // EFFECTS: saves the user's garage workroom to file
-    private void saveGarage() {
+    public void saveGarage() {
         try {
             jsonWriterGarage.open();
             jsonWriterGarage.write(userGarage);
@@ -189,7 +189,7 @@ public class Marketplace {
 
     // MODIFIES: marketplace workroom
     // EFFECTS: saves the user's marketplace listings to file
-    private void saveMarketplace() {
+    public void saveMarketplace() {
         try {
             jsonWriterUserMarket.open();
             jsonWriterUserMarket.write(userMarketplace);
@@ -202,7 +202,7 @@ public class Marketplace {
 
     // MODIFIES: userAccount workroom
     // EFFECTS: saves the user's account balance to file
-    private void saveAccount() {
+    public void saveAccount() {
         try {
             jsonWriterAccount.open();
             jsonWriterAccount.write(userAccount);

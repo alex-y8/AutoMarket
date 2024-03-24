@@ -151,7 +151,12 @@ public class CarListMenu implements ListCellRenderer<Car> {
         carBraking.setText("Braking: " + (car.getBraking()));
         carDriveType.setText("Drive Type: " + (car.getDriveType()));
         carImage.setPreferredSize(new Dimension((int) IMAGE_WIDTH, (int) IMAGE_HEIGHT));
-        String imageFile = "src/images/" + car.getImage();
+        String imageFile;
+        if (car.getImage() == null) {
+            imageFile = "src/images/null-car.png";
+        } else {
+            imageFile = "src/images/" + car.getImage();
+        }
         ImageIcon image = new ImageIcon(imageFile);
         Image scaled = image.getImage().getScaledInstance((int) IMAGE_WIDTH, (int) IMAGE_HEIGHT, Image.SCALE_SMOOTH);
         ImageIcon scaledImage = new ImageIcon(scaled);

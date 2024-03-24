@@ -12,7 +12,7 @@ public abstract class AbstractMenu extends JFrame {
     private JPanel panel;
     protected CarListMenu carListMenu;
     protected List<Car> carList;
-    protected static Marketplace marketplace = new Marketplace();
+    protected static Marketplace marketplace = new Marketplace(); // doesn't work if initialized in constructor
     protected DefaultListModel<Car> carDefaultListModel;
 
     protected final DecimalFormat df;
@@ -53,6 +53,11 @@ public abstract class AbstractMenu extends JFrame {
         JList<Car> carJList = new JList<>(carDefaultListModel);
         carJList.setCellRenderer(carListMenu);
         return carJList;
+    }
+
+    // EFFECTS: returns the CLI marketplace
+    public Marketplace getMarketplace() {
+        return marketplace;
     }
 
 }
