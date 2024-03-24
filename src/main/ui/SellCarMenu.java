@@ -4,11 +4,13 @@ import model.cars.Car;
 import model.cars.DriveType;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 public class SellCarMenu extends JFrame {
 
@@ -55,10 +57,12 @@ public class SellCarMenu extends JFrame {
         imageFile = "null-car.png";
 
         initializeFrame();
-        closeButtonListener();
 
         panel = createPanel();
         add(panel);
+
+        closeButtonListener();
+        imageButtonListener();
         setVisible(true);
 
     }
@@ -108,19 +112,6 @@ public class SellCarMenu extends JFrame {
     }
 
     private void addToPanel() {
-//        panel.add(manufacturerLabel);
-//        panel.add(manufacturerTextField);
-//        panel.add(modelLabel);
-//        panel.add(yearLabel);
-//        panel.add(speedLabel);
-//        panel.add(handlingLabel);
-//        panel.add(accelerationLabel);
-//        panel.add(brakingLabel);
-//        panel.add(driveTypeLabel);
-//        panel.add(priceLabel);
-//        panel.add(imageLabel);
-
-
         manufacturerTextField = addLabelAndTextField(panel, gbc, "Manufacturer: ", manufacturerTextField);
         modelTextField = addLabelAndTextField(panel, gbc, "Model: ", modelTextField);
         yearTextField = addLabelAndTextField(panel, gbc, "Year: ", yearTextField);
@@ -181,17 +172,24 @@ public class SellCarMenu extends JFrame {
         gbc.gridy++;
     }
 
+    private void createTextField() {
+        manufacturerTextField = new JTextField();
+        modelTextField = new JTextField();
+        yearTextField = new JTextField();
+        speedTextField = new JTextField();
+        handlingTextField = new JTextField();
+        accelerationTextField = new JTextField();
+        brakingTextField = new JTextField();
+        driveTypeTextField = new JTextField();
+        priceTextField = new JTextField();
+    }
+
     private JButton createListCarButton() {
         listCarButton = new JButton("List car");
         listCarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                car = new Car(manufacturerTextField.getText(), modelTextField.getText(),
-                        Integer.parseInt(yearTextField.getText()), Double.parseDouble(speedTextField.getText()),
-                        Double.parseDouble(handlingTextField.getText()),
-                        Double.parseDouble(accelerationTextField.getText()),
-                        Double.parseDouble(brakingTextField.getText()), DriveType.valueOf(driveTypeTextField.getText()),
-                        Integer.parseInt(priceTextField.getText()), imageFile);
+                createCar();
 
                 if (MarketplaceGUI.getIsOriginalMarket()) {
                     MarketplaceGUI.getOriginalMarket().addCar(car);
@@ -203,22 +201,36 @@ public class SellCarMenu extends JFrame {
                     new MarketplaceMenu(MarketplaceGUI.getMarketplace().getCars());
                 }
                 hasListedCar = true;
-
             }
         });
         return listCarButton;
     }
 
-    private void createTextField() {
-        manufacturerTextField = new JTextField();
-        modelTextField = new JTextField();
-        yearTextField = new JTextField();
-        speedTextField = new JTextField();
-        handlingTextField = new JTextField();
-        accelerationTextField = new JTextField();
-        brakingTextField = new JTextField();
-        driveTypeTextField = new JTextField();
-        priceTextField = new JTextField();
+    private void createCar() {
+        car = new Car(manufacturerTextField.getText(), modelTextField.getText(),
+                Integer.parseInt(yearTextField.getText()), Double.parseDouble(speedTextField.getText()),
+                Double.parseDouble(handlingTextField.getText()),
+                Double.parseDouble(accelerationTextField.getText()),
+                Double.parseDouble(brakingTextField.getText()),
+                DriveType.valueOf(driveTypeTextField.getText().toUpperCase()),
+                Integer.parseInt(priceTextField.getText()), imageFile);
+    }
+
+    private void imageButtonListener() {
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image files (jpg, jpeg, or png)",
+                "jpg", "jpeg", "png");
+        imageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(filter);
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    imageFile = selectedFile.getAbsolutePath();
+                }
+            }
+        });
     }
 
     public static boolean getHasListedCar() {

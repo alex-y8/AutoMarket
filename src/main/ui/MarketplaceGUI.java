@@ -36,6 +36,7 @@ public class MarketplaceGUI extends JFrame {
     private GarageWorkRoom filteredMarketplace;
     private AccountWorkRoom userAccount;
 
+    private JsonWriterGarage getJsonWriterOriginalMarket;
     private JsonWriterGarage jsonWriterMarket;
     private JsonWriterGarage jsonWriterUserMarket;
     private JsonWriterGarage jsonWriterGarage;
@@ -71,6 +72,7 @@ public class MarketplaceGUI extends JFrame {
         filteredMarketplace = new GarageWorkRoom();
         userAccount = new AccountWorkRoom();
 
+        getJsonWriterOriginalMarket = new JsonWriterGarage(JSON_ORIGINAL_MARKET);
         jsonWriterMarket = new JsonWriterGarage(JSON_MARKET);
         jsonWriterUserMarket = new JsonWriterGarage(JSON_USER_MARKET);
         jsonWriterGarage = new JsonWriterGarage(JSON_GARAGE);
@@ -303,10 +305,19 @@ public class MarketplaceGUI extends JFrame {
                 JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
         if (saveData == 0) {
-            if (!isOriginalMarket || SellCarMenu.getHasListedCar()) {
-                loadCars();
-
+//            if (!isOriginalMarket || SellCarMenu.getHasListedCar()) {
+//                saveMarketplace();
+//                //loadCars();
+//                System.out.println(marketplace.getCars().size());
+//                System.out.println(AbstractMenu.marketplace.getMarketplaceCars().numCars());
+//
+//            }
+            if (SellCarMenu.getHasListedCar()) {
                 saveMarketplace();
+                //loadCars();
+                System.out.println(marketplace.getCars().size());
+                System.out.println(AbstractMenu.marketplace.getMarketplaceCars().numCars());
+
             }
             //AbstractMenu.marketplace.saveMarketplace();
             AbstractMenu.marketplace.saveGarage();
@@ -318,9 +329,14 @@ public class MarketplaceGUI extends JFrame {
     }
 
     public void saveMarketplace() {
+//        try {
+//            marketplace = jsonReaderMarket.read();
+//        } catch (IOException e) {
+//            System.out.println("Unable to read from file: " + JSON_MARKET);
+//        }
         try {
             jsonWriterMarket.open();
-            jsonWriterMarket.write(marketplace);
+            jsonWriterMarket.write(originalMarketplace);
             jsonWriterMarket.close();
             System.out.println("Marketplace successfully saved!");
         } catch (FileNotFoundException e) {

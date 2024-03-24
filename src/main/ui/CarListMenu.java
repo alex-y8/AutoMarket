@@ -154,6 +154,8 @@ public class CarListMenu implements ListCellRenderer<Car> {
         String imageFile;
         if (car.getImage() == null) {
             imageFile = "src/images/null-car.png";
+        } else if (car.getImage().length() > 22) {
+            imageFile = car.getImage();
         } else {
             imageFile = "src/images/" + car.getImage();
         }
