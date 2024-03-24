@@ -166,7 +166,7 @@ public class Marketplace {
 
     // MODIFIES: this
     // EFFECTS: loads the default marketplace car listings
-    private void loadListings() {
+    public void loadListings() {
         try {
             marketplace = jsonReaderMarket.read();
         } catch (IOException e) {
@@ -823,6 +823,10 @@ public class Marketplace {
         if (input.next().toLowerCase().equals("y")) {
             saveAccount();
         }
+    }
+
+    public GarageWorkRoom getMarketplaceCars() {
+        return marketplace;
     }
 
     public GarageWorkRoom getUserGarage() {

@@ -102,6 +102,8 @@ public class AccountMenu extends AbstractMenu {
                     marketplace.getUserAccount().setBalance(balanceToSet);
                     textLabel.setText("Your account balance has been set to: $"
                             + df.format(marketplace.getUserAccount().getBalance()));
+                    balanceLabel.setText("Your account balance is: $"
+                            + df.format(marketplace.getUserAccount().getBalance()));
                 } catch (NumberFormatException exception) {
                     textLabel.setText("Please enter a number");
                 } catch (IllegalAccountBalanceException ex) {

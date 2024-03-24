@@ -15,7 +15,6 @@ public class MarketplaceMenu extends AbstractMenu {
 
     private JButton buyCarButton;
     private JButton sellCarButton;
-    private JButton filterCarButton;
     private JLabel balanceLabel;
     private JComboBox sortComboBox;
     private JComboBox orderComboBox;
@@ -29,6 +28,7 @@ public class MarketplaceMenu extends AbstractMenu {
     public MarketplaceMenu(List<Car> cars) {
         super(cars);
         buyCarButtonListener();
+        sellCarButtonListener();
     }
 
     @Override
@@ -181,6 +181,17 @@ public class MarketplaceMenu extends AbstractMenu {
                     marketplace.buyCar(c);
                     balanceLabel.setText("Balance: $" + df.format(marketplace.getUserAccount().getBalance()));
                 }
+            }
+        });
+    }
+
+    // EFFECTS: button listener for the sell car button, opens a list car menu when clicked
+    private void sellCarButtonListener() {
+        sellCarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SellCarMenu();
+                dispose();
             }
         });
     }

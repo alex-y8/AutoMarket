@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,20 +24,24 @@ import java.util.List;
 public class MarketplaceGUI extends JFrame {
 
     private static final String JSON_MARKET = "./data/carMarket.json";
+    private static final String JSON_ORIGINAL_MARKET = "./data/originalMarket.json";
     private static final String JSON_USER_MARKET = "./data/userCarMarket.json";
     private static final String JSON_GARAGE = "./data/garage.json";
     private static final String JSON_ACCOUNT = "./data/account.json";
 
-    private GarageWorkRoom marketplace;
+    private static GarageWorkRoom marketplace;
+    private static GarageWorkRoom originalMarketplace;
     private GarageWorkRoom userMarketplace;
     private GarageWorkRoom userGarage;
     private GarageWorkRoom filteredMarketplace;
     private AccountWorkRoom userAccount;
 
+    private JsonWriterGarage jsonWriterMarket;
     private JsonWriterGarage jsonWriterUserMarket;
     private JsonWriterGarage jsonWriterGarage;
     private JsonWriterAccount jsonWriterAccount;
 
+    private JsonReaderGarage jsonReaderOriginalMarket;
     private JsonReaderGarage jsonReaderMarket;
     private JsonReaderGarage jsonReaderUserMarket;
     private JsonReaderGarage jsonReaderGarage;
@@ -44,6 +49,8 @@ public class MarketplaceGUI extends JFrame {
 
     public static final int WIDTH = 800;
     public static final int HEIGHT = 800;
+
+    private static boolean isOriginalMarket;
 
     private JPanel mainMenu;
 
@@ -58,15 +65,18 @@ public class MarketplaceGUI extends JFrame {
 
     private void initialize() {
         marketplace = new GarageWorkRoom();
+        originalMarketplace = new GarageWorkRoom();
         userMarketplace = new GarageWorkRoom();
         userGarage = new GarageWorkRoom();
         filteredMarketplace = new GarageWorkRoom();
         userAccount = new AccountWorkRoom();
 
+        jsonWriterMarket = new JsonWriterGarage(JSON_MARKET);
         jsonWriterUserMarket = new JsonWriterGarage(JSON_USER_MARKET);
         jsonWriterGarage = new JsonWriterGarage(JSON_GARAGE);
         jsonWriterAccount = new JsonWriterAccount(JSON_ACCOUNT);
 
+        jsonReaderOriginalMarket = new JsonReaderGarage(JSON_ORIGINAL_MARKET);
         jsonReaderMarket = new JsonReaderGarage(JSON_MARKET);
         jsonReaderUserMarket = new JsonReaderGarage(JSON_USER_MARKET);
         jsonReaderGarage = new JsonReaderGarage(JSON_GARAGE);
@@ -78,7 +88,7 @@ public class MarketplaceGUI extends JFrame {
     private void initializeGraphics() {
         initializeMainMenu();
         exitButton();
-        loadCars();
+        //loadCars();
         loadGarage();
         loadAccount();
 
@@ -113,7 +123,12 @@ public class MarketplaceGUI extends JFrame {
                 "", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
         if (loadData == 0) {
-            AbstractMenu.marketplace.loadUserListings();
+            //AbstractMenu.marketplace.loadUserListings();
+            loadCars();
+            isOriginalMarket = false;
+        } else {
+            loadOriginalMarket();
+            isOriginalMarket = true;
         }
 
     }
@@ -151,8 +166,13 @@ public class MarketplaceGUI extends JFrame {
         marketplaceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<Car> carList = marketplace.getCars();
-                new MarketplaceMenu(carList);
+                if (isOriginalMarket) {
+                    List<Car> carList = originalMarketplace.getCars();
+                    new MarketplaceMenu(carList);
+                } else {
+                    List<Car> carList = marketplace.getCars();
+                    new MarketplaceMenu(carList);
+                }
             }
         });
 
@@ -217,10 +237,17 @@ public class MarketplaceGUI extends JFrame {
 
     }
 
+    private void loadOriginalMarket() {
+        try {
+            originalMarketplace = jsonReaderOriginalMarket.read();
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_ORIGINAL_MARKET);
+        }
+    }
+
     // MODIFIES: this
     // EFFECTS: loads the cars listed for sale onto the marketplace menu
     private void loadCars() {
-        //convert json file to list
         try {
             marketplace = jsonReaderMarket.read();
         } catch (IOException e) {
@@ -276,7 +303,12 @@ public class MarketplaceGUI extends JFrame {
                 JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
         if (saveData == 0) {
-            AbstractMenu.marketplace.saveMarketplace();
+            if (!isOriginalMarket || SellCarMenu.getHasListedCar()) {
+                loadCars();
+
+                saveMarketplace();
+            }
+            //AbstractMenu.marketplace.saveMarketplace();
             AbstractMenu.marketplace.saveGarage();
             AbstractMenu.marketplace.saveAccount();
             System.exit(0);
@@ -285,5 +317,27 @@ public class MarketplaceGUI extends JFrame {
         }
     }
 
+    public void saveMarketplace() {
+        try {
+            jsonWriterMarket.open();
+            jsonWriterMarket.write(marketplace);
+            jsonWriterMarket.close();
+            System.out.println("Marketplace successfully saved!");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_USER_MARKET);
+        }
+    }
+
+    public static GarageWorkRoom getMarketplace() {
+        return marketplace;
+    }
+
+    public static GarageWorkRoom getOriginalMarket() {
+        return originalMarketplace;
+    }
+
+    public static boolean getIsOriginalMarket() {
+        return isOriginalMarket;
+    }
 
 }
