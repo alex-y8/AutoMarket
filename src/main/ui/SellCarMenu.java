@@ -165,9 +165,13 @@ public class SellCarMenu extends JFrame {
     private void createBottomPanel(JPanel panel, GridBagConstraints gbc) {
         //bottomPanel = new JPanel(new GridLayout());
         //bottomPanel.add(createListCarButton());
+        gbc.gridx = 0;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(createListCarButton(), gbc);
+        JLabel messageLabel = new JLabel();
+
+        //panel.add()
 
         gbc.gridy++;
     }

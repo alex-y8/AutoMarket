@@ -36,7 +36,7 @@ public class MarketplaceGUI extends JFrame {
     private GarageWorkRoom filteredMarketplace;
     private AccountWorkRoom userAccount;
 
-    private JsonWriterGarage getJsonWriterOriginalMarket;
+    private JsonWriterGarage jsonWriterOriginalMarket;
     private JsonWriterGarage jsonWriterMarket;
     private JsonWriterGarage jsonWriterUserMarket;
     private JsonWriterGarage jsonWriterGarage;
@@ -72,7 +72,7 @@ public class MarketplaceGUI extends JFrame {
         filteredMarketplace = new GarageWorkRoom();
         userAccount = new AccountWorkRoom();
 
-        getJsonWriterOriginalMarket = new JsonWriterGarage(JSON_ORIGINAL_MARKET);
+        jsonWriterOriginalMarket = new JsonWriterGarage(JSON_ORIGINAL_MARKET);
         jsonWriterMarket = new JsonWriterGarage(JSON_MARKET);
         jsonWriterUserMarket = new JsonWriterGarage(JSON_USER_MARKET);
         jsonWriterGarage = new JsonWriterGarage(JSON_GARAGE);
@@ -109,13 +109,28 @@ public class MarketplaceGUI extends JFrame {
     private void initializeMainMenu() {
         mainMenu = new JPanel();
         mainMenu.setLayout(new BorderLayout());
+        addGraphic();
         mainMenu.add(createMarketplaceButton());
         mainMenu.add(createGarageButton());
         mainMenu.add(createAccountButton());
         mainMenu.add(quitButton());
-        mainMenu.setBounds(50, 100, WIDTH, HEIGHT);
+        //mainMenu.setBounds(50, 0, WIDTH, HEIGHT);
         mainMenu.setLayout(new GridLayout(0, 1, 0, 10));
         mainMenu.setBorder(BorderFactory.createEmptyBorder(HEIGHT - 300, 20, 20, 20));
+    }
+
+
+    private void addGraphic() {
+        ImageIcon imageIcon = new ImageIcon("src/images/mainmenu_graphic.png");
+        JLabel imageLabel = new JLabel(imageIcon);
+        JPanel imagePanel = new JPanel();
+
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
+
+        imagePanel.add(imageLabel, BorderLayout.CENTER);
+        add(imagePanel);
+
     }
 
     private void createLoadMarketplaceWindow() {
@@ -313,7 +328,12 @@ public class MarketplaceGUI extends JFrame {
 //
 //            }
             if (SellCarMenu.getHasListedCar()) {
-                saveMarketplace();
+                if (isOriginalMarket) {
+                    saveOriginalMarketplace();
+                    //saveMarketplace(); //choose no load market, save and market saves 0 cars
+                } else {
+                    saveMarketplace();
+                }
                 //loadCars();
                 System.out.println(marketplace.getCars().size());
                 System.out.println(AbstractMenu.marketplace.getMarketplaceCars().numCars());
@@ -328,6 +348,17 @@ public class MarketplaceGUI extends JFrame {
         }
     }
 
+    private void saveOriginalMarketplace() {
+        try {
+            jsonWriterOriginalMarket.open();
+            jsonWriterOriginalMarket.write(originalMarketplace);
+            jsonWriterOriginalMarket.close();
+            System.out.println("original market saved");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_ORIGINAL_MARKET);
+        }
+    }
+
     public void saveMarketplace() {
 //        try {
 //            marketplace = jsonReaderMarket.read();
@@ -336,7 +367,7 @@ public class MarketplaceGUI extends JFrame {
 //        }
         try {
             jsonWriterMarket.open();
-            jsonWriterMarket.write(originalMarketplace);
+            jsonWriterMarket.write(marketplace);
             jsonWriterMarket.close();
             System.out.println("Marketplace successfully saved!");
         } catch (FileNotFoundException e) {
