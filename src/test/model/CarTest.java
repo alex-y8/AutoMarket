@@ -38,4 +38,17 @@ public class CarTest {
         assertEquals(DriveType.AWD, car2.getDriveType());
         assertEquals(DriveType.FWD, car3.getDriveType());
     }
+
+    @Test
+    public void testToString() {
+        assertEquals( "2016" + " "
+                + "Audi"
+                + " " + "R8" + " $242,000"
+                + "\n" + "Speed: "
+                + 8.2 + "\n" + "Handling: "
+                + 7.6 + "\n" + "Acceleration: "
+                + 9.0 + "\n" + "Braking: "
+                + 9.2 + "\n" + "Drive type: "
+                + "RWD" + "\n", car1.toString());
+    }
 }
