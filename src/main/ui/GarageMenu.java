@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+// Creates the GarageMenu
 public class GarageMenu extends AbstractMenu {
 
     private JLabel balanceLabel;
@@ -24,11 +25,14 @@ public class GarageMenu extends AbstractMenu {
 
     private boolean isAscendingOrder = true;
 
+    // EFFECTS: constructs a new GarageMenu
     public GarageMenu(List<Car> garageList) {
         super(garageList);
         refundCarButtonListener();
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the upper panel and adds buttons, combobox, labels to it
     @Override
     protected JPanel createUpperPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -47,6 +51,8 @@ public class GarageMenu extends AbstractMenu {
         return buttonPanel;
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the combobox for sorting by the car's fields
     private void createSortComboBox() {
         String[] filters = {"Sort by:", "Year", "Speed", "Handling", "Acceleration", "Braking", "Drive Type", "Price"};
         sortComboBox = new JComboBox(filters);
@@ -62,6 +68,8 @@ public class GarageMenu extends AbstractMenu {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the combo box for choosing the sorting order
     private void createOrderComboBox() {
         String[] order = {"Ascending order", "Descending order"};
         orderComboBox = new JComboBox(order);
@@ -73,6 +81,8 @@ public class GarageMenu extends AbstractMenu {
         });
     }
 
+    // MODIFIES: carList
+    // EFFECTS: sorts the list of cars according to the selected sorting filter, in ascending order
     private void updateCarListAscending() {
         setupLists();
 
@@ -100,6 +110,7 @@ public class GarageMenu extends AbstractMenu {
         }
     }
 
+    // EFFECTS: initializes the list for sorting and creates the first element of the combo boxes
     private void setupLists() {
         carDefaultListModel.clear();
         sortedList = new ArrayList<>(carList);
@@ -112,12 +123,16 @@ public class GarageMenu extends AbstractMenu {
         }
     }
 
+    // MODIFIES: carList
+    // EFFECTS: adds the car to the sorted list
     private void addCarToSortedList() {
         for (Car c : sortedList) {
             carDefaultListModel.addElement(c);
         }
     }
 
+    // MODIFIES: carList
+    // EFFECTS: sorts the list of cars according to the selected sorting filter, in descending order
     private void updateCarListDescending() {
         setupLists();
 
@@ -145,6 +160,7 @@ public class GarageMenu extends AbstractMenu {
         }
     }
 
+    // EFFECTS: chooses how to sort the lists, according to the sort combo box selection
     private void chooseSortOrder() {
         selectedOrderFilter = (String) orderComboBox.getSelectedItem();
         isAscendingOrder = selectedOrderFilter.equals("Ascending order");
@@ -155,6 +171,8 @@ public class GarageMenu extends AbstractMenu {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: button listener for the Refund car button
     private void refundCarButtonListener() {
         refundCarButton.addActionListener(new ActionListener() {
             @Override
@@ -164,6 +182,8 @@ public class GarageMenu extends AbstractMenu {
         });
     }
 
+    // MODIFIES: this, userAccount
+    // EFFECTS: removes the selected car from the garage and refunds the car money to the user account
     private void refundCar() {
         double balanceToSet = 0.0;
         double currentBalance = marketplace.getUserAccount().getBalance();;
@@ -181,7 +201,8 @@ public class GarageMenu extends AbstractMenu {
         new GarageMenu(marketplace.getUserGarage().getCars());
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: creates the main panel with a scroll pane
     @Override
     protected JPanel createMainPanel() {
         JPanel centerPanel = new JPanel();

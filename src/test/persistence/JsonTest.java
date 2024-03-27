@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonTest {
     protected void checkCar(String manufacturer, String model, int year, double speed, double handling,
-                            double acceleration, double braking, DriveType driveType, int price, Car car) {
+                            double acceleration, double braking, DriveType driveType, int price, String image, Car car) {
         assertEquals(manufacturer, car.getManufacturer());
         assertEquals(model, car.getModel());
         assertEquals(year, car.getYear());
@@ -20,6 +20,7 @@ public class JsonTest {
         assertEquals(braking, car.getBraking());
         assertEquals(driveType, car.getDriveType());
         assertEquals(price, car.getPrice());
+        assertEquals(image, car.getImage());
     }
 
     protected void checkAccount(double balance, Account a) {

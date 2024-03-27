@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
+// Creates the account menu
 public class AccountMenu extends AbstractMenu {
 
     private static final int TEXT_FIELD_FRAME_HEIGHT = 200;
@@ -26,12 +27,14 @@ public class AccountMenu extends AbstractMenu {
 
     private JFrame textFieldFrame;
 
+    // EFFECTS: constructs a new AccountMenu
     public AccountMenu(List<Car> carList) {
         super(carList);
         setBalanceButtonListener();
     }
 
-    // EFFECTS: don't need upper panel for account menu
+    // MODIFIES: this
+    // EFFECTS: creates the buttons for the upper panel
     @Override
     protected JPanel createUpperPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -40,8 +43,9 @@ public class AccountMenu extends AbstractMenu {
         return buttonPanel;
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the main panel for the account menu
     @Override
-    // EFFECTS: creates the buttons for the account menu
     protected JPanel createMainPanel() {
         JPanel buttonPanel = new JPanel(new FlowLayout());
 
@@ -62,7 +66,8 @@ public class AccountMenu extends AbstractMenu {
         });
     }
 
-    // EFFECTS: initializes the input text field
+    // MODIFIES: this
+    // EFFECTS: initializes the input text field in the new window
     private void initializeTextField() {
         textFieldFrame = new JFrame();
         textFieldFrame.setSize(TEXT_FIELD_FRAME_WIDTH, TEXT_FIELD_FRAME_HEIGHT);
@@ -90,6 +95,8 @@ public class AccountMenu extends AbstractMenu {
 
     }
 
+    // MODIFIES: userAccount
+    // EFFECTS: sets the account balance to the given user input
     private void buttonListener() {
         button.addActionListener(new ActionListener() {
             @Override
@@ -109,11 +116,11 @@ public class AccountMenu extends AbstractMenu {
                 } catch (IllegalAccountBalanceException ex) {
                     textLabel.setText("Please enter a positive number");
                 }
-
             }
         });
     }
 
+    // EFFECTS: creates the JTextField for the account menu
     private JTextField createTextField() {
         textField = new JTextField();
         textField.setPreferredSize(new Dimension(TEXT_FIELD_FRAME_WIDTH - 200,

@@ -9,7 +9,8 @@
       "acceleration": 9.0,
       "braking": 9.2,
       "driveType": "RWD",
-      "price": 242000
+      "price": 242000,
+      "image": ""
     },
     {
       "manufacturer": "Nissan",
@@ -20,7 +21,8 @@
       "acceleration": 9.6,
       "braking": 7.6,
       "driveType": "AWD",
-      "price": 132000
+      "price": 132000,
+      "image": ""
     }
   ]
 }

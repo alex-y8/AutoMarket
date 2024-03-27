@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+// Creates the marketplace menu
 public class MarketplaceMenu extends AbstractMenu {
 
     private JButton buyCarButton;
@@ -25,6 +26,7 @@ public class MarketplaceMenu extends AbstractMenu {
 
     private boolean isAscendingOrder = true;
 
+    // EFFECTS: constructs a new marketplace menu with the list of cars available for purchase
     public MarketplaceMenu(List<Car> cars) {
         super(cars);
         buyCarButtonListener();
@@ -53,6 +55,8 @@ public class MarketplaceMenu extends AbstractMenu {
         return buttonPanel;
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the combo box for choosing the sorting order
     private void createOrderComboBox() {
         String[] order = {"Ascending order", "Descending order"};
         orderComboBox = new JComboBox(order);
@@ -64,6 +68,8 @@ public class MarketplaceMenu extends AbstractMenu {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the combobox for sorting by the car's fields
     private void createSortComboBox() {
         String[] filters = {"Sort by:", "Year", "Speed", "Handling", "Acceleration", "Braking", "Drive Type", "Price"};
         sortComboBox = new JComboBox(filters);
@@ -79,6 +85,8 @@ public class MarketplaceMenu extends AbstractMenu {
         });
     }
 
+    // MODIFIES: garageList
+    // EFFECTS: sorts the list of cars according to the selected sorting filter, in ascending order
     private void updateCarListAscending() {
         setupLists();
 
@@ -106,6 +114,8 @@ public class MarketplaceMenu extends AbstractMenu {
         }
     }
 
+    // MODIFIES: garageList
+    // EFFECTS: sorts the list of cars according to the selected sorting filter, in descending order
     private void updateCarListDescending() {
         setupLists();
 
@@ -133,6 +143,7 @@ public class MarketplaceMenu extends AbstractMenu {
         }
     }
 
+    // EFFECTS: initializes the list for sorting and creates the first element of the combo boxes
     private void setupLists() {
         carDefaultListModel.clear();
         sortedList = new ArrayList<>(carList);
@@ -145,13 +156,15 @@ public class MarketplaceMenu extends AbstractMenu {
         }
     }
 
-
+    // MODIFIES: garageList
+    // EFFECTS: adds the car to the sorted list
     private void addCarToSortedList() {
         for (Car c : sortedList) {
             carDefaultListModel.addElement(c);
         }
     }
 
+    // EFFECTS: chooses how to sort the lists, according to the sort combo box selection
     private void chooseSortOrder() {
         selectedOrderFilter = (String) orderComboBox.getSelectedItem();
         isAscendingOrder = selectedOrderFilter.equals("Ascending order");
@@ -175,6 +188,7 @@ public class MarketplaceMenu extends AbstractMenu {
     // EFFECTS: button listener for the buy car button, buys the selected car when clicked
     private void buyCarButtonListener() {
         buyCarButton.addActionListener(new ActionListener() {
+            // EFFECTS: buys the car from marketplace, adds it to garage, and subtracts car price from account balance
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (Car c : carListMenu.getSelectedCarList()) {
@@ -188,6 +202,7 @@ public class MarketplaceMenu extends AbstractMenu {
     // EFFECTS: button listener for the sell car button, opens a list car menu when clicked
     private void sellCarButtonListener() {
         sellCarButton.addActionListener(new ActionListener() {
+            // EFFECTS: refreshes the sell car menu
             @Override
             public void actionPerformed(ActionEvent e) {
                 new SellCarMenu();

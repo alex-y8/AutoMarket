@@ -83,6 +83,10 @@ public class GarageTest {
 
     @Test
     public void testRemoveCarOne() {
+        garageWorkRoom.addCar(car1);
+        assertTrue(garageWorkRoom.getCars().contains(car1));
+        garageWorkRoom.removeCar(car1);
+        assertFalse(garageWorkRoom.getCars().contains(car1));
         garage.addCar(car1);
         assertTrue(garage.containsCar(car1));
         garage.removeCar(car1);

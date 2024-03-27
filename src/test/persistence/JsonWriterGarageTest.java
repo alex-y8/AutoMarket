@@ -48,9 +48,9 @@ public class JsonWriterGarageTest extends JsonTest {
         try {
             GarageWorkRoom wr = new GarageWorkRoom();
             wr.addCar(new Car("Audi", "R8", 2016, 8.2, 7.6, 9.0,
-                    9.2, DriveType.RWD, 100000, null));
+                    9.2, DriveType.RWD, 100000, ""));
             wr.addCar(new Car("Nissan", "GT-R", 2017, 7.9, 7.2, 9.6,
-                    7.6, DriveType.AWD, 50000, null));
+                    7.6, DriveType.AWD, 50000, ""));
             JsonWriterGarage writer = new JsonWriterGarage("./data/testWriterGeneralWorkroom.json");
             writer.open();
             writer.write(wr);
@@ -61,9 +61,9 @@ public class JsonWriterGarageTest extends JsonTest {
             List<Car> carList = wr.getCars();
             assertEquals(2, carList.size());
             checkCar("Audi", "R8", 2016, 8.2, 7.6, 9.0,
-                    9.2, DriveType.RWD, 100000, carList.get(0));
+                    9.2, DriveType.RWD, 100000, "", carList.get(0));
             checkCar("Nissan", "GT-R", 2017, 7.9, 7.2, 9.6,
-                    7.6, DriveType.AWD, 50000, carList.get(1));
+                    7.6, DriveType.AWD, 50000, "", carList.get(1));
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }

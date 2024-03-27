@@ -12,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
+// Menu for listing a car onto the marketplace
 public class SellCarMenu extends JFrame {
 
     private JPanel panel;
@@ -48,6 +49,7 @@ public class SellCarMenu extends JFrame {
 
     private GridBagConstraints gbc;
 
+    // EFFECTS: constructs the menu for when the user wants to list their own car
     public SellCarMenu() {
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -67,13 +69,15 @@ public class SellCarMenu extends JFrame {
 
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: initializes the window
     private void initializeFrame() {
         setSize(MarketplaceGUI.WIDTH, MarketplaceGUI.HEIGHT);
         setLocationRelativeTo(null);
         setResizable(false);
     }
 
+    // EFFECTS: button listener for the "X" button in the top right corner of the window, refreshes the menu
     private void closeButtonListener() {
         addWindowListener(new WindowAdapter() {
             @Override
@@ -87,8 +91,9 @@ public class SellCarMenu extends JFrame {
         });
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the panel and adds all the labels to the panel
     private JPanel createPanel() {
-        //panel = new JPanel(new GridLayout(0, 1, 5, 5));
         panel = new JPanel(new GridBagLayout());
         gbc.anchor = GridBagConstraints.WEST;
 
@@ -111,6 +116,8 @@ public class SellCarMenu extends JFrame {
         return panel;
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds the text fields to the panel
     private void addToPanel() {
         manufacturerTextField = addLabelAndTextField(panel, gbc, "Manufacturer: ", manufacturerTextField);
         modelTextField = addLabelAndTextField(panel, gbc, "Model: ", modelTextField);
@@ -127,6 +134,8 @@ public class SellCarMenu extends JFrame {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up the gridbaglayout constraints and adds the components to the panel
     private JTextField addLabelAndTextField(JPanel panel, GridBagConstraints gbc,
                                             String labelText, JTextField textField) {
 
@@ -147,6 +156,8 @@ public class SellCarMenu extends JFrame {
         return textField;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets up the grid bag layout constraints and adds the components to the image panel
     private void createImagePanel(JPanel panel, GridBagConstraints gbc) {
         JLabel label = new JLabel("Image: ");
         label.setFont(new Font("Trebuchet MS", Font.PLAIN, 24));
@@ -162,6 +173,8 @@ public class SellCarMenu extends JFrame {
         gbc.gridy++;
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the lower panel and adds the components to it
     private void createBottomPanel(JPanel panel, GridBagConstraints gbc) {
         //bottomPanel = new JPanel(new GridLayout());
         //bottomPanel.add(createListCarButton());
@@ -176,6 +189,8 @@ public class SellCarMenu extends JFrame {
         gbc.gridy++;
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the JTextFields
     private void createTextField() {
         manufacturerTextField = new JTextField();
         modelTextField = new JTextField();
@@ -188,9 +203,12 @@ public class SellCarMenu extends JFrame {
         priceTextField = new JTextField();
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates the list car button
     private JButton createListCarButton() {
         listCarButton = new JButton("List car");
         listCarButton.addActionListener(new ActionListener() {
+            // EFFECTS: adds the listed car to the market
             @Override
             public void actionPerformed(ActionEvent e) {
                 createCar();
@@ -210,6 +228,7 @@ public class SellCarMenu extends JFrame {
         return listCarButton;
     }
 
+    // EFFECTS: creates the car with the given user inputs
     private void createCar() {
         car = new Car(manufacturerTextField.getText(), modelTextField.getText(),
                 Integer.parseInt(yearTextField.getText()), Double.parseDouble(speedTextField.getText()),
@@ -220,10 +239,12 @@ public class SellCarMenu extends JFrame {
                 Integer.parseInt(priceTextField.getText()), imageFile);
     }
 
+    // EFFECTS: button listener for the upload image button
     private void imageButtonListener() {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Image files (jpg, jpeg, or png)",
                 "jpg", "jpeg", "png");
         imageButton.addActionListener(new ActionListener() {
+            // EFFECTS: opens a file chooser and allows the user to upload their own image
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
@@ -237,6 +258,7 @@ public class SellCarMenu extends JFrame {
         });
     }
 
+    // EFFECTS: returns true if the user has listed a car onto the market
     public static boolean getHasListedCar() {
         return hasListedCar;
     }

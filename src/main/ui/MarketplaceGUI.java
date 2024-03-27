@@ -54,6 +54,9 @@ public class MarketplaceGUI extends JFrame {
     private static boolean isOriginalMarket;
 
     private JPanel mainMenu;
+    private JPanel imagePanel;
+
+    private GridBagConstraints gbc;
 
     // EFFECTS: constructs the marketplace gui
     public MarketplaceGUI() {
@@ -83,12 +86,16 @@ public class MarketplaceGUI extends JFrame {
         jsonReaderUserMarket = new JsonReaderGarage(JSON_USER_MARKET);
         jsonReaderGarage = new JsonReaderGarage(JSON_GARAGE);
         jsonReaderAccount = new JsonReaderAccount(JSON_ACCOUNT);
+
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
     }
 
     // MODIFIES: this
     // EFFECTS:  draws the JFrame window where this Marketplace will operate, creates the menu buttons
     private void initializeGraphics() {
-        initializeMainMenu();
+        initializeMainMenu(gbc);
         exitButton();
         //loadCars();
         loadGarage();
@@ -102,37 +109,57 @@ public class MarketplaceGUI extends JFrame {
         setResizable(false);
 
         add(mainMenu);
+        revalidate();
+        repaint();
     }
 
     // MODIFIES: this
     // EFFECTS: sets up the main menu's borders and buttons
-    private void initializeMainMenu() {
+    private void initializeMainMenu(GridBagConstraints gbc) {
         mainMenu = new JPanel();
-        mainMenu.setLayout(new BorderLayout());
-        addGraphic();
-        mainMenu.add(createMarketplaceButton());
-        mainMenu.add(createGarageButton());
-        mainMenu.add(createAccountButton());
-        mainMenu.add(quitButton());
-        //mainMenu.setBounds(50, 0, WIDTH, HEIGHT);
-        mainMenu.setLayout(new GridLayout(0, 1, 0, 10));
-        mainMenu.setBorder(BorderFactory.createEmptyBorder(HEIGHT - 300, 20, 20, 20));
+        mainMenu.setLayout(new GridBagLayout());
+        gbc.insets = new Insets(5, 10, 5, 10);
+        addGraphic(gbc);
+
+        gbc.gridx = 0;
+        //gbc.gridwidth = 3;
+        //gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+//        panel.add(imageButton, gbc);
+
+        gbc.gridy++;
+
+        mainMenu.add(createMarketplaceButton(), gbc);
+        gbc.gridy++;
+        mainMenu.add(createGarageButton(), gbc);
+        gbc.gridy++;
+        mainMenu.add(createAccountButton(), gbc);
+        gbc.gridy++;
+        mainMenu.add(quitButton(), gbc);
+        //mainMenu.setLayout(new GridBagLayout());
+        //mainMenu.setLayout(new GridLayout(0, 1, 0, 10));
+        //mainMenu.setBorder(BorderFactory.createEmptyBorder(HEIGHT - 300, 20, 20, 20));
     }
 
-
-    private void addGraphic() {
+    // EFFECTS: adds the application logo to the main menu
+    private void addGraphic(GridBagConstraints gbc) {
         ImageIcon imageIcon = new ImageIcon("src/images/mainmenu_graphic.png");
-        JLabel imageLabel = new JLabel(imageIcon);
-        JPanel imagePanel = new JPanel();
+        JLabel imageLabel = new JLabel();
 
+        Image scaled = imageIcon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+        ImageIcon scaledImage = new ImageIcon(scaled);
+
+        imageLabel.setIcon(scaledImage);
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.CENTER);
+        imageLabel.setPreferredSize(new Dimension(WIDTH - 100, (HEIGHT / 2) + 75));
 
-        imagePanel.add(imageLabel, BorderLayout.CENTER);
-        add(imagePanel);
+        mainMenu.add(imageLabel, gbc);
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates a pop-up window that prompts the user if they want to load their marketplace
     private void createLoadMarketplaceWindow() {
         String[] options = {"Yes", "No"};
 
@@ -150,7 +177,8 @@ public class MarketplaceGUI extends JFrame {
 
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: creates a pop-up window that prompts the user if they want to load their garage
     private void createLoadGarageWindow() {
         String[] options = {"Yes", "No"};
 
@@ -162,6 +190,8 @@ public class MarketplaceGUI extends JFrame {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates a pop-up window that prompts the user if they want to load their account information
     private void createLoadAccountWindow() {
         String[] options = {"Yes", "No"};
 
@@ -181,6 +211,7 @@ public class MarketplaceGUI extends JFrame {
         marketplaceButton.setFont(new Font("", Font.PLAIN, 24));
 
         marketplaceButton.addActionListener(new ActionListener() {
+            // EFFECTS:
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (isOriginalMarket) {
@@ -254,6 +285,8 @@ public class MarketplaceGUI extends JFrame {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: loads the market if the user chooses not to load their market
     private void loadOriginalMarket() {
         try {
             originalMarketplace = jsonReaderOriginalMarket.read();
@@ -348,6 +381,8 @@ public class MarketplaceGUI extends JFrame {
         }
     }
 
+    // MODIFIES: originalMarket.json
+    // EFFECTS: saves the original marketplace to file
     private void saveOriginalMarketplace() {
         try {
             jsonWriterOriginalMarket.open();
@@ -359,6 +394,8 @@ public class MarketplaceGUI extends JFrame {
         }
     }
 
+    // MODIFIES: carMarket.json
+    // EFFECTS: saves the marketplace to file
     public void saveMarketplace() {
 //        try {
 //            marketplace = jsonReaderMarket.read();

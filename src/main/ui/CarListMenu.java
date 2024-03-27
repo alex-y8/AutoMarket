@@ -7,6 +7,7 @@ import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+// Creates the list of cars to be displayed in the marketplace and garage
 public class CarListMenu implements ListCellRenderer<Car> {
 
     private JPanel carListPanel;
@@ -32,7 +33,6 @@ public class CarListMenu implements ListCellRenderer<Car> {
 
     private final DecimalFormat df = new DecimalFormat("#,###.##");
 
-
     // EFFECTS: construct the menu for the car list
     public CarListMenu() {
         selectedCars = new ArrayList<>();
@@ -51,6 +51,8 @@ public class CarListMenu implements ListCellRenderer<Car> {
         return selectedCars;
     }
 
+    // MODIFIES: this
+    // EFFECTS: renders the list of cars and overrides behaviour when a car is selected/unselected
     @Override
     public Component getListCellRendererComponent(JList<? extends Car> carList, Car car,
                                                   int index, boolean isSelected, boolean cellHasFocus) {
@@ -68,6 +70,8 @@ public class CarListMenu implements ListCellRenderer<Car> {
         return carListPanel;
     }
 
+    // MODIFIES: this
+    // EFFECTS: highlights the background of the selected car, adds selected car(s) to the selected list
     private void select() {
         carListPanel.setBackground(carList.getSelectionBackground());
         textPanel.setBackground(carList.getSelectionBackground());
@@ -87,6 +91,8 @@ public class CarListMenu implements ListCellRenderer<Car> {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: unhighlights the background of the selected car, removes selected car(s) from the selected list
     private void unselect() {
         carListPanel.setBackground(carList.getBackground());
         textPanel.setBackground(carList.getBackground());
@@ -104,6 +110,8 @@ public class CarListMenu implements ListCellRenderer<Car> {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the JLabels and sets the font size
     private void setUpLabels() {
         carManufacturer = new JLabel();
         carModel = new JLabel();
@@ -127,6 +135,8 @@ public class CarListMenu implements ListCellRenderer<Car> {
         carDriveType.setFont(new Font("", Font.PLAIN, 18));
     }
 
+    // MODIFIES: this
+    // EFFECTS: initializes the textPanel and adds all the JLabels to itself
     private void setUpPanels() {
         textPanel = new JPanel(new GridLayout(0, 1, 0, -10));
         textPanel.add(carManufacturer);
@@ -140,6 +150,8 @@ public class CarListMenu implements ListCellRenderer<Car> {
         textPanel.add(carDriveType);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the JLabel text to the fields of the car and handles image selection
     private void setUpInfo() {
         carManufacturer.setText(car.getManufacturer());
         carModel.setText(car.getModel());

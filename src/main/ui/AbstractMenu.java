@@ -7,6 +7,7 @@ import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.List;
 
+// Abstract render of a menu
 public abstract class AbstractMenu extends JFrame {
 
     private JPanel panel;
@@ -17,6 +18,7 @@ public abstract class AbstractMenu extends JFrame {
 
     protected final DecimalFormat df;
 
+    // EFFECTS: constructs a new AbstractMenu
     public AbstractMenu(List<Car> carList) {
         df = new DecimalFormat("#,###.##");
         this.carList = carList;
@@ -31,6 +33,7 @@ public abstract class AbstractMenu extends JFrame {
         setVisible(true);
     }
 
+    // MODIFIES: this
     // EFFECTS: creates the menu window frame
     private void createFrame() {
         setSize(MarketplaceGUI.WIDTH, MarketplaceGUI.HEIGHT);
@@ -38,9 +41,11 @@ public abstract class AbstractMenu extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    // MODIFIES: this
     // EFFECTS: creates the upper panel
     protected abstract JPanel createUpperPanel();
 
+    // MODIFIES: this
     // EFFECTS: creates the menu scroll panel
     protected abstract JPanel createMainPanel();
 
