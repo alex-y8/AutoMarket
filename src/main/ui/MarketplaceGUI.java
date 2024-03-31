@@ -1,6 +1,7 @@
 package ui;
 
 import model.AccountWorkRoom;
+import model.EventLog;
 import model.GarageWorkRoom;
 import model.cars.Car;
 import persistence.JsonReaderAccount;
@@ -347,19 +348,13 @@ public class MarketplaceGUI extends JFrame {
     // MODIFIES: this
     // EFFECTS: prompt user to save data, then quits the program
     private void processQuit() {
+        LogPrinter lp = new LogPrinter();
         String[] options = {"Save and quit", "Quit without saving"};
 
         int saveData = JOptionPane.showOptionDialog(getContentPane(), "Data is unsaved", "",
                 JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
         if (saveData == 0) {
-//            if (!isOriginalMarket || SellCarMenu.getHasListedCar()) {
-//                saveMarketplace();
-//                //loadCars();
-//                System.out.println(marketplace.getCars().size());
-//                System.out.println(AbstractMenu.marketplace.getMarketplaceCars().numCars());
-//
-//            }
             if (SellCarMenu.getHasListedCar()) {
                 if (isOriginalMarket) {
                     saveOriginalMarketplace();
@@ -375,8 +370,10 @@ public class MarketplaceGUI extends JFrame {
             //AbstractMenu.marketplace.saveMarketplace();
             AbstractMenu.marketplace.saveGarage();
             AbstractMenu.marketplace.saveAccount();
+            lp.printLog(EventLog.getInstance());
             System.exit(0);
         } else {
+            lp.printLog(EventLog.getInstance());
             System.exit(0);
         }
     }

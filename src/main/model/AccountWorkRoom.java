@@ -32,6 +32,8 @@ public class AccountWorkRoom implements Writeable {
     public void setBalance(double amount) throws IllegalAccountBalanceException {
         if (amount >= 0) {
             account.get(0).setBalance(amount);
+            EventLog.getInstance().logEvent(new Event("Set account balance to: "
+                    + account.get(0).getBalance()));
         } else {
             throw new IllegalAccountBalanceException();
         }
@@ -79,6 +81,8 @@ public class AccountWorkRoom implements Writeable {
     public boolean boughtCar(Car c) {
         if (getBalance() >= c.getPrice()) {
             setBalanceBoughtCar(getBalance() - c.getPrice());
+            EventLog.getInstance().logEvent(new Event("Bought car and added to garage: " + c.getYear() + " "
+                    + c.getManufacturer() + " " + c.getModel()));
             return true;
         }
         return false;

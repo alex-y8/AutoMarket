@@ -29,6 +29,8 @@ public class GarageWorkRoom implements Writeable {
     // EFFECTS: adds car to this workroom
     public void addCar(Car car) {
         carList.add(car);
+        EventLog.getInstance().logEvent(new Event("Car listed onto marketplace: " + car.getYear() + " "
+                + car.getManufacturer() + " " + car.getModel()));
     }
 
     // EFFECTS: returns number of cars in this workroom
@@ -38,6 +40,8 @@ public class GarageWorkRoom implements Writeable {
 
     public void removeCar(Car car) {
         carList.remove(car);
+        EventLog.getInstance().logEvent(new Event("Removed car from garage: " + car.getYear() + " "
+                + car.getManufacturer() + " " + car.getModel()));
     }
 
     // EFFECTS: returns the cars in the garage as a String in format "manufacturer model"
