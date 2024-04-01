@@ -16,17 +16,6 @@ import java.io.File;
 public class SellCarMenu extends JFrame {
 
     private JPanel panel;
-    private JPanel bottomPanel;
-    private JLabel manufacturerLabel;
-    private JLabel modelLabel;
-    private JLabel yearLabel;
-    private JLabel speedLabel;
-    private JLabel handlingLabel;
-    private JLabel accelerationLabel;
-    private JLabel brakingLabel;
-    private JLabel driveTypeLabel;
-    private JLabel priceLabel;
-    private JLabel imageLabel;
 
     private JTextField manufacturerTextField;
     private JTextField modelTextField;
@@ -98,16 +87,6 @@ public class SellCarMenu extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
 
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        manufacturerLabel = new JLabel("Manufacturer");
-        modelLabel = new JLabel("Model");
-        yearLabel = new JLabel("Year");
-        speedLabel = new JLabel("Speed");
-        handlingLabel = new JLabel("Handling");
-        accelerationLabel = new JLabel("Acceleration");
-        brakingLabel = new JLabel("Braking");
-        driveTypeLabel = new JLabel("Drive Type");
-        priceLabel = new JLabel("Price");
-        imageLabel = new JLabel("Image");
 
         createTextField();
 

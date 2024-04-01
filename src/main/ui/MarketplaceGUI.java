@@ -10,8 +10,6 @@ import persistence.JsonWriterAccount;
 import persistence.JsonWriterGarage;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,20 +30,14 @@ public class MarketplaceGUI extends JFrame {
 
     private static GarageWorkRoom marketplace;
     private static GarageWorkRoom originalMarketplace;
-    private GarageWorkRoom userMarketplace;
     private GarageWorkRoom userGarage;
-    private GarageWorkRoom filteredMarketplace;
     private AccountWorkRoom userAccount;
 
     private JsonWriterGarage jsonWriterOriginalMarket;
     private JsonWriterGarage jsonWriterMarket;
-    private JsonWriterGarage jsonWriterUserMarket;
-    private JsonWriterGarage jsonWriterGarage;
-    private JsonWriterAccount jsonWriterAccount;
 
     private JsonReaderGarage jsonReaderOriginalMarket;
     private JsonReaderGarage jsonReaderMarket;
-    private JsonReaderGarage jsonReaderUserMarket;
     private JsonReaderGarage jsonReaderGarage;
     private JsonReaderAccount jsonReaderAccount;
 
@@ -55,7 +47,6 @@ public class MarketplaceGUI extends JFrame {
     private static boolean isOriginalMarket;
 
     private JPanel mainMenu;
-    private JPanel imagePanel;
 
     private GridBagConstraints gbc;
 
@@ -71,20 +62,14 @@ public class MarketplaceGUI extends JFrame {
     private void initialize() {
         marketplace = new GarageWorkRoom();
         originalMarketplace = new GarageWorkRoom();
-        userMarketplace = new GarageWorkRoom();
         userGarage = new GarageWorkRoom();
-        filteredMarketplace = new GarageWorkRoom();
         userAccount = new AccountWorkRoom();
 
         jsonWriterOriginalMarket = new JsonWriterGarage(JSON_ORIGINAL_MARKET);
         jsonWriterMarket = new JsonWriterGarage(JSON_MARKET);
-        jsonWriterUserMarket = new JsonWriterGarage(JSON_USER_MARKET);
-        jsonWriterGarage = new JsonWriterGarage(JSON_GARAGE);
-        jsonWriterAccount = new JsonWriterAccount(JSON_ACCOUNT);
 
         jsonReaderOriginalMarket = new JsonReaderGarage(JSON_ORIGINAL_MARKET);
         jsonReaderMarket = new JsonReaderGarage(JSON_MARKET);
-        jsonReaderUserMarket = new JsonReaderGarage(JSON_USER_MARKET);
         jsonReaderGarage = new JsonReaderGarage(JSON_GARAGE);
         jsonReaderAccount = new JsonReaderAccount(JSON_ACCOUNT);
 

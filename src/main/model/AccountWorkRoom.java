@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writeable;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class AccountWorkRoom implements Writeable {
     private List<Account> account;
     private Account a1;
 
+    private final DecimalFormat df = new DecimalFormat("#,###.##");
+
     // EFFECTS: constructs workroom with an account with $0
     public AccountWorkRoom() {
         account = new ArrayList<>();
@@ -33,7 +36,7 @@ public class AccountWorkRoom implements Writeable {
         if (amount >= 0) {
             account.get(0).setBalance(amount);
             EventLog.getInstance().logEvent(new Event("Set account balance to: "
-                    + account.get(0).getBalance()));
+                    + df.format(account.get(0).getBalance())));
         } else {
             throw new IllegalAccountBalanceException();
         }
