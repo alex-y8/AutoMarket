@@ -3,11 +3,8 @@ package ui;
 import model.Event;
 import model.EventLog;
 
+// Class that prints the logs from the event logger
 public class LogPrinter {
-
-//    public LogPrinter() {
-//
-//    }
 
     // EFFECTS: prints the event log
     public void printLog(EventLog el) {

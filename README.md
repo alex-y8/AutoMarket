@@ -43,46 +43,89 @@ drop-down menu and sorting the list of marketplace/garage cars
 
 Event log example:
 
-Sun Mar 31 21:38:17 PDT 2024
-Set account balance to: 1,234,567
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 2016 Audi R8
 
 
-Sun Mar 31 21:38:23 PDT 2024
-Bought car and added to garage: 2017 Nissan GT-R
-
-
-Sun Mar 31 21:38:23 PDT 2024
+Wed Apr 03 16:33:22 PDT 2024\
 Car listed onto marketplace: 2017 Nissan GT-R
 
 
-Sun Mar 31 21:38:29 PDT 2024
-Bought car and added to garage: 1994 Mazda MX-5 Miata
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 1988 BMW M5
 
 
-Sun Mar 31 21:38:29 PDT 2024
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 2011 Bugatti Veyron
+
+
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 2013 Ferrari LaFerrari
+
+
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 2012 Lamborghini Aventador
+
+
+Wed Apr 03 16:33:22 PDT 2024\
 Car listed onto marketplace: 1994 Mazda MX-5 Miata
 
 
-Sun Mar 31 21:38:46 PDT 2024
-Removed car from garage: 2017 Nissan GT-R
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 2019 Porsche 911 GT3 RS
 
 
-Sun Mar 31 21:38:46 PDT 2024
-Set account balance to: 1,209,567
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 1985 Toyota Trueno AE86
+
+
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 2018 Honda Civic Type R
+
+
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 2015 Dodge Challenger
+
+
+Wed Apr 03 16:33:22 PDT 2024\
+Car listed onto marketplace: 2020 Chevrolet Stingray
+
+Wed Apr 03 16:33:33 PDT 2024\
+Set account balance to: 5,000,000
+
+
+Wed Apr 03 16:33:42 PDT 2024\
+Bought car and added to garage: 2011 Bugatti Veyron
+
+
+Wed Apr 03 16:33:42 PDT 2024\
+Car listed onto marketplace: 2011 Bugatti Veyron
+
+
+Wed Apr 03 16:33:46 PDT 2024\
+Removed car from garage: 2011 Bugatti Veyron
+
+
+Wed Apr 03 16:33:46 PDT 2024\
+Set account balance to: 5,000,000
+
+
+Wed Apr 03 16:34:45 PDT 2024\
+Car listed onto marketplace: 2024 MyCar Car 1
 
 
 ## Phase 4: Task 3
 
 I would make the Account class extend the AccountWorkRoom class, since both classes have similar functionality and 
 methods. This change would reduce duplicated code, resulting in improved code readability. Also, the GarageWorkRoom 
-and Garage classes can be combined into one class since they both have associations with the Car class. The Car class
-has too many associations with other classes (high coupling), so a refactor that removes those associations would 
-reduce coupling. So, I would make the list of cars be stored in the AbstractMenu class so that all it's subclasses can
-inherit the list of cars. Additionally, the CarList and SellCar menus can be refactored similarly so that they both 
-won't need an association with the Car class. These changes would reduce coupling between classes and allow for 
-improved code maintainability.
+and Garage classes can be combined into one class since they both have similar functionality and an association with 
+the Car class. The Car class has too many associations with other classes (high coupling), so a refactor that removes 
+those associations would reduce coupling. So, I would make the list of cars be stored in the AbstractMenu class so that 
+all it's subclasses can inherit the list of cars. Additionally, the CarList and SellCar menus can be refactored 
+similarly so that they both won't need an association with the Car class. These changes would reduce coupling between 
+classes and allow for improved code maintainability.
 
-Image credits:
+## Image Credits
 
 Car images from https://forza.fandom.com/wiki/Forza_Wiki
 
