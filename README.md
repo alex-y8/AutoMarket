@@ -33,8 +33,8 @@ from file
 - You can generate the first required action related to the user story "adding multiple Xs to a Y" by clicking
 marketplace, selecting a car, and clicking the "Buy car" button. You'll need to have enough account balance to purchase
 the car.
-- You can generate the second required action related to the user story "adding multiple Xs to a Y" by clicking the
-drop-down menu and sorting the list of marketplace/garage cars
+- You can generate the second required action related to the user story "adding multiple Xs to a Y" by clicking going
+to your garage, selecting a car, and clicking the "Remove car" button. You'll need to have already bought a car.
 - You can locate my visual component by clicking on the marketplace
 - You can save the state of my application by clicking the Quit button and then selecting "Save and exit" 
 - You can reload the state of my application by clicking "Yes" when prompted when the application starts
