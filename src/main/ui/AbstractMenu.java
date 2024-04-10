@@ -39,6 +39,7 @@ public abstract class AbstractMenu extends JFrame {
         setSize(MarketplaceGUI.WIDTH, MarketplaceGUI.HEIGHT);
         setResizable(false);
         setLocationRelativeTo(null);
+        setIconImage(new ImageIcon("src/images/logo.png").getImage());
     }
 
     // MODIFIES: this

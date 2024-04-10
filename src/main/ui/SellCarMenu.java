@@ -54,6 +54,7 @@ public class SellCarMenu extends JFrame {
 
         closeButtonListener();
         imageButtonListener();
+        setIconImage(new ImageIcon("src/images/logo.png").getImage());
         setVisible(true);
 
     }

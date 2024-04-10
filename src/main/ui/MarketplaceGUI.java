@@ -93,6 +93,7 @@ public class MarketplaceGUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         setResizable(false);
+        setIconImage(new ImageIcon("src/images/logo.png").getImage());
 
         add(mainMenu);
         revalidate();
@@ -154,9 +155,11 @@ public class MarketplaceGUI extends JFrame {
 
         if (loadData == 0) {
             //AbstractMenu.marketplace.loadUserListings();
+            loadOriginalMarket();
             loadCars();
             isOriginalMarket = false;
         } else {
+            loadCars();
             loadOriginalMarket();
             isOriginalMarket = true;
         }
@@ -355,12 +358,9 @@ public class MarketplaceGUI extends JFrame {
             //AbstractMenu.marketplace.saveMarketplace();
             AbstractMenu.marketplace.saveGarage();
             AbstractMenu.marketplace.saveAccount();
-            lp.printLog(EventLog.getInstance());
-            System.exit(0);
-        } else {
-            lp.printLog(EventLog.getInstance());
-            System.exit(0);
         }
+        lp.printLog(EventLog.getInstance());
+        System.exit(0);
     }
 
     // MODIFIES: originalMarket.json
