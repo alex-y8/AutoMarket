@@ -6,8 +6,6 @@ import model.cars.DriveType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// Referenced from the JsonSerialization Demo
-// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonTest {
     protected void checkCar(String manufacturer, String model, int year, double speed, double handling,
                             double acceleration, double braking, DriveType driveType, int price, String image, Car car) {

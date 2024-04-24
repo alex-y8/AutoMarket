@@ -12,8 +12,6 @@ import java.util.List;
 
 // Represents a workroom having an account balance
 // Accounts list will always be non-empty
-// Referenced from the JsonSerialization Demo
-// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class AccountWorkRoom implements Writeable {
 
     private double balance;
