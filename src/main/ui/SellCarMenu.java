@@ -194,9 +194,12 @@ public class SellCarMenu extends JFrame {
                 createCar();
 
                 if (MarketplaceGUI.getIsOriginalMarket()) {
-                    MarketplaceGUI.getOriginalMarket().addCar(car);
+                    //MarketplaceGUI.getOriginalMarket().addCar(car);
+                    MarketplaceGUI.getMarketplace().addCar(car);
+                    MarketplaceGUI.setOriginalMarketplaceBooleanFalse();
                     dispose();
-                    new MarketplaceMenu(MarketplaceGUI.getOriginalMarket().getCars());
+                    new MarketplaceMenu(MarketplaceGUI.getMarketplace().getCars());
+                    //new MarketplaceMenu(MarketplaceGUI.getOriginalMarket().getCars());
                 } else {
                     MarketplaceGUI.getMarketplace().addCar(car);
                     dispose();

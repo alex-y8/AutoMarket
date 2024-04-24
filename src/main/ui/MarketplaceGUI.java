@@ -345,8 +345,8 @@ public class MarketplaceGUI extends JFrame {
         if (saveData == 0) {
             if (SellCarMenu.getHasListedCar()) {
                 if (isOriginalMarket) {
-                    saveOriginalMarketplace();
-                    //saveMarketplace(); //choose no load market, save and market saves 0 cars
+                    //saveOriginalMarketplace();
+                    saveMarketplace(); //choose no load market, save and market saves 0 cars
                 } else {
                     saveMarketplace();
                 }
@@ -404,6 +404,10 @@ public class MarketplaceGUI extends JFrame {
 
     public static boolean getIsOriginalMarket() {
         return isOriginalMarket;
+    }
+
+    public static void setOriginalMarketplaceBooleanFalse() {
+        isOriginalMarket = false;
     }
 
 }
