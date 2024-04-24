@@ -109,10 +109,7 @@ public class MarketplaceGUI extends JFrame {
         addGraphic(gbc);
 
         gbc.gridx = 0;
-        //gbc.gridwidth = 3;
-        //gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-//        panel.add(imageButton, gbc);
 
         gbc.gridy++;
 
@@ -123,9 +120,6 @@ public class MarketplaceGUI extends JFrame {
         mainMenu.add(createAccountButton(), gbc);
         gbc.gridy++;
         mainMenu.add(quitButton(), gbc);
-        //mainMenu.setLayout(new GridBagLayout());
-        //mainMenu.setLayout(new GridLayout(0, 1, 0, 10));
-        //mainMenu.setBorder(BorderFactory.createEmptyBorder(HEIGHT - 300, 20, 20, 20));
     }
 
     // EFFECTS: adds the application logo to the main menu
@@ -379,11 +373,6 @@ public class MarketplaceGUI extends JFrame {
     // MODIFIES: carMarket.json
     // EFFECTS: saves the marketplace to file
     public void saveMarketplace() {
-//        try {
-//            marketplace = jsonReaderMarket.read();
-//        } catch (IOException e) {
-//            System.out.println("Unable to read from file: " + JSON_MARKET);
-//        }
         try {
             jsonWriterMarket.open();
             jsonWriterMarket.write(marketplace);
@@ -406,6 +395,7 @@ public class MarketplaceGUI extends JFrame {
         return isOriginalMarket;
     }
 
+    // EFFECTS: sets the original marketplace boolean to false
     public static void setOriginalMarketplaceBooleanFalse() {
         isOriginalMarket = false;
     }

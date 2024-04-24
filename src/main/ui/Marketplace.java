@@ -18,12 +18,9 @@ import java.util.Scanner;
 import java.text.DecimalFormat;
 
 // Console car marketplace, where car listings are shown and up for sale
-// Inspired by CPSC210 TellerApp
-// https://github.students.cs.ubc.ca/CPSC210/TellerApp
 public class Marketplace {
 
     private static final String JSON_MARKET = "./data/carMarket.json";
-    private static final String JSON_FILTERED_MARKET = "./data/filteredCarMarket.json";
     private static final String JSON_USER_MARKET = "./data/userCarMarket.json";
     private static final String JSON_GARAGE = "./data/garage.json";
     private static final String JSON_ACCOUNT = "./data/account.json";
